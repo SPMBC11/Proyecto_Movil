@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.proyecto_movil.R
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ fun BackGroundImage(
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre logo y texto
 
             Text(
-                text = "CritiChord",
+                text = stringResource(R.string.critichord),
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold

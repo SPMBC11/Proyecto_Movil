@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -119,7 +120,7 @@ fun LoginScreen(
                     onCheckedChange = { remember = it },
                     colors = CheckboxDefaults.colors(checkedColor = accent, checkmarkColor = Color.Black)
                 )
-                Text("Recordarme", color = Color.White, fontSize = 14.sp)
+                Text(stringResource(R.string.recordarme), color = Color.White, fontSize = 14.sp)
             }
 
             Spacer(Modifier.height(8.dp))
@@ -136,7 +137,7 @@ fun LoginScreen(
 
             Spacer(Modifier.height(10.dp))
             Text(
-                text = "¿Olvidaste tu contraseña?",
+                text = stringResource(R.string.olvidaste_tu_contrase_a),
                 color = hint,
                 fontSize = 13.sp,
                 modifier = Modifier.clickable { onForgotPassword() }
@@ -146,7 +147,7 @@ fun LoginScreen(
             Divider(color = Color(0xFF2B2B2B))
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Continuar con",
+                text = stringResource(R.string.continuar_con),
                 color = hint,
                 fontSize = 13.sp
             )
@@ -170,9 +171,9 @@ fun LoginScreen(
 
             Spacer(Modifier.height(22.dp))
             Row {
-                Text("¿No tienes una cuenta? ", color = hint, fontSize = 13.sp)
+                Text(stringResource(R.string.no_tienes_una_cuenta), color = hint, fontSize = 13.sp)
                 Text(
-                    "Regístrate",
+                    stringResource(R.string.reg_strate),
                     color = accent,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.SemiBold,

@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Proyecto_movil</string>
     <string name="comenzar_ahora">Comenzar ahora!</string>
+    <string name="recordarme">Recordarme</string>
+    <string name="olvidaste_tu_contrase_a">¿Olvidaste tu contraseña?</string>
+    <string name="continuar_con">Continuar con</string>
+    <string name="no_tienes_una_cuenta">"¿No tienes una cuenta? "</string>
+    <string name="reg_strate">Regístrate</string>
+    <string name="critichord">CritiChord</string>
+    <string name="contin_a_con_facebook">Continúa con Facebook</string>
+    <string name="contin_a_con_apple">Continúa con Apple</string>
+    <string name="contin_a_con_google">Continúa con Google</string>
+    <string name="logu_ate_con_tus_datos_de_acceso">Loguéate con tus datos de acceso</string>
 </resources>

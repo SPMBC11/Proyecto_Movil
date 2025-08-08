@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -101,7 +102,7 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
                 shape = RoundedCornerShape(50),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Comenzar ahora!", color = Color.Black)
+                Text(stringResource(R.string.comenzar_ahora), color = Color.Black)
             }
         }
     }

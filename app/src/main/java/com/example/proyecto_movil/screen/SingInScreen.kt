@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,20 +57,20 @@ fun SignInScreen(onLoginClick: () -> Unit) {
         // Botones de redes sociales (usa logos propios)
         Column {
             SocialLoginButton(
-                text = "Continúa con Google",
+                text = stringResource(R.string.contin_a_con_google),
                 icon = painterResource(id = R.drawable.google),
                 onClick = { /* Acción Google */ }
             )
 
             SocialLoginButton(
-                text = "Continúa con Facebook",
+                text = stringResource(R.string.contin_a_con_facebook),
                 icon = painterResource(id = R.drawable.facebook),
                 backgroundColor = Color(0xFF1877F2), // Azul Facebook
                 onClick = { /* Acción Facebook */ }
             )
 
             SocialLoginButton(
-                text = "Continúa con Apple",
+                text = stringResource(R.string.contin_a_con_apple),
                 icon = painterResource(id = R.drawable.manzana),
                 onClick = { /* Acción Apple */ }
             )
@@ -82,14 +83,14 @@ fun SignInScreen(onLoginClick: () -> Unit) {
             shape = RoundedCornerShape(50),
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Loguéate con tus datos de acceso", color = Color.Black)
+            Text(stringResource(R.string.logu_ate_con_tus_datos_de_acceso), color = Color.Black)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("¿No tienes una cuenta? ", color = Color.White)
+        Text(stringResource(R.string.no_tienes_una_cuenta), color = Color.White)
         Text(
-            "Registrarse", color = Color(0xFF00E5FF),
+            stringResource(R.string.reg_strate), color = Color(0xFF00E5FF),
             modifier = Modifier.clickable { /* ir a registro */ }
         )
     }

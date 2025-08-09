@@ -47,7 +47,6 @@ fun LoginScreen(
     var remember by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
 
-    // Colors similar to the mockup
     val bg = Color(0xFF0E0E0E)
     val card = Color(0xFF151515)
     val accent = Color(0xFF20D0C2)

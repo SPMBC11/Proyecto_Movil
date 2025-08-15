@@ -6,14 +6,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.utils.UserReview // Importa el nuevo Composable
+import com.example.proyecto_movil.data.local.FalseReviewRepository
+import com.example.proyecto_movil.utils.UserReview
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +47,7 @@ fun albumReviewScreen(
                 .align(Alignment.TopEnd)
                 .padding(30.dp)
                 .size(30.dp),
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onPrimary
         )
 
         Column(
@@ -62,7 +63,7 @@ fun albumReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.titulo_resenas),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -82,20 +83,20 @@ fun albumReviewScreen(
 
             Text(
                 text = stringResource(id = R.string.titulo_album),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
                 text = stringResource(id = R.string.artista_album),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 18.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
                 text = stringResource(id = R.string.ano_album),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -109,13 +110,13 @@ fun albumReviewScreen(
                 Column(modifier = Modifier.padding(start = 16.dp)) {
                     Text(
                         text = stringResource(id = R.string.puntaje_album),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                     )
                     Text(
                         text = stringResource(id = R.string.cantidad_usuarios_alb),
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         fontSize = 12.sp,
                     )
                 }
@@ -125,13 +126,13 @@ fun albumReviewScreen(
                     onValueChange = {},
                     readOnly = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.White,
-                        cursorColor = Color.White,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Color.White,
-                        unfocusedBorderColor = Color.White,
+                        focusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                        cursorColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                        focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary,
                     ),
                     modifier = Modifier
                         .height(50.dp)
@@ -142,7 +143,7 @@ fun albumReviewScreen(
 
             Text(
                 text = stringResource(id = R.string.resenas_album),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(start = 16.dp, end = 220.dp)
@@ -150,26 +151,22 @@ fun albumReviewScreen(
 
             Text(
                 text = stringResource(id = R.string.tipo_resenas),
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSecondary,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(end = 125.dp, top = 10.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            //Nuevo composable
-            UserReview(
-                userImage = R.drawable.drake,
-                userName = stringResource(id = R.string.persona1_user),
-                reviewText = stringResource(id = R.string.persona1_reseña),
-                isLiked = true // Cora lleno
-            )
-
-            UserReview(
-                userImage = R.drawable.tyler,
-                userName = stringResource(id = R.string.persona2_user),
-                reviewText = stringResource(id = R.string.persona2_reseña),
-                isLiked = true // Cora lleno
-            )
+            Column {
+                FalseReviewRepository.Reviews.forEach { review ->
+                    UserReview(
+                        userImage = review.imageId,
+                        userName = stringResource(id = review.usernameId),
+                        reviewText = stringResource(id = review.contentId),
+                        isLiked = true
+                    )
+                }
+            }
         }
     }
 }
@@ -177,5 +174,7 @@ fun albumReviewScreen(
 @Preview(showBackground = true, name = "AlbumReviewScreen Preview")
 @Composable
 fun albumReviewScreenPreview() {
-    albumReviewScreen()
+    Proyecto_MovilTheme {
+        albumReviewScreen()
+    }
 }

@@ -170,7 +170,7 @@ fun FormularioRegistro(
             label = { Text(stringResource(R.string.email)) },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.usuario),
+                    painter = painterResource(R.drawable.correo),
                     modifier = Modifier.size(20.dp),
                     contentDescription = "Icono de usuario",
 
@@ -198,7 +198,7 @@ fun FormularioRegistro(
             label = { Text(stringResource(R.string.contra)) },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(R.drawable.usuario),
+                    painter = painterResource(R.drawable.candado),
                     modifier = Modifier.size(20.dp),
                     contentDescription = "Icono de usuario",
 
@@ -212,7 +212,8 @@ fun FormularioRegistro(
                 }) {
                    Icon(
                        painter = painterResource(icono),
-                       contentDescription = (stringResource(R.string.mostrar_password))
+                       contentDescription = (stringResource(R.string.mostrar_password)),
+                       modifier = Modifier.size(22.dp)
                    )
                 }
             },
@@ -233,8 +234,3 @@ fun FormularioRegistro(
     }
     }
 
-@Preview (showBackground = true)
-@Composable
-fun FormularioRegistroPreview() {
-    FormularioRegistro()
-}

@@ -90,22 +90,17 @@ fun YatienesCuenta(texto : String,
     )
 }
 @Composable
-fun CheckboxDatos() {
-    var checked by remember { mutableStateOf(true) }
+fun CheckboxDatos(modifier: Modifier = Modifier) {
+    var checked by remember { mutableStateOf(false) }
 
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            "Minimal checkbox"
-        )
         Checkbox(
             checked = checked,
             onCheckedChange = { checked = it }
         )
     }
 
-    Text(
-        if (checked) "Checkbox is checked" else "Checkbox is unchecked"
-    )
 }

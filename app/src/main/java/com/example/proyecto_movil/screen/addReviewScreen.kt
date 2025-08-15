@@ -74,7 +74,7 @@ fun AddReviewScreen(
                 horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = stringResource(id = R.string.titulo_resenas),
+                    text = stringResource(id = R.string.titulo_agreresenas),
                     color = Color.White,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold

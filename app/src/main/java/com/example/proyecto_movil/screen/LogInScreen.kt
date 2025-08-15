@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,31 +51,28 @@ fun LoginScreen(
 
     val bg = Color(0xFF0E0E0E)
     val card = Color(0xFF151515)
-    val accent = Color(0xFF20D0C2)
     val fieldText = Color(0xFFEDEDED)
     val hint = Color(0xFF9A9A9A)
+    val accent = Color(0xFF20D0C2)
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(bg)
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Back button
         IconButton(
             onClick = onBack,
             modifier = Modifier
-                .align(Alignment.TopStart)
+                .align(Alignment.Start)
                 .padding(top = 8.dp)
         ) {
             Icon(Icons.Default.ArrowBack, contentDescription = "Atrás", tint = Color.White)
         }
+        Spacer(modifier = Modifier.weight(1f))
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-            , horizontalAlignment = Alignment.CenterHorizontally) {
             // Logo placeholder (circle with 3 diagonal lines)
             Image(
                 painter = painterResource(id = R.drawable.logo),
@@ -151,34 +150,54 @@ fun LoginScreen(
                 fontSize = 13.sp
             )
             Spacer(Modifier.height(12.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                IconButton(onClick = { /* Google */ }) {
-                    Icon(painter = painterResource(id = R.drawable.google), contentDescription = "Google", tint = Color.Unspecified)
-                }
-                IconButton(onClick = { /* Facebook */ }) {
-                    Icon(painter = painterResource(id = R.drawable.facebook), contentDescription = "Facebook", tint = Color.Unspecified)
-                }
-                IconButton(onClick = { /* Apple */ }) {
-                    Icon(painter = painterResource(id = R.drawable.manzana), contentDescription = "Apple", tint = Color.Unspecified)
-                }
-            }
-
+            SocialButtons()
             Spacer(Modifier.height(22.dp))
-            Row {
-                Text(stringResource(R.string.no_tienes_una_cuenta), color = hint, fontSize = 13.sp)
-                Text(
-                    stringResource(R.string.reg_strate),
-                    color = accent,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.clickable { onRegister() }
-                )
-            }
+            RegisterOrCreateAccount()
+
+
+        Spacer(Modifier.weight(1f))
+    }
+}
+
+@Composable
+fun RegisterOrCreateAccount(
+    modifier: Modifier = Modifier,
+){
+    val accent = Color(0xFF20D0C2)
+    val hint = Color(0xFF9A9A9A)
+
+    Row(
+        modifier = modifier
+    ) {
+        Text(stringResource(R.string.no_tienes_una_cuenta), color = hint, fontSize = 13.sp)
+        Text(
+            stringResource(R.string.reg_strate),
+            color = accent,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.clickable { }
+        )
+    }
+}
+
+@Composable
+private fun SocialButtons(
+    modifier: Modifier = Modifier
+){
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        IconButton(onClick = { /* Google */ }) {
+            Icon(painter = painterResource(id = R.drawable.google), contentDescription = "Google", tint = Color.Unspecified)
+        }
+        IconButton(onClick = { /* Facebook */ }) {
+            Icon(painter = painterResource(id = R.drawable.facebook), contentDescription = "Facebook", tint = Color.Unspecified)
+        }
+        IconButton(onClick = { /* Apple */ }) {
+            Icon(painter = painterResource(id = R.drawable.manzana), contentDescription = "Apple", tint = Color.Unspecified)
         }
     }
 }

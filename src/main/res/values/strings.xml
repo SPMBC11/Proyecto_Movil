@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">critichord</string>
+<string name="nombre">nombre</string>
+    <string name="nombre_usuario">nombre de usuario</string>
+    <string name="registrarse">registrarse</string>
+    <string name="email">Email</string>
+    <string name="contra">Contraseña</string>
+    <string name="mostrar_password">Mostrar password</string>
+    <string name="registrar">Registrar</string>
+
+</resources>

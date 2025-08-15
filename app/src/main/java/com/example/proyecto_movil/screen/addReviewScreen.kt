@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.colorResource // Importa colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -165,7 +166,7 @@ fun AddReviewScreen(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp) // Espacio entre el OutlinedTextField y la imagen
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedTextField(
                         value = "97%",
@@ -227,7 +228,7 @@ fun AddReviewScreen(
             ) {
                 Button(
                     onClick = onCancelarClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF333333)),
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.grisCriti)), // Solución aquí
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.weight(1f)
                 ) {
@@ -235,7 +236,7 @@ fun AddReviewScreen(
                 }
                 Button(
                     onClick = onPublicarClick,
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF06A0B5)),
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.azulCriti)), // Solución aquí
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.weight(1f)
                 ) {

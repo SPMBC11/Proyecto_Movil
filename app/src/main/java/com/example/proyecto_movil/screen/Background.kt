@@ -38,7 +38,7 @@ fun BackGroundImage(
             Image(
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
-                modifier = Modifier.size(100.dp) // Ajusta tamaño del logo
+                modifier = Modifier.size(12.dp) // Ajusta tamaño del logo
             )
 
             Spacer(modifier = Modifier.height(16.dp)) // Espacio entre logo y texto

@@ -2,11 +2,9 @@ package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +32,7 @@ import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
 fun WelcomeScreen(onStartClick: () -> Unit) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
@@ -45,20 +43,23 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             contentDescription = "Imagen principal",
             contentScale = ContentScale.Crop,
             modifier = Modifier
+                .fillMaxWidth()
                 .height(500.dp)
         )
 
         // Contenedor negro redondeado que se superpone
         Column(
             modifier = Modifier
-                .fillMaxHeight()
-                .padding(horizontal = 30.dp)
-                .background(Color.Black),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .align(Alignment.BottomCenter)
+                .offset(y = (-50).dp) // Para superponer sobre la imagen
+                .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                .background(Color.Black)
+                .padding(24.dp)
         ) {
             Text(
-                text = stringResource(R.string.lleva_registro_de_tus_canciones_y_lbumes_favoritos),
+                text = "LLeva registro de tus canciones y álbumes favoritos",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -67,16 +68,15 @@ fun WelcomeScreen(onStartClick: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(R.string.guarda_aquellos_que_quieras_escuchar),
+                text = "Guarda aquellos que quieras escuchar",
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 14.sp
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
-
             Text(
-                text = stringResource(R.string.y_dile_al_mundo_qu_piensas_de_ellos),
+                text = "Y dile al mundo qué piensas de ellos",
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 14.sp
             )

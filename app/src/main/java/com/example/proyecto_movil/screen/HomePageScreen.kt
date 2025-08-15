@@ -62,8 +62,8 @@ fun HomeScreen(
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(bottom = 8.dp)
             ) {
                 item {
                     SectionRow(
@@ -91,9 +91,9 @@ fun HomeScreen(
                     SectionRow(
                         title = "Popular entre amigos",
                         albums = listOf(
-                            AlbumUi(R.drawable.swag, "SWAG", ""),
-                            AlbumUi(R.drawable.billie, "HIT ME HARD AND SOFT", ""),
-                            AlbumUi(R.drawable.dbtmf, "DbTmF", "")
+                            AlbumUi(R.drawable.swag, "SWAG", "Justin Bieber"),
+                            AlbumUi(R.drawable.billie, "HIT ME HARD AND SOFT", "Billie Eilish"),
+                            AlbumUi(R.drawable.dbtmf, "DbTmF", "Bad Bunny")
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -151,7 +151,7 @@ private fun HeaderSection() {
                 imageVector = Icons.Filled.Settings,
                 contentDescription = stringResource(id = R.string.ajustes_icon),
                 modifier = Modifier
-                    .align(Alignment.TopEnd as Alignment.Vertical)
+                    .align(Alignment.Top)
                     .padding(30.dp)
                     .size(30.dp),
                 tint = Color.White
@@ -210,7 +210,7 @@ private fun SectionRow(
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
         )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(1.dp)) {
             items(albums) { album ->
                 AlbumCard(album = album) { onAlbumClick(album) }
             }
@@ -225,7 +225,7 @@ private fun AlbumCard(
 ) {
     Column(
         modifier = Modifier
-            .width(210.dp)
+            .width(130.dp)
             .clickable { onClick() },
         horizontalAlignment = Alignment.Start
     ) {
@@ -233,7 +233,7 @@ private fun AlbumCard(
             painter = painterResource(id = album.coverRes),
             contentDescription = album.title,
             modifier = Modifier
-                .size(width = 110.dp, height = 110.dp)
+                .size(100.dp)
                 .clip(RoundedCornerShape(8.dp)),
             contentScale = ContentScale.Crop
         )
@@ -241,7 +241,7 @@ private fun AlbumCard(
         Text(
             text = album.title,
             color = Color.White,
-            fontSize = 18.sp,
+            fontSize = 8.sp,
             fontWeight = FontWeight.ExtraBold,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -250,7 +250,7 @@ private fun AlbumCard(
             Text(
                 text = album.artist,
                 color = Color.White.copy(alpha = 0.85f),
-                fontSize = 14.sp
+                fontSize = 10.sp
             )
         }
     }

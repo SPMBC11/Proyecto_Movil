@@ -19,6 +19,7 @@
     <string name="titulo_resenas">Reseñas</string>
     <string name="fondo_degradado">Fondo degradado azul</string>
     <string name="ajustes_icon">Icono de ajustes</string>
+    <string name="imagen_album">Imagen del album reseña</string>
     <string name="titulo_album">CIRCLES</string>
     <string name="artista_album">Mac Miller</string>
     <string name="ano_album">(2020)</string>

@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
+import com.example.proyecto_movil.utils.recursos.AlbumUi
 
 @Composable
 fun HomeScreen(
@@ -189,13 +190,6 @@ private fun SearchBar() {
             .height(52.dp)
     )
 }
-
-data class AlbumUi(
-    val coverRes: Int,
-    val title: String,
-    val artist: String
-)
-
 @Composable
 private fun SectionRow(
     title: String,

@@ -1,5 +1,6 @@
 package com.example.critichord.ui
 import android.graphics.Color
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,12 @@ import com.example.critichord.ui.utils.YatienesCuenta
 fun RegisterScreen2(
     modifier: Modifier = Modifier
 ){
+    var click = 0;
+    var nombrePersona by remember { mutableStateOf("") }
+    var nombreUsuario by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Box(
         modifier = modifier,
     ){
@@ -63,7 +70,17 @@ fun RegisterScreen2(
             Spacer(Modifier.height(60.dp))
             Registrate("Registrate")
             Spacer(Modifier.height(10.dp))
-            FormularioRegistro()
+            FormularioRegistro(
+                nombrePersona = nombrePersona,
+                nombreUsuario = nombreUsuario,
+                email = email,
+                password = password,
+                onNombrePersonaChange = { nombrePersona = it },
+                onNombreUsuarioChange = { nombreUsuario = it },
+                onEmailChange = { email = it },
+                onPasswordChange = { password = it },
+
+            )
             Spacer(Modifier.height(30.dp))
             Row( modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,){
@@ -75,7 +92,13 @@ fun RegisterScreen2(
             }
             Spacer(Modifier.height(30.dp))
             AppButton(
-                stringResource(R.string.registrar)
+                stringResource(R.string.registrar),
+               onClick = {
+                   Log.d("RegisterScreen2", "nombrePersona: $nombrePersona")
+                Log.d("RegisterScreen2", "nombreUsuario: $nombreUsuario")
+                Log.d("RegisterScreen2", "email: $email")
+                Log.d("RegisterScreen2", "password: $password")
+                }
             )
             Spacer(Modifier.height(30.dp))
             YatienesCuenta("Ya tienes una cuenta? inicia sesion")
@@ -96,21 +119,23 @@ fun RegisterScreen2Preview() {
 
 @Composable
 fun FormularioRegistro(
+    nombrePersona: String = "",
+    nombreUsuario: String = "",
+    email: String = "",
+    password: String = "",
+    onNombrePersonaChange: (String) -> Unit ,
+    onNombreUsuarioChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit ,
+    onPasswordChange: (String) -> Unit ,
     modifier: Modifier = Modifier
 
 ){
-    var nombrePersona by remember { mutableStateOf("") }
-    var nombreUsuario by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier){
         OutlinedTextField(
             value = nombrePersona,
-            onValueChange = {
-                nombrePersona = it
-            },
+            onValueChange = onNombrePersonaChange,
             label = { Text(stringResource(R.string.nombre)) },
             leadingIcon = {
                 Icon(
@@ -136,9 +161,8 @@ fun FormularioRegistro(
         )
         OutlinedTextField(
             value = nombreUsuario,
-            onValueChange = {
-                nombreUsuario = it
-            },
+            onValueChange =
+              onNombreUsuarioChange,
             label = { Text(stringResource(R.string.nombre_usuario)) },
             leadingIcon = {
                 Icon(
@@ -164,9 +188,8 @@ fun FormularioRegistro(
 
         OutlinedTextField(
             value = email,
-            onValueChange = {
-                email = it
-            },
+            onValueChange =
+             onEmailChange,
             label = { Text(stringResource(R.string.email)) },
             leadingIcon = {
                 Icon(
@@ -192,9 +215,7 @@ fun FormularioRegistro(
         var icono = if (mostrarPassword)  R.drawable.view else R.drawable.hide
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
+            onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.contra)) },
             leadingIcon = {
                 Icon(

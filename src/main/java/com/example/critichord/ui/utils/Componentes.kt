@@ -36,10 +36,11 @@ fun LogoApp(
 @Composable
 fun AppButton(
     Textoboton: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = colorResource(R.color.cian),
             contentColor = colorResource(R.color.white)

@@ -111,5 +111,8 @@ fun CheckboxDatos(modifier: Modifier = Modifier) {
         )
     }
 
+
+
+
 }
 

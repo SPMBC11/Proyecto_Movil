@@ -22,7 +22,6 @@ fun AddReviewScreen(
     onCancelarClick: () -> Unit = {}
 ) {
     ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
-        // Es un BoxScope: aquí sí podemos alinear
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
 
         Column(

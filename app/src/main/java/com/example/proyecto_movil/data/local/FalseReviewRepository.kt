@@ -6,13 +6,13 @@ object FalseReviewRepository {
     val Reviews = listOf(
         ReviewInfo(
             imageId = R.drawable.drake,
-            usernameId = "Drake",
-            contentId = "Interesante"
+            username = "Drake",
+            content = "Interesante"
         ),
         ReviewInfo(
             imageId = R.drawable.tyler,
-            usernameId = "Tyler",
-            contentId = "Nos hace falta macsito :("
+            username = "Tyler", 
+            content = "Nos hace falta macsito :("
         )
     )
 }

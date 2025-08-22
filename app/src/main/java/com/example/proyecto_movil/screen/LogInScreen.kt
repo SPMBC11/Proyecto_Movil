@@ -19,11 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-<<<<<<< HEAD
-=======
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.colorResource
->>>>>>> 01711e02a16b4d52a400d6fdd5eb814d6e64be16
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,19 +49,11 @@ fun LoginScreen(
     var remember by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
 
-<<<<<<< HEAD
-    val bg = Color(0xFF0E0E0E)
-    val card = Color(0xFF151515)
-    val accent = Color(0xFF20D0C2)
-    val fieldText = Color(0xFFEDEDED)
-    val hint = Color(0xFF9A9A9A)
-=======
     val bg = colorResource(R.color.black)
     val card = colorResource(R.color.black)
     val fieldText = colorResource(R.color.white)
     val hint = colorResource(R.color.gris)
     val accent = colorResource(R.color.teal_200)
->>>>>>> 01711e02a16b4d52a400d6fdd5eb814d6e64be16
 
     Box(
         modifier = Modifier

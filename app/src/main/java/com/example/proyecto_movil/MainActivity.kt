@@ -14,21 +14,21 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.screen.BackGroundImage
 
+// navegacion
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import com.example.proyecto_movil.navigation.AppNavHost
+
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Proyecto_movilTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    // Opción A: solo tu pantalla
-                    LaunchScreenUI(modifier = Modifier.padding(innerPadding))
-
-                    // Opción B: usa Greeting si lo quieres y está definido como @Composable
-                    // Greeting(name = "Android", modifier = Modifier.padding(innerPadding))
-                }
+                AppNavHost()
             }
         }
+
     }
 }
 

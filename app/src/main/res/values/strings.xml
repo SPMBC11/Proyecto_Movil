@@ -11,8 +11,7 @@
     <string name="contin_a_con_apple">Continúa con Apple</string>
     <string name="contin_a_con_google">Continúa con Google</string>
     <string name="logu_ate_con_tus_datos_de_acceso">Loguéate con tus datos de acceso</string>
-<<<<<<< HEAD
-=======
+
     <string name="y_dile_al_mundo_qu_piensas_de_ellos">Y dile al mundo qué piensas de ellos</string>
     <string name="guarda_aquellos_que_quieras_escuchar">Guarda aquellos que quieras escuchar</string>
     <string name="Guarda_aquellos">Guarda aquellos que quieras escuchar</string>
@@ -47,5 +46,4 @@
     <string name="mostrar_password">Mostrar password</string>
     <string name="registrar">Registrar</string>
 
->>>>>>> 01711e02a16b4d52a400d6fdd5eb814d6e64be16
 </resources>

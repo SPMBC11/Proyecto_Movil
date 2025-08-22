@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.utils.*
 
+//Comentario de prueba
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddReviewScreen(

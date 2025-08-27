@@ -1,6 +1,7 @@
 package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable // 👈 nuevo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape // 👈 nuevo
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip // 👈 nuevo
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,11 +43,11 @@ import com.example.proyecto_movil.utils.SectionTitle
 import com.example.proyecto_movil.utils.ScreenBackground
 import com.example.proyecto_movil.utils.SettingsIcon
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun albumReviewScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onArtistClick: () -> Unit = {} // 👈 nuevo
 ) {
     ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
@@ -64,6 +67,18 @@ fun albumReviewScreen(
                 title = stringResource(id = R.string.titulo_album),
                 artist = stringResource(id = R.string.artista_album),
                 year = stringResource(id = R.string.ano_album)
+            )
+
+            // 👇 Foto de perfil del artista, CLICKEABLE para ir a Artistpage
+            Spacer(Modifier.height(16.dp))
+            Image(
+                painter = painterResource(id = R.drawable.sabrina), // usa el drawable de tu artista
+                contentDescription = "Foto de perfil del artista",
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape)
+                    .clickable { onArtistClick() }, // 👈 navegación
+                contentScale = ContentScale.Crop
             )
 
             Spacer(Modifier.height(20.dp))
@@ -87,8 +102,8 @@ fun albumReviewScreen(
                 FalseReviewRepository.Reviews.forEach { review ->
                     UserReview(
                         userImage = review.imageId,
-                        userName = review.username, // Usa el nombre directo
-                        reviewText = review.content, // Usa el contenido directo
+                        userName = review.username,
+                        reviewText = review.content,
                         isLiked = true
                     )
                 }

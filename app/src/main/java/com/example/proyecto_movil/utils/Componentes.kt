@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -164,6 +166,20 @@ fun FotoAlbumArtista(
 
     )
 }
+@Composable
+fun FotoAlbumArtistaPeque(
+    idImage : Int,
+    modifier: Modifier = Modifier
+){
+    Image(
+        painter = painterResource(idImage),
+        contentDescription = "Imagen de perfil",
+        modifier = modifier
+            .padding(8.dp)
+            .size(55.dp)
+
+    )
+}
 
 @Composable
 fun FotoPerfilArtista(
@@ -181,6 +197,17 @@ fun FotoPerfilArtista(
         contentScale = ContentScale.Crop
     )
 }
+@Composable
+fun BotonEscribir(
+    modifier: Modifier = Modifier,
+    tint: Color = Color.White
+) {
+    Image(
+        painter = painterResource(id = R.drawable.editar),
+        contentDescription = ("Logo editar"),
+        modifier = Modifier.size(15.dp)
+    )
+}
 
 @Composable
 fun TituloAlbum(
@@ -190,6 +217,52 @@ fun TituloAlbum(
     Text(
         text = texto,
         fontSize = 20.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = colorResource(R.color.white),
+        modifier = modifier.fillMaxWidth()
+            .wrapContentWidth(Alignment.Start),
+        textAlign = TextAlign.Center
+    )
+}
+@Composable
+fun TituloArtistaPeque(
+    texto : String,
+    modifier: Modifier = Modifier
+){
+    Text(
+        text = texto,
+        fontSize = 10.sp,
+        fontWeight = FontWeight.Medium,
+        color = colorResource(R.color.grisCLaro),
+        modifier = modifier.fillMaxWidth()
+            .wrapContentWidth(Alignment.Start),
+        textAlign = TextAlign.Center
+    )
+}
+
+@Composable
+fun TituloAlbumPeque(
+    texto : String,
+    modifier: Modifier = Modifier
+){
+    Text(
+        text = texto,
+        fontSize = 10.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = colorResource(R.color.white),
+        modifier = modifier.fillMaxWidth()
+            .wrapContentWidth(Alignment.Start),
+        textAlign = TextAlign.Center
+    )
+}
+@Composable
+fun DescripcionLista(
+    texto : String,
+    modifier: Modifier = Modifier
+){
+    Text(
+        text = texto,
+        fontSize = 13.sp,
         fontWeight = FontWeight.SemiBold,
         color = colorResource(R.color.white),
         modifier = modifier.fillMaxWidth()

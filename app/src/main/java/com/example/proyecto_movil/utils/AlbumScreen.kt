@@ -52,6 +52,7 @@ fun SettingsIcon(
     )
 }
 
+
 @Composable
 fun TitleBar(
     text: String,

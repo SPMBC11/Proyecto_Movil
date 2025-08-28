@@ -1,5 +1,6 @@
 package com.example.proyecto_movil.ui.utils
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
@@ -297,5 +298,40 @@ fun FechaAlbum(
         modifier = modifier,
         textAlign = TextAlign.Center
     )
+}
+@Composable
+fun BotonGuardar(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(R.color.teal_200),
+            contentColor = colorResource(R.color.white)
+        ),
+        modifier = modifier
+    ) {
+        Text(text)
+    }
+}
+@Composable
+fun BotonEditarImagen(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = onClick,
+        border = BorderStroke(1.dp, colorResource(R.color.white)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(R.color.grisOscuro),
+            contentColor = colorResource(R.color.white)
+        ),
+        modifier = modifier
+    ) {
+        Text(text)
+    }
 }
 

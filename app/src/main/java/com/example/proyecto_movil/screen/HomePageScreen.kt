@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.utils.recursos.AlbumUi
+import com.example.proyecto_movil.utils.recursos.ArtistUI
 
 @Composable
 fun HomeScreen(
@@ -39,7 +40,7 @@ fun HomeScreen(
     onProfileClick: () -> Unit = {}
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        // Fondo (puedes usar el mismo de AddReviewScreen)
+        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondocriti),
             contentDescription = stringResource(id = R.string.fondo_degradado),
@@ -70,9 +71,9 @@ fun HomeScreen(
                     SectionRow(
                         title = "Novedades",
                         albums = listOf(
-                            AlbumUi(R.drawable.tyler_dttg, "DON'T TAP THE GLASS", "Tyler, The Creator"),
-                            AlbumUi(R.drawable.mcmiller, "CIRCLES", "Mac Miller"),
-                            AlbumUi(R.drawable.feid, "FERXXO VOL 10: SAGRADO", "Feid")
+                            AlbumUi(1, R.drawable.tyler_dttg, "DON'T TAP THE GLASS", "2024", ArtistUI(1, "Tyler, The Creator", "Pop", "Tyler, The Creator")),
+                            AlbumUi(2, R.drawable.mcmiller, "CIRCLES", "2020", ArtistUI(2, "Mac Miller", "Hip Hop", "Mac Miller")),
+                            AlbumUi(3, R.drawable.feid, "FERXXO VOL 10: SAGRADO", "2024", ArtistUI(3, "Feid", "Reggaeton", "Feid"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -81,9 +82,9 @@ fun HomeScreen(
                     SectionRow(
                         title = "Nuevo entre amigos",
                         albums = listOf(
-                            AlbumUi(R.drawable.bogota_deluxe, "BOGOTÁ (DELUXE)", "Andrés Cepeda"),
-                            AlbumUi(R.drawable.epistolares, "EPISTOLARES+", "AKRIILA"),
-                            AlbumUi(R.drawable.babylon, "BABYLON CLUB", "Danny Ocean")
+                            AlbumUi(4, R.drawable.bogota_deluxe, "BOGOTÁ (DELUXE)", "2023", ArtistUI(4, "Andrés Cepeda", "Balada", "Andrés Cepeda")),
+                            AlbumUi(5, R.drawable.epistolares, "EPISTOLARES+", "2024", ArtistUI(5, "AKRIILA", "Hip Hop", "AKRIILA")),
+                            AlbumUi(6, R.drawable.babylon, "BABYLON CLUB", "2024", ArtistUI(6, "Danny Ocean", "Pop", "Danny Ocean"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -92,9 +93,9 @@ fun HomeScreen(
                     SectionRow(
                         title = "Popular entre amigos",
                         albums = listOf(
-                            AlbumUi(R.drawable.swag, "SWAG", "Justin Bieber"),
-                            AlbumUi(R.drawable.billie, "HIT ME HARD AND SOFT", "Billie Eilish"),
-                            AlbumUi(R.drawable.dbtmf, "DbTmF", "Bad Bunny")
+                            AlbumUi(7, R.drawable.swag, "SWAG", "2013", ArtistUI(7, "Justin Bieber", "Pop", "Justin Bieber")),
+                            AlbumUi(8, R.drawable.billie, "HIT ME HARD AND SOFT", "2024", ArtistUI(8, "Billie Eilish", "Pop", "Billie Eilish")),
+                            AlbumUi(9, R.drawable.dbtmf, "DbTmF", "2024", ArtistUI(9, "Bad Bunny", "Reggaeton", "Bad Bunny"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -146,7 +147,6 @@ private fun HeaderSection() {
             }
         }
 
-        // Iconitos de la derecha (simples placeholders)
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Icon(
                 imageVector = Icons.Filled.Settings,
@@ -240,9 +240,9 @@ private fun AlbumCard(
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
-        if (album.artist.isNotBlank()) {
+        if (album.artist.name.isNotBlank()) {
             Text(
-                text = album.artist,
+                text = album.artist.name,
                 color = Color.White.copy(alpha = 0.85f),
                 fontSize = 10.sp
             )
@@ -304,10 +304,12 @@ private fun BottomBarItem(
     }
 }
 
-/* ---------- Preview ---------- */
-
 @Preview(showBackground = true, name = "HomeScreen Preview")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(
+        onAlbumClick = {},
+        onHomeClick = {},
+        onProfileClick = {}
+    )
 }

@@ -7,4 +7,3 @@ data class AlbumUi(
     val year: String,
     val artist: ArtistUI
 )
-

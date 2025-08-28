@@ -8,10 +8,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument // ✅ IMPORT CORRECTO
+import androidx.navigation.navArgument
 
-import com.example.proyecto_movil.data.local.Catalog // ✅ si usas Catalog
-import com.example.proyecto_movil.screen.* // ✅ trae WelcomeScreen, LoginScreen, Artistpage, etc.
+import com.example.proyecto_movil.data.local.Catalog
+import com.example.proyecto_movil.screen.*
 
 @Composable
 fun AppNavHost(
@@ -73,7 +73,8 @@ fun AppNavHost(
         }
 
         composable(Screen.Profile.route) {
-            UserProfileScreen()
+            // Se pasa 'true' porque se asume que esta es la ruta para "mi perfil"
+            UserProfileScreen(isCurrentUserProfile = true)
         }
 
         // ---------- ALBUM (SIN ID) ----------

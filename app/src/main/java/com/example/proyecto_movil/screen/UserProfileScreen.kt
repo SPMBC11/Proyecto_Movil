@@ -35,7 +35,7 @@ import com.example.proyecto_movil.utils.SettingsIcon
 import com.example.proyecto_movil.utils.SectionTitle
 
 @Composable
-fun UserProfileScreen(modifier: Modifier = Modifier) {
+fun UserProfileScreen(isCurrentUserProfile: Boolean, modifier: Modifier = Modifier) {
     val profileInfo = FalseProfileInfoRepository.profile
     val favoriteAlbums = FalseAlbumProfRepository.albums
     val userReviews = FalseReviewProfRepository.reviews
@@ -57,7 +57,6 @@ fun UserProfileScreen(modifier: Modifier = Modifier) {
             SettingsIcon()
         }
 
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,7 +70,8 @@ fun UserProfileScreen(modifier: Modifier = Modifier) {
                     userImageRes = profileInfo.imageId,
                     userName = profileInfo.username,
                     followers = profileInfo.followers,
-                    following = profileInfo.following
+                    following = profileInfo.following,
+                    isCurrentUserProfile = isCurrentUserProfile
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -143,7 +143,8 @@ fun ProfileHeader(
     userImageRes: Int,
     userName: String,
     followers: Int,
-    following: Int
+    following: Int,
+    isCurrentUserProfile: Boolean
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -181,6 +182,34 @@ fun ProfileHeader(
                     text = "$following siguiendo",
                     color = colorResource(id = R.color.white).copy(alpha = 0.7f)
                 )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            if (isCurrentUserProfile) {
+                OutlinedButton(
+                    onClick = { /* TODO: Lógica para seguir */ },
+                    modifier = Modifier.height(30.dp),
+                    shape = RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = colorResource(id = R.color.white),
+                        containerColor = Color.Transparent
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
+                ) {
+                    Text(text = "Editar Perfil", fontSize = 12.sp)
+                }
+            } else {
+                OutlinedButton(
+                    onClick = { /* TODO: Lógica para seguir */ },
+                    modifier = Modifier.height(30.dp),
+                    shape = RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = colorResource(id = R.color.white),
+                        containerColor = Color.Transparent
+                    ),
+                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
+                ) {
+                    Text(text = "Seguir", fontSize = 12.sp)
+                }
             }
         }
     }
@@ -303,10 +332,18 @@ fun ScoreBadge(
     }
 }
 
-@Preview(showBackground = true, name = "UserProfileScreen Preview")
+@Preview(showBackground = true, name = "My Profile Preview")
 @Composable
-fun UserProfileScreenPreview() {
+fun MyProfileScreenPreview() {
     Proyecto_movilTheme {
-        UserProfileScreen()
+        UserProfileScreen(isCurrentUserProfile = true)
+    }
+}
+
+@Preview(showBackground = true, name = "Other User Profile Preview")
+@Composable
+fun OtherUserProfileScreenPreview() {
+    Proyecto_movilTheme {
+        UserProfileScreen(isCurrentUserProfile = false)
     }
 }

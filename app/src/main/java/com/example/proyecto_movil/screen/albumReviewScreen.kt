@@ -1,37 +1,20 @@
 package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable // 👈 nuevo
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape // 👈 nuevo
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip // 👈 nuevo
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.local.FalseReviewRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
@@ -42,12 +25,15 @@ import com.example.proyecto_movil.utils.ScoreRow
 import com.example.proyecto_movil.utils.SectionTitle
 import com.example.proyecto_movil.utils.ScreenBackground
 import com.example.proyecto_movil.utils.SettingsIcon
+import com.example.proyecto_movil.utils.recursos.AlbumUi
+import com.example.proyecto_movil.utils.recursos.ArtistUI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun albumReviewScreen(
+    album: AlbumUi,
     modifier: Modifier = Modifier,
-    onArtistClick: () -> Unit = {} // 👈 nuevo
+    onArtistClick: () -> Unit = {}
 ) {
     ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
@@ -63,21 +49,21 @@ fun albumReviewScreen(
             Spacer(Modifier.height(32.dp))
 
             AlbumHeader(
-                coverRes = R.drawable.mcmiller,
-                title = stringResource(id = R.string.titulo_album),
-                artist = stringResource(id = R.string.artista_album),
-                year = stringResource(id = R.string.ano_album)
+                coverRes = album.coverRes,     // ✅
+                title    = album.title,         // ✅
+                artist   = album.artist.name,   // ✅
+                year     = album.year           // ✅
             )
 
-            // 👇 Foto de perfil del artista, CLICKEABLE para ir a Artistpage
             Spacer(Modifier.height(16.dp))
+
             Image(
-                painter = painterResource(id = R.drawable.sabrina), // usa el drawable de tu artista
-                contentDescription = "Foto de perfil del artista",
+                painter = painterResource(id = album.coverRes), // ✅ nada de R.drawable.sabrina
+                contentDescription = "Foto de ${album.artist.name}",
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape)
-                    .clickable { onArtistClick() }, // 👈 navegación
+                    .clickable { onArtistClick() },
                 contentScale = ContentScale.Crop
             )
 
@@ -85,14 +71,14 @@ fun albumReviewScreen(
 
             ScoreRow(
                 scoreLabel = stringResource(id = R.string.puntaje_album),
-                usersHint = stringResource(id = R.string.cantidad_usuarios_alb),
+                usersHint  = stringResource(id = R.string.cantidad_usuarios_alb),
                 scoreValue = "97%"
             )
 
             Spacer(Modifier.height(16.dp))
 
             SectionTitle(
-                title = stringResource(id = R.string.resenas_album),
+                title    = stringResource(id = R.string.resenas_album),
                 subtitle = stringResource(id = R.string.tipo_resenas)
             )
 
@@ -102,9 +88,9 @@ fun albumReviewScreen(
                 FalseReviewRepository.Reviews.forEach { review ->
                     UserReview(
                         userImage = review.imageId,
-                        userName = review.username,
-                        reviewText = review.content,
-                        isLiked = true
+                        userName  = review.username,
+                        reviewText= review.content,
+                        isLiked   = true
                     )
                 }
             }
@@ -112,10 +98,12 @@ fun albumReviewScreen(
     }
 }
 
-@Preview(showBackground = true, name = "AlbumReviewScreen Preview")
+@Preview(showBackground = true,)
 @Composable
 fun albumReviewScreenPreview() {
-    Proyecto_movilTheme {
-        albumReviewScreen()
-    }
+    albumReviewScreen(
+        album = TODO(),
+        modifier = TODO(),
+        onArtistClick = TODO()
+    )
 }

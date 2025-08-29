@@ -14,7 +14,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +32,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.utils.recursos.AlbumUi
 import com.example.proyecto_movil.utils.recursos.ArtistUI
@@ -35,7 +41,7 @@ import com.example.proyecto_movil.utils.recursos.ArtistUI
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onAlbumClick: (AlbumUi) -> Unit = {},
+    onAlbumClick: (AlbumUi) -> Unit = {},     // 👉 Se invoca al tocar un álbum
     onHomeClick: () -> Unit = {},
     onProfileClick: () -> Unit = {}
 ) {
@@ -71,9 +77,12 @@ fun HomeScreen(
                     SectionRow(
                         title = "Novedades",
                         albums = listOf(
-                            AlbumUi(1, R.drawable.tyler_dttg, "DON'T TAP THE GLASS", "2024", ArtistUI(1, "Tyler, The Creator", "Pop", "Tyler, The Creator")),
-                            AlbumUi(2, R.drawable.mcmiller, "CIRCLES", "2020", ArtistUI(2, "Mac Miller", "Hip Hop", "Mac Miller")),
-                            AlbumUi(3, R.drawable.feid, "FERXXO VOL 10: SAGRADO", "2024", ArtistUI(3, "Feid", "Reggaeton", "Feid"))
+                            AlbumUi(1, R.drawable.tyler_dttg, "DON'T TAP THE GLASS", "2024",
+                                ArtistUI(1, "Tyler, The Creator", "Pop", "Tyler, The Creator")),
+                            AlbumUi(2, R.drawable.mcmiller, "CIRCLES", "2020",
+                                ArtistUI(2, "Mac Miller", "Hip Hop", "Mac Miller")),
+                            AlbumUi(3, R.drawable.feid, "FERXXO VOL 10: SAGRADO", "2024",
+                                ArtistUI(3, "Feid", "Reggaeton", "Feid"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -82,9 +91,12 @@ fun HomeScreen(
                     SectionRow(
                         title = "Nuevo entre amigos",
                         albums = listOf(
-                            AlbumUi(4, R.drawable.bogota_deluxe, "BOGOTÁ (DELUXE)", "2023", ArtistUI(4, "Andrés Cepeda", "Balada", "Andrés Cepeda")),
-                            AlbumUi(5, R.drawable.epistolares, "EPISTOLARES+", "2024", ArtistUI(5, "AKRIILA", "Hip Hop", "AKRIILA")),
-                            AlbumUi(6, R.drawable.babylon, "BABYLON CLUB", "2024", ArtistUI(6, "Danny Ocean", "Pop", "Danny Ocean"))
+                            AlbumUi(4, R.drawable.bogota_deluxe, "BOGOTÁ (DELUXE)", "2023",
+                                ArtistUI(4, "Andrés Cepeda", "Balada", "Andrés Cepeda")),
+                            AlbumUi(5, R.drawable.epistolares, "EPISTOLARES+", "2024",
+                                ArtistUI(5, "AKRIILA", "Hip Hop", "AKRIILA")),
+                            AlbumUi(6, R.drawable.babylon, "BABYLON CLUB", "2024",
+                                ArtistUI(6, "Danny Ocean", "Pop", "Danny Ocean"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -93,9 +105,12 @@ fun HomeScreen(
                     SectionRow(
                         title = "Popular entre amigos",
                         albums = listOf(
-                            AlbumUi(7, R.drawable.swag, "SWAG", "2013", ArtistUI(7, "Justin Bieber", "Pop", "Justin Bieber")),
-                            AlbumUi(8, R.drawable.billie, "HIT ME HARD AND SOFT", "2024", ArtistUI(8, "Billie Eilish", "Pop", "Billie Eilish")),
-                            AlbumUi(9, R.drawable.dbtmf, "DbTmF", "2024", ArtistUI(9, "Bad Bunny", "Reggaeton", "Bad Bunny"))
+                            AlbumUi(7, R.drawable.swag, "SWAG", "2013",
+                                ArtistUI(7, "Justin Bieber", "Pop", "Justin Bieber")),
+                            AlbumUi(8, R.drawable.billie, "HIT ME HARD AND SOFT", "2024",
+                                ArtistUI(8, "Billie Eilish", "Pop", "Billie Eilish")),
+                            AlbumUi(9, R.drawable.dbtmf, "DbTmF", "2024",
+                                ArtistUI(9, "Bad Bunny", "Reggaeton", "Bad Bunny"))
                         ),
                         onAlbumClick = onAlbumClick
                     )
@@ -147,17 +162,14 @@ private fun HeaderSection() {
             }
         }
 
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Icon(
-                imageVector = Icons.Filled.Settings,
-                contentDescription = stringResource(id = R.string.ajustes_icon),
-                modifier = Modifier
-                    .align(Alignment.Top)
-                    .padding(30.dp)
-                    .size(30.dp),
-                tint = Color.White
-            )
-        }
+        Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = stringResource(id = R.string.ajustes_icon),
+            modifier = Modifier
+                .padding(30.dp)
+                .size(30.dp),
+            tint = Color.White
+        )
     }
 }
 
@@ -172,7 +184,7 @@ private fun SearchBar() {
         },
         placeholder = {
             Text(
-                text = "Busca entre más 5 millones de álbumes",
+                text = "Busca entre más de 5 millones de álbumes",
                 color = Color.White.copy(alpha = 0.75f)
             )
         },
@@ -190,6 +202,7 @@ private fun SearchBar() {
             .height(52.dp)
     )
 }
+
 @Composable
 private fun SectionRow(
     title: String,
@@ -204,9 +217,12 @@ private fun SectionRow(
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
         )
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(1.dp)) {
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
             items(albums) { album ->
-                AlbumCard(album = album) { onAlbumClick(album) }
+                AlbumCard(album = album) { onAlbumClick(album) }  // 👉 pasa el álbum tocado
             }
         }
     }
@@ -220,7 +236,7 @@ private fun AlbumCard(
     Column(
         modifier = Modifier
             .width(130.dp)
-            .clickable { onClick() },
+            .clickable { onClick() }, // 👉 el toque en toda la card dispara onAlbumClick(album)
         horizontalAlignment = Alignment.Start
     ) {
         Image(
@@ -235,7 +251,7 @@ private fun AlbumCard(
         Text(
             text = album.title,
             color = Color.White,
-            fontSize = 8.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.ExtraBold,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -290,8 +306,7 @@ private fun BottomBarItem(
         modifier = Modifier.clickable { onClick() }
     ) {
         Box(
-            modifier = Modifier
-                .size(26.dp),
+            modifier = Modifier.size(26.dp),
             contentAlignment = Alignment.Center
         ) { icon() }
         Spacer(Modifier.height(4.dp))
@@ -304,12 +319,26 @@ private fun BottomBarItem(
     }
 }
 
+/* ---------- Wrapper opcional con navegación simple ---------- */
+/* Úsalo si quieres que el Home navegue sin pasar lambdas desde afuera */
+@Composable
+fun HomeScreenRoute(navController: NavController) {
+    HomeScreen(
+        onAlbumClick = { album ->
+            navController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.set("album", album)
+            navController.navigate("albumReview")
+        },
+        onHomeClick = { /* no-op */ },
+        onProfileClick = { /* navController.navigate("profile") */ }
+    )
+}
+
+/* ---------- Preview ---------- */
 @Preview(showBackground = true, name = "HomeScreen Preview")
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(
-        onAlbumClick = {},
-        onHomeClick = {},
-        onProfileClick = {}
-    )
+    val navController = rememberNavController()
+    HomeScreenRoute(navController) // Preview solo para composición; clic no navega en preview
 }

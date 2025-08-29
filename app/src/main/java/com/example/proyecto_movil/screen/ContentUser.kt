@@ -215,7 +215,7 @@ fun ContentUser(
     }
     }
 
-
+// aqui se usa la la preview del ContentUser
 @Preview(showBackground = true)
 @Composable
 fun ContentUserPreview() {

@@ -1,6 +1,6 @@
 # CritiChord
 
-¡Bienvenido al repositorio de **CritiChord**! 🎉
+¡Bienvenido al repositorio de **CritiChord**! 
 
 Este proyecto es una aplicación móvil desarrollada con **Android Studio** y **Jetpack Compose**. CritiChord es una herramienta para la crítica musical que permite a los usuarios evaluar, reseñar y descubrir música.
 

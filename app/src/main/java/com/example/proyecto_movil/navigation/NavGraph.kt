@@ -1,6 +1,5 @@
 package com.example.proyecto_movil.navigation
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,79 +9,99 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 
-import com.example.proyecto_movil.data.local.Catalog
 import com.example.proyecto_movil.screen.*
+import com.example.proyecto_movil.utils.recursos.AlbumUi
 
 @Composable
 fun AppNavHost(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = Screen.Welcome.route
 ) {
-    NavHost(navController = navController, startDestination = startDestination) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
+        modifier = modifier
+    ) {
 
-        // ---------- FLUJO AUTH ----------
+        // ---------- WELCOME ----------
         composable(Screen.Welcome.route) {
             WelcomeScreen(
                 onStartClick = { navController.navigate(Screen.SignIn.route) }
             )
         }
 
+        // ---------- SIGN IN ----------
         composable(Screen.SignIn.route) {
             SignInScreen(
                 onLoginClick = { navController.navigate(Screen.Login.route) }
             )
         }
 
+        // ---------- LOGIN ----------
         composable(Screen.Login.route) {
             LoginScreen(
                 onBack = { navController.navigateUp() },
                 onLogin = { _, _, _ ->
                     navController.navigate(Screen.Home.route) {
-                        // Limpia el backstack de auth si quieres:
                         popUpTo(Screen.Welcome.route) { inclusive = true }
                         launchSingleTop = true
                     }
                 },
                 onForgotPassword = { /* TODO */ },
                 onRegister = { navController.navigate(Screen.Register.route) },
-                onGoogle = { navController.navigate(Screen.Home.route) },
-                onFacebook = { navController.navigate(Screen.Home.route) },
-                onApple = { navController.navigate(Screen.Home.route) },
+                onGoogle = { /* TODO: auth social */ },
+                onFacebook = { /* TODO: auth social */ },
+                onApple = { /* TODO: auth social */ }
             )
         }
 
+        // ---------- REGISTER ----------
         composable(Screen.Register.route) {
             RegisterScreen2(
-                modifier = Modifier,
                 onBack = { navController.navigateUp() },
                 onRegister = { _, _, _ ->
-                    // TODO lógica registro
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
                 onLogin = { navController.navigate(Screen.Login.route) }
             )
         }
 
-        // ---------- HOME / PROFILE ----------
+        // ---------- HOME ----------
         composable(Screen.Home.route) {
             HomeScreen(
-                onAlbumClick = { _ -> navController.navigate(Screen.Album.route) }, // simple (sin id)
+                onAlbumClick = { album: AlbumUi ->
+                    navController.navigate("${Screen.Album.route}/${album.id}")
+                },
                 onHomeClick = { /* ya estás en Home */ },
                 onProfileClick = { navController.navigate(Screen.Profile.route) }
             )
         }
 
+        // ---------- PROFILE ----------
         composable(Screen.Profile.route) {
-            // Se pasa 'true' porque se asume que esta es la ruta para "mi perfil"
-            UserProfileScreen(isCurrentUserProfile = true)
+            UserProfileScreen(
+                isCurrentUserProfile = true,
+                onEditProfile = { navController.navigate(Screen.EditProfile.route) },
+                onSettings = { navController.navigate(Screen.Settings.route) },
+                onOpenContent = { navController.navigate(Screen.ContentUser.route) },
+                onBack = { navController.navigateUp() }
+            )
         }
 
-        // ---------- ALBUM (SIN ID) ----------
-        composable(Screen.Album.route) {
+        // ---------- ALBUM (con ID) ----------
+        composable(
+            route = "${Screen.Album.route}/{albumId}",
+            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            // val albumId = backStackEntry.arguments?.getInt("albumId")
             albumReviewScreen(
                 onArtistClick = {
-                    // Si quieres abrir la versión genérica de artista (sin id):
-                    navController.navigate(Screen.Artist.route)
+                    // TODO: reemplaza "1" por el artistId real si lo tienes
+                    navController.navigate("${Screen.Artist.route}/1")
                 }
             )
         }
@@ -95,46 +114,7 @@ fun AppNavHost(
             )
         }
 
-        // ---------- ARTISTA (SIN ID) ----------
-        composable(Screen.Artist.route) {
-            // Si tu Artistpage NO requiere artistId:
-            Artistpage(
-                onBack = { navController.navigateUp() },
-                onOpenAlbum = { albumId ->
-                    navController.navigate("${Screen.Album.route}/$albumId")
-                },
-                onSeeAll = { /* opcional */ }
-            )
-
-            // Si tu Artistpage SÍ requiere artistId, usa esto en su lugar:
-            // val defaultId = Catalog.artists.firstOrNull()?.id ?: return@composable
-            // Artistpage(
-            //     artistId = defaultId,
-            //     onBack = { navController.navigateUp() },
-            //     onOpenAlbum = { targetAlbumId -> navController.navigate("${Screen.Album.route}/$targetAlbumId") },
-            //     onSeeAll = { }
-            // )
-        }
-
-        // ---------- ALBUM (CON ID) ----------
-        composable(
-            route = "${Screen.Album.route}/{albumId}",
-            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
-        ) { entry ->
-            val albumId = entry.arguments?.getInt("albumId") ?: return@composable
-            val album = Catalog.albumById(albumId)
-            if (album == null) {
-                navController.navigateUp(); return@composable
-            }
-            albumReviewScreen(
-                onArtistClick = {
-                    // Desde un álbum concreto, abre el artista con id:
-                    navController.navigate("${Screen.Artist.route}/${album.artistId}")
-                }
-            )
-        }
-
-        // ---------- ARTISTA (CON ID) ----------
+        // ---------- ARTISTA (con ID) ----------
         composable(
             route = "${Screen.Artist.route}/{artistId}",
             arguments = listOf(navArgument("artistId") { type = NavType.IntType })
@@ -147,6 +127,31 @@ fun AppNavHost(
                     navController.navigate("${Screen.Album.route}/$targetAlbumId")
                 },
                 onSeeAll = { /* opcional */ }
+            )
+        }
+
+        // ---------- SETTINGS ----------
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                onBackClick = { navController.navigateUp() }
+            )
+        }
+
+        // ---------- EDITAR PERFIL ----------
+        composable(Screen.EditProfile.route) {
+            EditarPerfil(
+                onBackClick = { navController.navigateUp() },
+                onBack = { navController.navigateUp() }
+            )
+        }
+
+        // ---------- CONTENT USER ----------
+        composable(Screen.ContentUser.route) {
+            ContentUser(
+                onBack = { navController.navigateUp() },
+                onOpenAlbum = { albumId ->
+                    navController.navigate("${Screen.Album.route}/$albumId")
+                }
             )
         }
     }

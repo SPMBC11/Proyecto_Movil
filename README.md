@@ -47,9 +47,11 @@ El diseño de las interfaces de usuario se puede ver en las **cuatro pantallas**
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📁 Estructura del proyecto
 
-El proyecto sigue una estructura de directorios estándar de Android, organizada para facilitar el desarrollo con Jetpack Compose.
+El proyecto sigue una estructura estándar de Android, organizada para facilitar el desarrollo con Jetpack Compose.
+
+```text
 spmbc11-proyecto_movil/
 ├── app/
 │   ├── build.gradle.kts
@@ -116,6 +118,7 @@ spmbc11-proyecto_movil/
 │       │       └── xml/
 │       └── test/
 └── (otros archivos y directorios de Gradle)
+```
 
 * `data/`: Contiene los repositorios y modelos de datos.
 * `navigation/`: Define las rutas y la navegación entre pantallas.

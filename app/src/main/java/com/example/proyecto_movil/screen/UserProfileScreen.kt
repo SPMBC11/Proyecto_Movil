@@ -3,6 +3,7 @@ package com.example.proyecto_movil.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,7 +36,14 @@ import com.example.proyecto_movil.utils.SettingsIcon
 import com.example.proyecto_movil.utils.SectionTitle
 
 @Composable
-fun UserProfileScreen(isCurrentUserProfile: Boolean, modifier: Modifier = Modifier) {
+fun UserProfileScreen(
+    isCurrentUserProfile: Boolean,
+    modifier: Modifier = Modifier,
+    onEditProfile: () -> Unit = {},   // ya lo tienes
+    onSettings: () -> Unit = {},      // 👈 NUEVO (rueda)
+    onOpenContent: () -> Unit = {},   // 👈 NUEVO ("Ver reseña")
+    onBack: () -> Unit = {}
+)  {
     val profileInfo = FalseProfileInfoRepository.profile
     val favoriteAlbums = FalseAlbumProfRepository.albums
     val userReviews = FalseReviewProfRepository.reviews
@@ -48,13 +56,19 @@ fun UserProfileScreen(isCurrentUserProfile: Boolean, modifier: Modifier = Modifi
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Volver",
-                tint = colorResource(id = R.color.white),
-                modifier = Modifier.size(30.dp)
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Volver",
+                    tint = colorResource(id = R.color.white),
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+            SettingsIcon(
+                modifier = Modifier
+                    .clickable { onSettings() }   // 👈 ahora navega a Configuración
             )
-            SettingsIcon()
+
         }
 
         LazyColumn(
@@ -71,7 +85,8 @@ fun UserProfileScreen(isCurrentUserProfile: Boolean, modifier: Modifier = Modifi
                     userName = profileInfo.username,
                     followers = profileInfo.followers,
                     following = profileInfo.following,
-                    isCurrentUserProfile = isCurrentUserProfile
+                    isCurrentUserProfile = isCurrentUserProfile,
+                    onEditProfile = onEditProfile
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -144,7 +159,8 @@ fun ProfileHeader(
     userName: String,
     followers: Int,
     following: Int,
-    isCurrentUserProfile: Boolean
+    isCurrentUserProfile: Boolean,
+    onEditProfile: () -> Unit = {} // ← NUEVO: para reutilizar el mismo callback en el header si quieres
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -186,7 +202,7 @@ fun ProfileHeader(
             Spacer(modifier = Modifier.height(8.dp))
             if (isCurrentUserProfile) {
                 OutlinedButton(
-                    onClick = { /* TODO: Lógica para seguir */ },
+                    onClick = onEditProfile, // ← AHORA NAVEGA A EditarPerfil
                     modifier = Modifier.height(30.dp),
                     shape = RoundedCornerShape(50.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -194,9 +210,9 @@ fun ProfileHeader(
                         containerColor = Color.Transparent
                     ),
                     border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
-                ) {
-                    Text(text = "Editar Perfil", fontSize = 12.sp)
-                }
+                )
+                 { Text(text = "Editar Perfil", fontSize = 12.sp) }
+
             } else {
                 OutlinedButton(
                     onClick = { /* TODO: Lógica para seguir */ },

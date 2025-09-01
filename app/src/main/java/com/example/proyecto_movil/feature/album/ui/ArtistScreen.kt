@@ -1,9 +1,10 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.feature.album.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -29,8 +30,8 @@ import com.example.proyecto_movil.ui.utils.TextoReseñas
 import com.example.proyecto_movil.ui.utils.TituloAlbum
 import com.example.proyecto_movil.ui.utils.TituloAlbumes
 import com.example.proyecto_movil.ui.utils.TituloArtista
-import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SettingsIcon
+import com.example.proyecto_movil.ui_components.ScreenBackground
+import com.example.proyecto_movil.ui_components.SettingsIcon
 
 @Composable
 fun Artistpage(
@@ -105,7 +106,7 @@ fun Artistpage(
                 Spacer(Modifier.height(24.dp))
                 Button(
                     onClick = onSeeAll,
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(25.dp),
+                    shape = RoundedCornerShape(25.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.azulCriti),
                         contentColor = Color.White

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.utils.SocialLoginButton
+import com.example.proyecto_movil.ui_components.SocialLoginButton
 
 @Composable
 fun SignInScreen(onLoginClick: () -> Unit) {

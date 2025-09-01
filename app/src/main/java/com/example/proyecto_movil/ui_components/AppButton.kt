@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.utils
+package com.example.proyecto_movil.ui_components
 
 
 import androidx.compose.runtime.Composable

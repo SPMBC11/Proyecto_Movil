@@ -6,13 +6,21 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.utils.*
+import com.example.proyecto_movil.ui_components.ActionButtonsRow
+import com.example.proyecto_movil.ui_components.AlbumHeader
+import com.example.proyecto_movil.ui_components.ReadOnlyField
+import com.example.proyecto_movil.ui_components.ScreenBackground
+import com.example.proyecto_movil.ui_components.SectionTitle
+import com.example.proyecto_movil.ui_components.SettingsIcon
+import com.example.proyecto_movil.ui_components.TitleBar
 
 //Comentario de prueba
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,8 +59,8 @@ fun AddReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.fecha_resena),
-                    color = androidx.compose.ui.graphics.Color.White,
-                    fontSize = androidx.compose.ui.unit.TextUnit.Unspecified,
+                    color = Color.White,
+                    fontSize = TextUnit.Unspecified,
                     modifier = Modifier.padding(start = 25.dp)
                 )
                 ReadOnlyField(
@@ -72,7 +80,7 @@ fun AddReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.puntaje_resena),
-                    color = androidx.compose.ui.graphics.Color.White,
+                    color = Color.White,
                     modifier = Modifier.padding(start = 9.dp)
                 )
 

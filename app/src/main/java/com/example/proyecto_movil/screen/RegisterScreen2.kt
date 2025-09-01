@@ -1,6 +1,6 @@
 package com.example.proyecto_movil.screen
 
-import com.example.proyecto_movil.utils.AppButton
+import com.example.proyecto_movil.ui_components.AppButton
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

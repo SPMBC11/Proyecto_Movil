@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.utils
+package com.example.proyecto_movil.ui_components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.res.stringResource
 
 @Composable
 fun UserReview(

@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SectionTitle
+import com.example.proyecto_movil.ui_components.ScreenBackground
+import com.example.proyecto_movil.ui_components.SectionTitle
 
 @Composable
 fun SettingsScreen(

@@ -1,11 +1,10 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.feature.album.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,16 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.local.FalseReviewRepository
-import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.utils.UserReview
-import com.example.proyecto_movil.utils.AlbumHeader
-import com.example.proyecto_movil.utils.TitleBar
-import com.example.proyecto_movil.utils.ScoreRow
-import com.example.proyecto_movil.utils.SectionTitle
-import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SettingsIcon
+import com.example.proyecto_movil.ui_components.UserReview
+import com.example.proyecto_movil.ui_components.AlbumHeader
+import com.example.proyecto_movil.ui_components.TitleBar
+import com.example.proyecto_movil.ui_components.ScoreRow
+import com.example.proyecto_movil.ui_components.SectionTitle
+import com.example.proyecto_movil.ui_components.ScreenBackground
+import com.example.proyecto_movil.ui_components.SettingsIcon
 import com.example.proyecto_movil.utils.recursos.AlbumUi
-import com.example.proyecto_movil.utils.recursos.ArtistUI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -31,9 +31,9 @@ import com.example.proyecto_movil.data.local.FalseAlbumProfRepository
 import com.example.proyecto_movil.data.local.FalseReviewProfRepository
 import com.example.proyecto_movil.data.local.FalseProfileInfoRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SettingsIcon
-import com.example.proyecto_movil.utils.SectionTitle
+import com.example.proyecto_movil.ui_components.ScreenBackground
+import com.example.proyecto_movil.ui_components.SettingsIcon
+import com.example.proyecto_movil.ui_components.SectionTitle
 
 @Composable
 fun UserProfileScreen(

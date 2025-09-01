@@ -17,9 +17,9 @@ import com.example.proyecto_movil.navigation.AppNavHost
 
 // 👇 Ajusta este import según dónde esté AppLogo en tu proyecto
 // Si lo creaste en ui/utils:
-import com.example.proyecto_movil.utils.AppLogo
+import com.example.proyecto_movil.ui_components.AppLogo
 // Si lo dejaste en utils (sin ui):
-// import com.example.proyecto_movil.utils.AppLogo
+// import com.example.proyecto_movil.ui_components.AppLogo
 
 // Usa tu fondo existente
 import com.example.proyecto_movil.screen.BackGroundImage

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.proyecto_movil.feature.album.ui.Artistpage
 import com.example.proyecto_movil.screen.*
 import com.example.proyecto_movil.utils.recursos.AlbumUi
 

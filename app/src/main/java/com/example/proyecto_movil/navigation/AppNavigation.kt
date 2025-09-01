@@ -1,14 +1,22 @@
 package com.example.proyecto_movil.navigation
 
+import UserReviewScreen
+import WelcomeScreen
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.proyecto_movil.R
+import com.example.proyecto_movil.data.AlbumUI
+import com.example.proyecto_movil.data.ReviewInfo
+import com.example.proyecto_movil.data.local.AlbumRepository
+import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.screen.*
-import com.example.proyecto_movil.utils.recursos.AlbumUi
 
 @Composable
 fun AppNavHost(
@@ -60,8 +68,7 @@ fun AppNavHost(
         // ---------- HOME ----------
         composable(Screen.Home.route) {
             HomeScreen(
-                onAlbumClick = { albumUi: AlbumUi ->
-                    // Guardamos el álbum seleccionado y navegamos al detalle
+                onAlbumClick = { albumUi: AlbumUI ->
                     navController.currentBackStackEntry
                         ?.savedStateHandle
                         ?.set("album", albumUi)
@@ -75,37 +82,59 @@ fun AppNavHost(
         // ---------- PROFILE ----------
         composable(Screen.Profile.route) {
             UserProfileScreen(
-                isCurrentUserProfile = true,
-                onEditProfile = { navController.navigate(Screen.EditProfile.route) },
-                onSettings    = { navController.navigate(Screen.Settings.route) },
-                onOpenContent = { navController.navigate(Screen.ContentUser.route) },
-                onBack        = { navController.navigateUp() }
+                username = "Xokas",
+                bio = "Streamer, gamer y crítico musical 🎮🎶",
+                followers = 1200,
+                following = 500,
+                profilePicRes = R.drawable.xocas,
+                favoriteAlbums = AlbumRepository.albums.take(3),
+                reviews = ReviewRepository.reviews.take(2),
+                onAlbumClick = { album ->
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("album", album)
+                    navController.navigate(Screen.Album.route)
+                },
+                onReviewClick = { review ->
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("review", review)
+                    navController.navigate(Screen.UserReview.route)
+                },
+                onSettingsClick = { navController.navigate(Screen.Settings.route) },
+                onEditProfile = { navController.navigate(Screen.EditProfile.route) }
             )
         }
 
-        // ---------- ALBUM (SIN ID; recibe AlbumUi por savedStateHandle) ----------
-        composable(Screen.Album.route) { backStackEntry ->
-            val album: AlbumUi? =
-                navController.previousBackStackEntry?.savedStateHandle?.get("album")
-                    ?: backStackEntry.savedStateHandle.get("album")
+        // ---------- REVIEW DETAIL ----------
+        composable(Screen.Review.route) { backStackEntry ->
+            val review = backStackEntry.savedStateHandle.get<ReviewInfo>("review")
+            if (review != null) {
+                ReviewDetailScreen(
+                    review = review,
+                    onBack = { navController.navigateUp() }
+                )
+            } else {
+                SimpleErrorScreen("No hay reseña seleccionada")
+            }
+        }
 
+        // ---------- ALBUM ----------
+        composable(Screen.Album.route) { backStackEntry ->
+            val album = backStackEntry.savedStateHandle.get<AlbumUI>("album")
             if (album != null) {
-                albumReviewScreen(
+                AlbumReviewScreen(
                     album = album,
-                    onArtistClick = {
-                        // Si luego tienes artistId en AlbumUi, navega con id:
-                        // navController.navigate("${Screen.Artist.route}/${album.artistId}")
-                        navController.navigate(Screen.Artist.route)
-                    }
+                    onArtistClick = { navController.navigate(Screen.Artist.route) }
                 )
             } else {
                 SimpleErrorScreen("No hay álbum seleccionado")
             }
         }
 
-        // ---------- ARTISTA (GENÉRICO) ----------
+        // ---------- ARTISTA ----------
         composable(Screen.Artist.route) {
-            Artistpage(
+            ArtistPage(
                 onBack = { navController.navigateUp() },
                 onOpenAlbum = { /* si usas id, navega a Album con id */ },
                 onSeeAll = { /* opcional */ }
@@ -122,8 +151,7 @@ fun AppNavHost(
         // ---------- EDITAR PERFIL ----------
         composable(Screen.EditProfile.route) {
             EditarPerfil(
-                onBackClick = { navController.navigateUp() },
-                onBack      = { navController.navigateUp() }
+                onBack = { navController.navigateUp() }
             )
         }
 
@@ -131,12 +159,21 @@ fun AppNavHost(
         composable(Screen.ContentUser.route) {
             ContentUser(
                 onBack = { navController.navigateUp() },
-                onOpenAlbum = { albumId ->
-                    // Si quieres abrir un álbum específico desde ContentUser:
-                    // navController.navigate("${Screen.Album.route}/$albumId")
-                    navController.navigate(Screen.Album.route)
-                }
+                onOpenAlbum = { navController.navigate(Screen.Album.route) }
             )
+        }
+
+        // ---------- USER REVIEW ----------
+        composable(Screen.UserReview.route) { backStackEntry ->
+            val review = backStackEntry.savedStateHandle.get<ReviewInfo>("review")
+            if (review != null) {
+                UserReviewScreen(
+                    review = review,
+                    onBack = { navController.navigateUp() }
+                )
+            } else {
+                SimpleErrorScreen("No hay reseña seleccionada")
+            }
         }
     }
 }
@@ -147,6 +184,6 @@ private fun SimpleErrorScreen(message: String) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = androidx.compose.ui.Alignment.Center
     ) {
-        androidx.compose.material3.Text(text = message, color = androidx.compose.ui.graphics.Color.White)
+        Text(text = message, color = MaterialTheme.colorScheme.onBackground)
     }
 }

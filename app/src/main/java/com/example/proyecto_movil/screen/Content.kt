@@ -1,59 +1,53 @@
 package com.example.proyecto_movil.screen
 
-
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.data.local.Catalog
-import com.example.proyecto_movil.ui.utils.BotonEscribir
-import com.example.proyecto_movil.ui.utils.FechaAlbum
-import com.example.proyecto_movil.ui.utils.FotoAlbumArtista
-import com.example.proyecto_movil.ui.utils.FotoAlbumArtistaPeque
-import com.example.proyecto_movil.ui.utils.FotoPerfilArtista
-import com.example.proyecto_movil.ui.utils.SeguidoresCantante
-import com.example.proyecto_movil.ui.utils.TextoReseñas
-import com.example.proyecto_movil.ui.utils.TituloAlbum
-import com.example.proyecto_movil.ui.utils.TituloAlbumPeque
-import com.example.proyecto_movil.ui.utils.TituloAlbumes
-import com.example.proyecto_movil.ui.utils.TituloArtista
-import com.example.proyecto_movil.ui.utils.DescripcionLista
-import com.example.proyecto_movil.ui.utils.TituloArtistaPeque
+import com.example.proyecto_movil.data.local.AlbumRepository
+import com.example.proyecto_movil.data.local.ArtistRepository
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import com.example.proyecto_movil.ui.utils.*
 import com.example.proyecto_movil.utils.ScreenBackground
 import com.example.proyecto_movil.utils.SettingsIcon
 
 @Composable
 fun Content(
-    artistId: Int? = null,                 // ← opcional para soportar ambas rutas
+    artistId: Int? = null,
     modifier: Modifier = Modifier,
     onBack: () -> Unit = {},
     onOpenAlbum: (Int) -> Unit = {},
     onSeeAll: () -> Unit = {}
 ) {
-    // Resuelve artista a mostrar
-    val selectedArtist = artistId?.let { Catalog.artistById(it) }
-    val albums = selectedArtist?.let { Catalog.albumsByArtist(it.id) } ?: Catalog.albums
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
+    // Buscar artista si llega un ID
+    val selectedArtist = artistId?.let { id ->
+        ArtistRepository.artists.find { it.id == id }
+    }
+
+    // Filtrar álbumes según artista (o todos si no hay artistId)
+    val albums = if (selectedArtist != null) {
+        AlbumRepository.albums.filter { it.artist.id == selectedArtist.id }
+    } else {
+        AlbumRepository.albums
+    }
+
     val headerTitle = selectedArtist?.name ?: "Todos"
 
-    ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -68,152 +62,103 @@ fun Content(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Volver",
-                        tint = colorResource(id = R.color.white)
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                TituloArtista("contenido")
-                SettingsIcon()
+                TituloArtista(headerTitle)
+                SettingsIcon(
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
             }
 
-
-
             Column(
-
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
+                // -------------------- Reseñas --------------------
                 TituloAlbum("Reseñas")
                 Spacer(Modifier.height(12.dp))
 
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                    items(albums.take(2)) { alb ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clickable { onOpenAlbum(alb.id) }
-                        ) {
-                            Spacer(Modifier.height(4.dp))
-                            Row (){
+                albums.chunked(2).take(3).forEach { group ->
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
+                        items(group) { alb ->
+                            Row(
+                                modifier = Modifier.clickable { onOpenAlbum(alb.id) }
+                            ) {
                                 FotoAlbumArtistaPeque(alb.coverRes)
-                                Column() {
+                                Column(modifier = Modifier.padding(start = 8.dp)) {
                                     TituloAlbumPeque(alb.title)
                                     Spacer(Modifier.height(7.dp))
-                                    Row(horizontalArrangement =
-                                        Arrangement.spacedBy(8.dp)) {
-                                        Spacer(Modifier.height(7.dp))
-                                        TituloArtistaPeque(alb.artistName)
+                                    TituloArtistaPeque(alb.artist.name)
+                                }
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(20.dp))
+                }
 
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(20.dp))
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                    items(albums.drop(2).take(2)) { alb ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clickable { onOpenAlbum(alb.id) }
-                        ) {
-                            Spacer(Modifier.height(4.dp))
-                            Row (){
-                                FotoAlbumArtistaPeque(alb.coverRes)
-                                Column() {
-                                    TituloAlbumPeque(alb.title)
-                                    Spacer(Modifier.height(7.dp))
-                                    Row(horizontalArrangement =
-                                        Arrangement.spacedBy(8.dp)) {
-                                        Spacer(Modifier.height(7.dp))
-                                        TituloArtistaPeque(alb.artistName)
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(20.dp))
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(15.dp)) {
-                    items(albums.drop(4).take(2)) { alb ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clickable { onOpenAlbum(alb.id) }
-                        ) {
-                            Spacer(Modifier.height(4.dp))
-                            Row (){
-                                FotoAlbumArtistaPeque(alb.coverRes)
-                                Column() {
-                                    TituloAlbumPeque(alb.title)
-                                    Spacer(Modifier.height(7.dp))
-                                    Row(horizontalArrangement =
-                                        Arrangement.spacedBy(8.dp)) {
-                                        Spacer(Modifier.height(7.dp))
-                                        TituloArtistaPeque(alb.artistName)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer(Modifier.height(24.dp))
+                // -------------------- Listas --------------------
                 TituloAlbum("Listas")
                 Spacer(Modifier.height(15.dp))
-                DescripcionLista(
-                    "Canciones que atentaron " +
-                            "contra mi estabilidad emocional"
-                )
-                LazyRow(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp, Alignment.Start),
-                    contentPadding = PaddingValues(start = 0.dp, end = 0.dp)) {
-                    items(albums) { alb ->
-                        Row( modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically)
-                        {
-                            FotoAlbumArtistaPeque(alb.coverRes)
-                        }
-                    }
-                }
-                Spacer(Modifier.height(24.dp))
-                DescripcionLista(
-                    "10/10 LO MEJOR")
-                LazyRow(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp, Alignment.Start),
-                    contentPadding = PaddingValues(start = 0.dp, end = 0.dp)) {
-                    items(albums) { alb ->
-                        Row( modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically)
-                        {
-                            FotoAlbumArtistaPeque(alb.coverRes)
-                        }
-                    }
-                }
-                Spacer(Modifier.height(24.dp))
-                DescripcionLista(
-                    "10/10 LO MEJOR")
-                LazyRow(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(1.dp, Alignment.Start),
-                    contentPadding = PaddingValues(start = 0.dp, end = 0.dp)) {
-                    items(albums) { alb ->
-                        Row( modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically)
-                        {
-                            FotoAlbumArtistaPeque(alb.coverRes)
-                        }
-                    }
-                }
+
+                DescripcionLista("Canciones que atentaron contra mi estabilidad emocional")
+                AlbumListRow(albums, onOpenAlbum)
+
                 Spacer(Modifier.height(24.dp))
 
+                DescripcionLista("10/10 LO MEJOR")
+                AlbumListRow(albums, onOpenAlbum)
+
+                Spacer(Modifier.height(24.dp))
+
+                DescripcionLista("Clásicos que nunca fallan")
+                AlbumListRow(albums, onOpenAlbum)
+
+                Spacer(Modifier.height(24.dp))
+
+                Button(
+                    onClick = onSeeAll,
+                    shape = MaterialTheme.shapes.medium,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text("Ver toda la discografía", fontSize = 14.sp)
+                }
             }
         }
     }
 }
 
+@Composable
+private fun AlbumListRow(
+    albums: List<com.example.proyecto_movil.data.AlbumUI>,
+    onOpenAlbum: (Int) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp)
+    ) {
+        items(albums) { alb ->
+            FotoAlbumArtistaPeque(alb.coverRes, modifier = Modifier.clickable { onOpenAlbum(alb.id) })
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun ContentPreview() {
-    Content()
+fun ContentPreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Content()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContentPreviewDark() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Content()
+    }
 }

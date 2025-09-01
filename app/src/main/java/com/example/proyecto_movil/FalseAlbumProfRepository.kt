@@ -5,7 +5,7 @@ import com.example.proyecto_movil.R
 object FalseAlbumProfRepository {
     val albums = listOf(
         AlbumProfInfo(
-            imageId = R.drawable.gypsy,
+            imageId = R.drawable.gypsy_kings,
             title = "GIPSY KINGS",
             artist = "GIPSY KINGS"
         ),

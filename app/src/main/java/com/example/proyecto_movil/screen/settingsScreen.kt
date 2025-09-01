@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SectionTitle
+import com.example.proyecto_movil.utils.ClickableSectionTitle
 
 @Composable
 fun SettingsScreen(
@@ -129,7 +129,7 @@ private fun ProfileSection() {
 
 @Composable
 private fun SettingsSection() {
-    SectionTitle(title = "Preferencias")
+    ClickableSectionTitle(title = "Preferencias")
     Spacer(modifier = Modifier.height(16.dp))
     SettingItem(text = "Idioma de la aplicación", hasSwitch = false)
     Spacer(modifier = Modifier.height(8.dp))
@@ -138,7 +138,7 @@ private fun SettingsSection() {
 
 @Composable
 private fun PrivacySection() {
-    SectionTitle(title = "Privacidad y social")
+    ClickableSectionTitle(title = "Privacidad y social")
     Spacer(modifier = Modifier.height(16.dp))
     SettingItem(text = "Ocultar tu actividad", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))
@@ -161,7 +161,7 @@ private fun PrivacySection() {
 
 @Composable
 private fun ContentSection() {
-    SectionTitle(title = "Contenido y visualización")
+    ClickableSectionTitle(title = "Contenido y visualización")
     Spacer(modifier = Modifier.height(16.dp))
     SettingItem(text = "Permitir la reproducción de contenido explícito", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))
@@ -170,7 +170,7 @@ private fun ContentSection() {
 
 @Composable
 private fun NotificationsSection() {
-    SectionTitle(title = "Notificaciones")
+    ClickableSectionTitle(title = "Notificaciones")
     Spacer(modifier = Modifier.height(16.dp))
     SettingItem(text = "Notificaciones push", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))

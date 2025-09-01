@@ -1,20 +1,20 @@
 package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.*
 
-//Comentario de prueba
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddReviewScreen(
@@ -22,7 +22,15 @@ fun AddReviewScreen(
     onPublicarClick: () -> Unit = {},
     onCancelarClick: () -> Unit = {}
 ) {
-    ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
+    // 👇 Detectamos si el theme es claro u oscuro
+    val isDarkTheme = isSystemInDarkTheme()
+    val backgroundRes = if (isDarkTheme) {
+        R.drawable.fondocriti
+    } else {
+        R.drawable.fondocriti_light
+    }
+
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
 
         Column(
@@ -36,7 +44,7 @@ fun AddReviewScreen(
             Spacer(Modifier.height(32.dp))
 
             AlbumHeader(
-                coverRes = R.drawable.mcmiller,
+                coverRes = R.drawable.circles,
                 title = stringResource(id = R.string.titulo_album),
                 artist = stringResource(id = R.string.artista_album),
                 year = stringResource(id = R.string.ano_album)
@@ -51,8 +59,7 @@ fun AddReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.fecha_resena),
-                    color = androidx.compose.ui.graphics.Color.White,
-                    fontSize = androidx.compose.ui.unit.TextUnit.Unspecified,
+                    color = MaterialTheme.colorScheme.onSurface, // 👈 adaptado al tema
                     modifier = Modifier.padding(start = 25.dp)
                 )
                 ReadOnlyField(
@@ -72,7 +79,7 @@ fun AddReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.puntaje_resena),
-                    color = androidx.compose.ui.graphics.Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 9.dp)
                 )
 
@@ -97,7 +104,7 @@ fun AddReviewScreen(
             )
 
             ReadOnlyField(
-                value = "Aqui puedes agregar una reseña...",
+                value = "Aquí puedes agregar una reseña...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
@@ -111,15 +118,21 @@ fun AddReviewScreen(
                 rightText = stringResource(id = R.string.publicar_resena),
                 onLeftClick = onCancelarClick,
                 onRightClick = onPublicarClick,
-                leftColor = colorResource(id = R.color.grisCriti),
-                rightColor = colorResource(id = R.color.azulCriti)
+                leftColor = MaterialTheme.colorScheme.secondary,
+                rightColor = MaterialTheme.colorScheme.primary
             )
         }
     }
 }
 
-@Preview(showBackground = true, name = "AddReviewScreen Preview")
+@Preview(
+    name = "AddReview Light",
+    showBackground = true,
+    showSystemUi = true
+)
 @Composable
-fun AddReviewScreenPreview() {
-    AddReviewScreen()
+fun AddReviewScreenLightPreview() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        AddReviewScreen()
+    }
 }

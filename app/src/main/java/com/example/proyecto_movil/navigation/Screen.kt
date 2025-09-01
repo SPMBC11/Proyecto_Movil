@@ -8,13 +8,16 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object Profile : Screen("profile")
     data object Album : Screen("album")
-    data object Artist : Screen("artist")
+    data object Artist : Screen("artist_page")
     data object AddReview : Screen("add_review")
 
-    // ya las tienes:
     data object Settings : Screen("settings")
     data object EditProfile : Screen("EditarPerfil")
 
-    // ➕ NUEVA:
     data object ContentUser : Screen("content_user")
+
+    data object Review : Screen("review")
+
+    data object UserReview : Screen("userReview")
+
 }

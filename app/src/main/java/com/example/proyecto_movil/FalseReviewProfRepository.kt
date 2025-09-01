@@ -11,7 +11,7 @@ object FalseReviewProfRepository {
             score = "85%"
         ),
         ReviewProfInfo(
-            imageId = R.drawable.fijacion,
+            imageId = R.drawable.fijacion_oral,
             title = "FIJACIÓN ORAL",
             artist = "SHAKIRA",
             score = "97%"

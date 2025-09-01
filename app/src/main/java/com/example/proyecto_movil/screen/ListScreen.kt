@@ -13,14 +13,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Headphones
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -31,7 +30,7 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.ScreenBackground
 
-// Definiciones de datos de ejemplo (mock data)
+// Datos de ejemplo
 data class AlbumItem(
     val id: Int,
     val coverRes: Int,
@@ -57,7 +56,7 @@ fun ListScreen(modifier: Modifier = Modifier) {
             // Encabezado
             HeaderSection()
 
-            // Información de la lista y del usuario
+            // Información de la lista
             ListInfoSection()
 
             // Cuadrícula de álbumes
@@ -79,24 +78,24 @@ private fun HeaderSection() {
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Volver",
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .size(30.dp)
-                .clickable { /* TODO: Navegación hacia atrás */ }
+                .clickable { /* Navegar hacia atrás */ }
         )
         Text(
             text = "Lista",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Icon(
             imageVector = Icons.Default.Settings,
             contentDescription = "Ajustes",
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier
                 .size(30.dp)
-                .clickable { /* TODO: Lógica de ajustes */ }
+                .clickable { /* Ajustes */ }
         )
     }
 }
@@ -108,13 +107,11 @@ private fun ListInfoSection() {
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 24.dp)
     ) {
-        // Información del creador
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        // Usuario creador
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = R.drawable.xocas),
-                contentDescription = "Avatar de el.xokas",
+                contentDescription = "Avatar",
                 modifier = Modifier
                     .size(42.dp)
                     .clip(CircleShape)
@@ -122,7 +119,7 @@ private fun ListInfoSection() {
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "el.xokas",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -132,24 +129,24 @@ private fun ListInfoSection() {
 
         // Título y descripción
         Text(
-            text = "Canciónes que atentaron contra mi estabilidad emocional",
-            color = Color.White,
-            fontSize = 28.sp,
+            text = "Canciones que atentaron contra mi estabilidad emocional",
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 22.sp,
             fontWeight = FontWeight.ExtraBold,
-            lineHeight = 32.sp
+            lineHeight = 28.sp
         )
 
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Pero la queria tanto que daba igual porque cinco minutos con ella significaban diez horas con cualquier otra entiendes ese nivel de vibración no lo había tenido nunca con veinte años yo ha había estado con bastantes tias.",
-            color = Color.White.copy(alpha = 0.7f),
+            text = "Pero la quería tanto que daba igual, porque cinco minutos con ella significaban diez horas con cualquier otra...",
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 12.sp
         )
 
         Spacer(Modifier.height(16.dp))
 
-        // Estadísticas (Likes y reproducciones)
+        // Estadísticas
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -159,13 +156,13 @@ private fun ListInfoSection() {
                 Icon(
                     imageVector = Icons.Default.FavoriteBorder,
                     contentDescription = "Likes",
-                    tint = Color.White.copy(alpha = 0.8f),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
                     text = "0 likes",
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp
                 )
             }
@@ -173,13 +170,13 @@ private fun ListInfoSection() {
                 Icon(
                     imageVector = Icons.Default.Headphones,
                     contentDescription = "Reproducciones",
-                    tint = Color.White.copy(alpha = 0.8f),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
                     text = "100%",
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 14.sp
                 )
             }
@@ -207,7 +204,7 @@ private fun AlbumCard(album: AlbumItem) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /* TODO: Lógica al hacer clic */ },
+            .clickable { /* Abrir álbum */ },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -219,24 +216,24 @@ private fun AlbumCard(album: AlbumItem) {
                 contentDescription = album.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f) // Para que la imagen sea cuadrada
+                    .aspectRatio(1f)
                     .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop
             )
-            // Icono de reproducción
+            // Botón play
             Box(
                 modifier = Modifier
                     .padding(4.dp)
                     .size(24.dp)
                     .clip(CircleShape)
-                    .background(Color.White.copy(alpha = 0.7f))
-                    .clickable { /* TODO: Lógica para reproducir */ },
+                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
+                    .clickable { /* Reproducir */ },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.xocas),
+                    imageVector = Icons.Default.PlayArrow,
                     contentDescription = "Reproducir",
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(16.dp)
                 )
             }
@@ -246,19 +243,19 @@ private fun AlbumCard(album: AlbumItem) {
 
         Text(
             text = album.title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onBackground,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
             text = album.year,
-            color = Color.White.copy(alpha = 0.7f),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 10.sp
         )
     }
 }
 
-@Preview(showBackground = true, name = "ListScreen Preview")
+@Preview(showBackground = true)
 @Composable
 fun ListScreenPreview() {
     Proyecto_movilTheme {

@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.utils.recursos.AlbumUi
-import com.example.proyecto_movil.utils.recursos.ArtistUI
+import com.example.proyecto_movil.data.AlbumUI
+import com.example.proyecto_movil.data.local.AlbumRepository
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onAlbumClick: (AlbumUi) -> Unit = {},     // 👉 Se invoca al tocar un álbum
+    onAlbumClick: (AlbumUI) -> Unit = {},
     onHomeClick: () -> Unit = {},
     onProfileClick: () -> Unit = {}
 ) {
@@ -76,42 +76,21 @@ fun HomeScreen(
                 item {
                     SectionRow(
                         title = "Novedades",
-                        albums = listOf(
-                            AlbumUi(1, R.drawable.tyler_dttg, "DON'T TAP THE GLASS", "2024",
-                                ArtistUI(1, "Tyler, The Creator", "Pop", "Tyler, The Creator")),
-                            AlbumUi(2, R.drawable.mcmiller, "CIRCLES", "2020",
-                                ArtistUI(2, "Mac Miller", "Hip Hop", "Mac Miller")),
-                            AlbumUi(3, R.drawable.feid, "FERXXO VOL 10: SAGRADO", "2024",
-                                ArtistUI(3, "Feid", "Reggaeton", "Feid"))
-                        ),
+                        albums = AlbumRepository.albums.filter { it.id in listOf(601, 201, 501) },
                         onAlbumClick = onAlbumClick
                     )
                 }
                 item {
                     SectionRow(
                         title = "Nuevo entre amigos",
-                        albums = listOf(
-                            AlbumUi(4, R.drawable.bogota_deluxe, "BOGOTÁ (DELUXE)", "2023",
-                                ArtistUI(4, "Andrés Cepeda", "Balada", "Andrés Cepeda")),
-                            AlbumUi(5, R.drawable.epistolares, "EPISTOLARES+", "2024",
-                                ArtistUI(5, "AKRIILA", "Hip Hop", "AKRIILA")),
-                            AlbumUi(6, R.drawable.babylon, "BABYLON CLUB", "2024",
-                                ArtistUI(6, "Danny Ocean", "Pop", "Danny Ocean"))
-                        ),
+                        albums = AlbumRepository.albums.filter { it.id in listOf(901, 1001, 1101) },
                         onAlbumClick = onAlbumClick
                     )
                 }
                 item {
                     SectionRow(
                         title = "Popular entre amigos",
-                        albums = listOf(
-                            AlbumUi(7, R.drawable.swag, "SWAG", "2013",
-                                ArtistUI(7, "Justin Bieber", "Pop", "Justin Bieber")),
-                            AlbumUi(8, R.drawable.billie, "HIT ME HARD AND SOFT", "2024",
-                                ArtistUI(8, "Billie Eilish", "Pop", "Billie Eilish")),
-                            AlbumUi(9, R.drawable.dbtmf, "DbTmF", "2024",
-                                ArtistUI(9, "Bad Bunny", "Reggaeton", "Bad Bunny"))
-                        ),
+                        albums = AlbumRepository.albums.filter { it.id in listOf(801, 701, 401) },
                         onAlbumClick = onAlbumClick
                     )
                 }
@@ -206,8 +185,8 @@ private fun SearchBar() {
 @Composable
 private fun SectionRow(
     title: String,
-    albums: List<AlbumUi>,
-    onAlbumClick: (AlbumUi) -> Unit
+    albums: List<AlbumUI>,
+    onAlbumClick: (AlbumUI) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -219,10 +198,10 @@ private fun SectionRow(
         )
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 4.dp)
+            contentPadding = PaddingValues(start = 8.dp, end = 16.dp)
         ) {
             items(albums) { album ->
-                AlbumCard(album = album) { onAlbumClick(album) }  // 👉 pasa el álbum tocado
+                AlbumCard(album = album) { onAlbumClick(album) }
             }
         }
     }
@@ -230,13 +209,13 @@ private fun SectionRow(
 
 @Composable
 private fun AlbumCard(
-    album: AlbumUi,
+    album: AlbumUI,
     onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .width(130.dp)
-            .clickable { onClick() }, // 👉 el toque en toda la card dispara onAlbumClick(album)
+            .clickable { onClick() },
         horizontalAlignment = Alignment.Start
     ) {
         Image(
@@ -320,7 +299,7 @@ private fun BottomBarItem(
 }
 
 /* ---------- Wrapper opcional con navegación simple ---------- */
-/* Úsalo si quieres que el Home navegue sin pasar lambdas desde afuera */
+
 @Composable
 fun HomeScreenRoute(navController: NavController) {
     HomeScreen(
@@ -340,5 +319,5 @@ fun HomeScreenRoute(navController: NavController) {
 @Composable
 fun HomeScreenPreview() {
     val navController = rememberNavController()
-    HomeScreenRoute(navController) // Preview solo para composición; clic no navega en preview
+    HomeScreenRoute(navController)
 }

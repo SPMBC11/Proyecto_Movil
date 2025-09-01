@@ -1,17 +1,14 @@
 package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,347 +16,213 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.data.local.FalseAlbumProfRepository
-import com.example.proyecto_movil.data.local.FalseReviewProfRepository
-import com.example.proyecto_movil.data.local.FalseProfileInfoRepository
+import com.example.proyecto_movil.data.ReviewInfo
+import com.example.proyecto_movil.data.local.AlbumRepository
+import com.example.proyecto_movil.data.local.ReviewRepository
+import com.example.proyecto_movil.data.local.UserRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.utils.ScreenBackground
-import com.example.proyecto_movil.utils.SettingsIcon
-import com.example.proyecto_movil.utils.SectionTitle
 
 @Composable
 fun UserProfileScreen(
-    isCurrentUserProfile: Boolean,
-    modifier: Modifier = Modifier,
-    onEditProfile: () -> Unit = {},   // ya lo tienes
-    onSettings: () -> Unit = {},      // 👈 NUEVO (rueda)
-    onOpenContent: () -> Unit = {},   // 👈 NUEVO ("Ver reseña")
-    onBack: () -> Unit = {}
-)  {
-    val profileInfo = FalseProfileInfoRepository.profile
-    val favoriteAlbums = FalseAlbumProfRepository.albums
-    val userReviews = FalseReviewProfRepository.reviews
-
-    ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = colorResource(id = R.color.white),
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-            SettingsIcon(
-                modifier = Modifier
-                    .clickable { onSettings() }   // 👈 ahora navega a Configuración
-            )
-
-        }
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 50.dp, start = 16.dp, end = 16.dp)
-        ) {
-
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-
-                ProfileHeader(
-                    userImageRes = profileInfo.imageId,
-                    userName = profileInfo.username,
-                    followers = profileInfo.followers,
-                    following = profileInfo.following,
-                    isCurrentUserProfile = isCurrentUserProfile,
-                    onEditProfile = onEditProfile
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                SectionTitle(title = "Álbumes favoritos")
-
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            item {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(30.dp)
-                ) {
-                    items(favoriteAlbums) { album ->
-                        AlbumCard(
-                            coverRes = album.imageId,
-                            title = album.title,
-                            artist = album.artist
-                        )
-                    }
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                SectionTitle(title = "Reseñas")
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            items(userReviews) { review ->
-                ReviewItem(
-                    coverRes = review.imageId,
-                    title = review.title,
-                    artist = review.artist,
-                    score = review.score,
-                    isLowScore = review.isLowScore
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Button(
-                    onClick = { /* TODO */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .height(35.dp),
-                    shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.azulCriti)
-                    )
-                ) {
-                    Text(
-                        text = "Ver todas las reseñas",
-                        color = colorResource(id = R.color.white),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun ProfileHeader(
-    userImageRes: Int,
-    userName: String,
+    username: String,
+    bio: String,
     followers: Int,
     following: Int,
-    isCurrentUserProfile: Boolean,
-    onEditProfile: () -> Unit = {} // ← NUEVO: para reutilizar el mismo callback en el header si quieres
+    profilePicRes: Int,
+    favoriteAlbums: List<com.example.proyecto_movil.data.AlbumUI>,
+    reviews: List<ReviewInfo>,
+    onAlbumClick: (com.example.proyecto_movil.data.AlbumUI) -> Unit,
+    onReviewClick: (ReviewInfo) -> Unit,
+    onSettingsClick: () -> Unit,
+    onEditProfile: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        // 👉 Fondo
         Image(
-            painter = painterResource(id = userImageRes),
-            contentDescription = "Imagen de perfil de $userName",
-            modifier = Modifier
-                .size(119.dp)
-                .clip(CircleShape)
-                .border(2.dp, colorResource(id = R.color.black), CircleShape),
+            painter = painterResource(id = R.drawable.fondocriti),
+            contentDescription = stringResource(id = R.string.fondo_degradado),
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column {
-            Text(
-                text = userName,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.white)
-            )
-            Row {
-                Text(
-                    text = "$followers seguidores",
-                    color = colorResource(id = R.color.white).copy(alpha = 0.7f)
-                )
-                Text(
-                    text = " • ",
-                    color = colorResource(id = R.color.white).copy(alpha = 0.7f)
-                )
-                Text(
-                    text = "$following siguiendo",
-                    color = colorResource(id = R.color.white).copy(alpha = 0.7f)
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            if (isCurrentUserProfile) {
-                OutlinedButton(
-                    onClick = onEditProfile, // ← AHORA NAVEGA A EditarPerfil
-                    modifier = Modifier.height(30.dp),
-                    shape = RoundedCornerShape(50.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = colorResource(id = R.color.white),
-                        containerColor = Color.Transparent
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
-                )
-                 { Text(text = "Editar Perfil", fontSize = 12.sp) }
-
-            } else {
-                OutlinedButton(
-                    onClick = { /* TODO: Lógica para seguir */ },
-                    modifier = Modifier.height(30.dp),
-                    shape = RoundedCornerShape(50.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = colorResource(id = R.color.white),
-                        containerColor = Color.Transparent
-                    ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
+        Scaffold(
+            topBar = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Seguir", fontSize = 12.sp)
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Atrás",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable { /* onBack */ }
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Configuración",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable { onSettingsClick() }
+                    )
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.background
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Foto + datos
+                Image(
+                    painter = painterResource(id = profilePicRes),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(text = username, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.White)
+                Text(text = "$followers seguidores • $following siguiendo", color = Color.White)
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = onEditProfile, shape = RoundedCornerShape(50)) {
+                    Text("Editar perfil", color = Color.White)
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Álbumes favoritos
+                Text("Tus álbumes favoritos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
+                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(vertical = 16.dp)) {
+                    items(favoriteAlbums.size) { index ->
+                        val album = favoriteAlbums[index]
+                        Column(
+                            modifier = Modifier
+                                .width(120.dp)
+                                .clickable { onAlbumClick(album) },
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = album.coverRes),
+                                contentDescription = album.title,
+                                modifier = Modifier
+                                    .size(120.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                            )
+                            Spacer(Modifier.height(6.dp))
+                            Text(album.title, color = Color.White, fontWeight = FontWeight.Bold, maxLines = 1, fontSize = 14.sp)
+                            Text(album.artist.name, color = Color.Gray, fontSize = 12.sp)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Reseñas
+                Text("Tus reseñas", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
+                Spacer(modifier = Modifier.height(12.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    reviews.forEach { review ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onReviewClick(review) },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                painter = painterResource(id = review.album.coverRes),
+                                contentDescription = review.album.title,
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Column(Modifier.weight(1f)) {
+                                Text(review.album.title.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                Text(review.album.artist.name.uppercase(), color = Color.Gray, fontSize = 12.sp)
+                                OutlinedButton(
+                                    onClick = { onReviewClick(review) },
+                                    shape = RoundedCornerShape(50),
+                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                                    modifier = Modifier.padding(top = 6.dp)
+                                ) {
+                                    Text("Ver reseña", fontSize = 12.sp, color = Color.White)
+                                }
+                            }
+                            Spacer(Modifier.width(8.dp))
+                            val scoreColor =
+                                if (review.score >= 7) Color(0xFF2E7D32)
+                                else if (review.score >= 5) Color(0xFFF9A825)
+                                else Color(0xFFC62828)
+                            Surface(color = scoreColor, shape = RoundedCornerShape(6.dp)) {
+                                Text(
+                                    text = "${(review.score * 10).toInt()}%",
+                                    color = Color.White,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Spacer(Modifier.width(8.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_edit), // asegúrate de tener este ícono
+                                contentDescription = "Editar reseña",
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Botón final
+                Button(
+                    onClick = { /* Navegar a reseñas + playlists */ },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = RoundedCornerShape(50),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ver reseñas y playlists", color = Color.White)
                 }
             }
         }
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-fun AlbumCard(
-    coverRes: Int,
-    title: String,
-    artist: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.width(100.dp)
-    ) {
-        Image(
-            painter = painterResource(id = coverRes),
-            contentDescription = "Portada del álbum $title",
-            modifier = Modifier.size(100.dp),
-            contentScale = ContentScale.Crop
+fun UserProfilePreview() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        UserProfileScreen(
+            username = "el.xokas",
+            bio = "Streamer y crítico musical 🎶",
+            followers = 17,
+            following = 78,
+            profilePicRes = R.drawable.xocas,
+            favoriteAlbums = listOf(
+                AlbumRepository.albums[11], // Gipsy Kings
+                AlbumRepository.albums[12], // Abraham Mateo
+                AlbumRepository.albums[13]  // Lánzalo
+            ),
+            reviews = ReviewRepository.reviews.take(3),
+            onAlbumClick = {},
+            onReviewClick = {},
+            onSettingsClick = {},
+            onEditProfile = {}
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = title,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.white),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = artist,
-            fontSize = 10.sp,
-            color = colorResource(id = R.color.white).copy(alpha = 0.7f),
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun ReviewItem(
-    coverRes: Int,
-    title: String,
-    artist: String,
-    score: String,
-    isLowScore: Boolean = false
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Transparent),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            painter = painterResource(id = coverRes),
-            contentDescription = "Portada del álbum",
-            modifier = Modifier
-                .padding(horizontal = 10.dp)
-                .size(64.dp)
-                .clip(RoundedCornerShape(4.dp)),
-            contentScale = ContentScale.Crop
-        )
-
-        Spacer(modifier = Modifier.width(16.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.white)
-            )
-            Text(
-                text = artist,
-                fontSize = 14.sp,
-                color = colorResource(id = R.color.white).copy(alpha = 0.7f)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(
-                onClick = { /* TODO */ },
-                modifier = Modifier.height(30.dp),
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = colorResource(id = R.color.white),
-                    containerColor = Color.Transparent
-                ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(width = 1.dp)
-            ) {
-                Text(text = "Ver reseña", fontSize = 12.sp)
-            }
-        }
-
-        ScoreBadge(score = score, isLowScore = isLowScore)
-    }
-}
-
-@Composable
-fun ScoreBadge(
-    score: String,
-    isLowScore: Boolean
-) {
-    val backgroundColor = if (isLowScore) {
-        colorResource(id = R.color.cafePuntCriti)
-    } else {
-        colorResource(id = R.color.verdePuntCriti)
-    }
-
-    Box(
-        modifier = Modifier
-            .width(45.dp)
-            .height(30.dp)
-            .background(backgroundColor, RoundedCornerShape(8.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = score,
-            color = colorResource(id = R.color.white),
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
-        )
-    }
-}
-
-@Preview(showBackground = true, name = "My Profile Preview")
-@Composable
-fun MyProfileScreenPreview() {
-    Proyecto_movilTheme {
-        UserProfileScreen(isCurrentUserProfile = true)
-    }
-}
-
-@Preview(showBackground = true, name = "Other User Profile Preview")
-@Composable
-fun OtherUserProfileScreenPreview() {
-    Proyecto_movilTheme {
-        UserProfileScreen(isCurrentUserProfile = false)
     }
 }

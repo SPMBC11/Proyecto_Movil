@@ -10,12 +10,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proyecto_movil.R
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
 fun ScreenBackground(
@@ -34,13 +36,10 @@ fun ScreenBackground(
     }
 }
 
-/**
- * Reutilizable en cualquier layout. La alineación se pasa desde el padre.
- */
 @Composable
 fun SettingsIcon(
     modifier: Modifier = Modifier,
-    tint: Color = Color.White
+    tint: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
 ) {
     Icon(
         imageVector = Icons.Filled.Settings,
@@ -51,7 +50,6 @@ fun SettingsIcon(
         tint = tint
     )
 }
-
 
 @Composable
 fun TitleBar(
@@ -65,7 +63,7 @@ fun TitleBar(
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -92,12 +90,12 @@ fun AlbumHeader(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
         )
-        Text(text = artist, color = Color.White, fontSize = 18.sp)
-        Text(text = year, color = Color.White, fontSize = 14.sp)
+        Text(text = artist, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 18.sp)
+        Text(text = year, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
     }
 }
 
@@ -112,13 +110,13 @@ fun ReadOnlyField(
         onValueChange = {},
         readOnly = true,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedLabelColor = Color.White,
-            unfocusedLabelColor = Color.White,
-            cursorColor = Color.White,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White,
-            focusedBorderColor = Color.White,
-            unfocusedBorderColor = Color.White,
+            focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+            cursorColor = MaterialTheme.colorScheme.onSurface,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+            focusedBorderColor = MaterialTheme.colorScheme.outline,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
         ),
         modifier = modifier
     )
@@ -139,13 +137,13 @@ fun ScoreRow(
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Text(
                 text = scoreLabel,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
             )
             Text(
                 text = usersHint,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 12.sp,
             )
         }
@@ -167,7 +165,7 @@ fun SectionTitle(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 16.dp)
@@ -175,7 +173,7 @@ fun SectionTitle(
         if (subtitle != null) {
             Text(
                 text = subtitle,
-                color = Color.Gray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(start = 16.dp, top = 10.dp)
             )
@@ -189,8 +187,8 @@ fun ActionButtonsRow(
     rightText: String,
     onLeftClick: () -> Unit,
     onRightClick: () -> Unit,
-    leftColor: Color,
-    rightColor: Color,
+    leftColor: androidx.compose.ui.graphics.Color,
+    rightColor: androidx.compose.ui.graphics.Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -205,7 +203,7 @@ fun ActionButtonsRow(
             shape = RoundedCornerShape(50),
             modifier = Modifier.weight(1f)
         ) {
-            Text(leftText, color = Color.White)
+            Text(leftText, color = MaterialTheme.colorScheme.onPrimary)
         }
         Button(
             onClick = onRightClick,
@@ -213,7 +211,15 @@ fun ActionButtonsRow(
             shape = RoundedCornerShape(50),
             modifier = Modifier.weight(1f)
         ) {
-            Text(rightText, color = Color.White)
+            Text(rightText, color = MaterialTheme.colorScheme.onPrimary)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AlbumScreenPreview() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        SectionTitle("Tus reseñas", "Subtítulo")
     }
 }

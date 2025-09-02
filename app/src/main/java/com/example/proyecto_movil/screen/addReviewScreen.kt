@@ -22,13 +22,9 @@ fun AddReviewScreen(
     onPublicarClick: () -> Unit = {},
     onCancelarClick: () -> Unit = {}
 ) {
-    // 👇 Detectamos si el theme es claro u oscuro
+    // 🔹 Fondo dinámico según el tema
     val isDarkTheme = isSystemInDarkTheme()
-    val backgroundRes = if (isDarkTheme) {
-        R.drawable.fondocriti
-    } else {
-        R.drawable.fondocriti_light
-    }
+    val backgroundRes = if (isDarkTheme) R.drawable.fondocriti else R.drawable.fondocriti_light
 
     ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
@@ -50,6 +46,7 @@ fun AddReviewScreen(
                 year = stringResource(id = R.string.ano_album)
             )
 
+            // 📅 Fecha reseña
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -59,7 +56,7 @@ fun AddReviewScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.fecha_resena),
-                    color = MaterialTheme.colorScheme.onSurface, // 👈 adaptado al tema
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(start = 25.dp)
                 )
                 ReadOnlyField(
@@ -70,6 +67,7 @@ fun AddReviewScreen(
                 )
             }
 
+            // ⭐ Puntaje reseña
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -99,20 +97,30 @@ fun AddReviewScreen(
                 }
             }
 
+            // ✍️ Campo reseña
             SectionTitle(
                 title = stringResource(id = R.string.agrega_resena)
             )
 
-            ReadOnlyField(
+            OutlinedTextField(
                 value = "Aquí puedes agregar una reseña...",
+                onValueChange = {},
+                readOnly = true,
+                enabled = false,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
-                    .padding(top = 10.dp, start = 20.dp, end = 20.dp)
+                    .padding(top = 10.dp, start = 20.dp, end = 20.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface,
+                )
             )
 
             Spacer(Modifier.weight(1f))
 
+            // 🔹 Botones
             ActionButtonsRow(
                 leftText = stringResource(id = R.string.cancelar_resena),
                 rightText = stringResource(id = R.string.publicar_resena),
@@ -125,14 +133,22 @@ fun AddReviewScreen(
     }
 }
 
-@Preview(
-    name = "AddReview Light",
-    showBackground = true,
-    showSystemUi = true
-)
+@Preview(name = "AddReview Light", showSystemUi = true)
 @Composable
 fun AddReviewScreenLightPreview() {
     Proyecto_movilTheme(useDarkTheme = false) {
-        AddReviewScreen()
+        Surface(color = MaterialTheme.colorScheme.background) {
+            AddReviewScreen()
+        }
+    }
+}
+
+@Preview(name = "AddReview Dark", showSystemUi = true)
+@Composable
+fun AddReviewScreenDarkPreview() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            AddReviewScreen()
+        }
     }
 }

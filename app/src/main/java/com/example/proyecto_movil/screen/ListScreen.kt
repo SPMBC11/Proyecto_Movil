@@ -3,6 +3,7 @@ package com.example.proyecto_movil.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -47,7 +48,10 @@ val mockAlbums = listOf(
 
 @Composable
 fun ListScreen(modifier: Modifier = Modifier) {
-    ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -78,21 +82,21 @@ private fun HeaderSection() {
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = "Volver",
-            tint = MaterialTheme.colorScheme.onBackground,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(30.dp)
                 .clickable { /* Navegar hacia atrás */ }
         )
         Text(
             text = "Lista",
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Icon(
             imageVector = Icons.Default.Settings,
             contentDescription = "Ajustes",
-            tint = MaterialTheme.colorScheme.onBackground,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(30.dp)
                 .clickable { /* Ajustes */ }
@@ -119,7 +123,7 @@ private fun ListInfoSection() {
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "el.xokas",
-                color = MaterialTheme.colorScheme.onBackground,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold
             )
@@ -130,7 +134,7 @@ private fun ListInfoSection() {
         // Título y descripción
         Text(
             text = "Canciones que atentaron contra mi estabilidad emocional",
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 22.sp,
             fontWeight = FontWeight.ExtraBold,
             lineHeight = 28.sp
@@ -243,7 +247,7 @@ private fun AlbumCard(album: AlbumItem) {
 
         Text(
             text = album.title,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
         )
@@ -255,10 +259,22 @@ private fun AlbumCard(album: AlbumItem) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "ListScreen Light", showSystemUi = true)
 @Composable
-fun ListScreenPreview() {
-    Proyecto_movilTheme {
-        ListScreen()
+fun ListScreenPreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            ListScreen()
+        }
+    }
+}
+
+@Preview(name = "ListScreen Dark", showSystemUi = true)
+@Composable
+fun ListScreenPreviewDark() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            ListScreen()
+        }
     }
 }

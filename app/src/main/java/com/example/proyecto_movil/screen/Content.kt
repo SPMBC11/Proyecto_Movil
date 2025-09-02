@@ -53,6 +53,7 @@ fun Content(
                 .fillMaxSize()
                 .padding(top = 10.dp, start = 16.dp, end = 16.dp)
         ) {
+            // 🔹 TopBar con back + título + settings
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -62,12 +63,12 @@ fun Content(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Volver",
-                        tint = MaterialTheme.colorScheme.onBackground
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 TituloArtista(headerTitle)
                 SettingsIcon(
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -116,6 +117,7 @@ fun Content(
 
                 Spacer(Modifier.height(24.dp))
 
+                // 🔹 Botón de discografía
                 Button(
                     onClick = onSeeAll,
                     shape = MaterialTheme.shapes.medium,
@@ -142,23 +144,30 @@ private fun AlbumListRow(
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
         items(albums) { alb ->
-            FotoAlbumArtistaPeque(alb.coverRes, modifier = Modifier.clickable { onOpenAlbum(alb.id) })
+            FotoAlbumArtistaPeque(
+                alb.coverRes,
+                modifier = Modifier.clickable { onOpenAlbum(alb.id) }
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Content Light", showSystemUi = true)
 @Composable
 fun ContentPreviewLight() {
     Proyecto_movilTheme(useDarkTheme = false) {
-        Content()
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Content()
+        }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Content Dark", showSystemUi = true)
 @Composable
 fun ContentPreviewDark() {
     Proyecto_movilTheme(useDarkTheme = true) {
-        Content()
+        Surface(color = MaterialTheme.colorScheme.background) {
+            Content()
+        }
     }
 }

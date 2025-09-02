@@ -2,47 +2,26 @@ package com.example.proyecto_movil.screen
 
 import com.example.proyecto_movil.utils.AppButton
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.ui.utils.LogoApp
-import com.example.proyecto_movil.ui.utils.CheckboxDatos
-import com.example.proyecto_movil.ui.utils.Registrate
-import com.example.proyecto_movil.ui.utils.Terminos
-import com.example.proyecto_movil.ui.utils.YatienesCuenta
-
+import com.example.proyecto_movil.ui.utils.*
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
 fun RegisterScreen2(
@@ -56,9 +35,19 @@ fun RegisterScreen2(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
 
-        // Botón atrás
+    Box(modifier = modifier.fillMaxSize()) {
+        // 🔹 Fondo dinámico
+        Image(
+            painter = painterResource(id = backgroundRes),
+            contentDescription = stringResource(id = R.string.fondo_degradado),
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        // 🔹 Botón atrás
         IconButton(
             onClick = onBack,
             modifier = Modifier.padding(16.dp)
@@ -66,17 +55,9 @@ fun RegisterScreen2(
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
-
-        // Fondo
-        Image(
-            painter = painterResource(id = R.drawable.fondocriti),
-            contentDescription = stringResource(id = R.string.fondo_degradado),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
 
         Column(
             verticalArrangement = Arrangement.Top,
@@ -86,7 +67,7 @@ fun RegisterScreen2(
             Spacer(Modifier.height(90.dp))
             LogoApp()
             Spacer(Modifier.height(60.dp))
-            Registrate(texto = "Registrate")
+            Registrate(texto = "Regístrate")
             Spacer(Modifier.height(10.dp))
 
             FormularioRegistro(
@@ -97,7 +78,7 @@ fun RegisterScreen2(
                 onNombrePersonaChange = { nombrePersona = it },
                 onNombreUsuarioChange = { nombreUsuario = it },
                 onEmailChange = { email = it },
-                onPasswordChange = { password = it },
+                onPasswordChange = { password = it }
             )
 
             Spacer(Modifier.height(30.dp))
@@ -111,14 +92,14 @@ fun RegisterScreen2(
                 CheckboxDatos()
                 Spacer(Modifier.width(8.dp))
                 Terminos(
-                    texto = "He leido y acepto los terminos y condiciones",
+                    texto = "He leído y acepto los términos y condiciones",
                     modifier = Modifier.weight(1f)
                 )
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Botón de registro con AppButton(text = ...)
+            // 🔹 Botón de registro
             AppButton(
                 text = "Registrarse",
                 onClick = { onRegister(nombreUsuario, email, password) },
@@ -136,12 +117,6 @@ fun RegisterScreen2(
     }
 }
 
-@Preview (showBackground = true)
-@Composable
-fun RegisterScreen2Preview() {
-    RegisterScreen2()
-}
-
 @Composable
 fun FormularioRegistro(
     nombrePersona: String = "",
@@ -156,7 +131,7 @@ fun FormularioRegistro(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        modifier = modifier.padding(horizontal = 16.dp)
     ) {
         OutlinedTextField(
             value = nombrePersona,
@@ -166,21 +141,21 @@ fun FormularioRegistro(
                 Icon(
                     painter = painterResource(R.drawable.usuario),
                     modifier = Modifier.size(20.dp),
-                    contentDescription = "Icono de usuario"
+                    contentDescription = "Icono de usuario",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = colorResource(R.color.white),
-                unfocusedTextColor = colorResource(R.color.white),
-                focusedContainerColor = colorResource(R.color.gris),
-                unfocusedContainerColor = colorResource(R.color.gris),
-                focusedBorderColor = colorResource(R.color.azulClaro),
-                unfocusedBorderColor = colorResource(R.color.azulClaro),
-                focusedLabelColor = colorResource(R.color.white),
-                unfocusedLabelColor = colorResource(R.color.white),
-                disabledLabelColor = colorResource(R.color.white),
-                errorLabelColor = colorResource(R.color.white)
-            )
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
@@ -191,21 +166,21 @@ fun FormularioRegistro(
                 Icon(
                     painter = painterResource(R.drawable.usuario),
                     modifier = Modifier.size(20.dp),
-                    contentDescription = "Icono de usuario"
+                    contentDescription = "Icono de usuario",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = colorResource(R.color.white),
-                unfocusedTextColor = colorResource(R.color.white),
-                focusedContainerColor = colorResource(R.color.gris),
-                unfocusedContainerColor = colorResource(R.color.gris),
-                focusedBorderColor = colorResource(R.color.azulClaro),
-                unfocusedBorderColor = colorResource(R.color.azulClaro),
-                focusedLabelColor = colorResource(R.color.white),
-                unfocusedLabelColor = colorResource(R.color.white),
-                disabledLabelColor = colorResource(R.color.white),
-                errorLabelColor = colorResource(R.color.white)
-            )
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
@@ -216,21 +191,21 @@ fun FormularioRegistro(
                 Icon(
                     painter = painterResource(R.drawable.correo),
                     modifier = Modifier.size(20.dp),
-                    contentDescription = "Icono de correo"
+                    contentDescription = "Icono de correo",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = colorResource(R.color.white),
-                unfocusedTextColor = colorResource(R.color.white),
-                focusedContainerColor = colorResource(R.color.gris),
-                unfocusedContainerColor = colorResource(R.color.gris),
-                focusedBorderColor = colorResource(R.color.azulClaro),
-                unfocusedBorderColor = colorResource(R.color.azulClaro),
-                focusedLabelColor = colorResource(R.color.white),
-                unfocusedLabelColor = colorResource(R.color.white),
-                disabledLabelColor = colorResource(R.color.white),
-                errorLabelColor = colorResource(R.color.white)
-            )
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
 
         var mostrarPassword by remember { mutableStateOf(false) }
@@ -244,7 +219,8 @@ fun FormularioRegistro(
                 Icon(
                     painter = painterResource(R.drawable.candado),
                     modifier = Modifier.size(20.dp),
-                    contentDescription = "Icono de candado"
+                    contentDescription = "Icono de candado",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
             visualTransformation = if (mostrarPassword) VisualTransformation.None else PasswordVisualTransformation(),
@@ -253,23 +229,44 @@ fun FormularioRegistro(
                     Icon(
                         painter = painterResource(icono),
                         contentDescription = stringResource(R.string.mostrar_password),
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(22.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             },
+            singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = colorResource(R.color.white),
-                unfocusedTextColor = colorResource(R.color.white),
-                focusedContainerColor = colorResource(R.color.gris),
-                unfocusedContainerColor = colorResource(R.color.gris),
-                focusedBorderColor = colorResource(R.color.azulClaro),
-                unfocusedBorderColor = colorResource(R.color.azulClaro),
-                focusedLabelColor = colorResource(R.color.white),
-                unfocusedLabelColor = colorResource(R.color.white),
-                disabledLabelColor = colorResource(R.color.white),
-                errorLabelColor = colorResource(R.color.white)
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             ),
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
         )
+    }
+}
+
+@Preview(name = "Register Light", showSystemUi = true)
+@Composable
+fun RegisterScreen2PreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            RegisterScreen2()
+        }
+    }
+}
+
+@Preview(name = "Register Dark", showSystemUi = true)
+@Composable
+fun RegisterScreen2PreviewDark() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            RegisterScreen2()
+        }
     }
 }

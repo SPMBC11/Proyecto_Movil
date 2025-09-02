@@ -12,7 +12,7 @@ object AlbumRepository {
         // Mac Miller
         AlbumUI(201, "CIRCLES", "2020", R.drawable.circles, ArtistRepository.artists[1]),
         // Reemplazado Best of Mac → David Lynch
-        AlbumUI(202, "Mulholland Drive OST", "2001", R.drawable.david_lynch_pfp, ArtistRepository.artists[19]),
+        AlbumUI(202, "Mulholland Drive OST", "2001", R.drawable.mullholand, ArtistRepository.artists[19]),
 
         // Aminé
         AlbumUI(301, "Good for you", "2022", R.drawable.goodforyou, ArtistRepository.artists[2]),

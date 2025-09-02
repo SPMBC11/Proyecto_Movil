@@ -1,10 +1,17 @@
-package com.example.proyecto_movil.screen
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +26,13 @@ import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.utils.*
+import com.example.proyecto_movil.utils.AlbumHeader
+import com.example.proyecto_movil.utils.ClickableSectionTitle
+import com.example.proyecto_movil.utils.ScoreRow
+import com.example.proyecto_movil.utils.ScreenBackground
+import com.example.proyecto_movil.utils.SettingsIcon
+import com.example.proyecto_movil.utils.TitleBar
+import com.example.proyecto_movil.utils.UserReview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +43,14 @@ fun AlbumReviewScreen(
 ) {
     val albumReviews = ReviewRepository.reviews.filter { it.album.id == album.id }
 
-    ScreenBackground(backgroundRes = R.drawable.fondocriti, modifier = modifier) {
+    // 🔹 Fondo dinámico según tema
+    val backgroundRes = if (isSystemInDarkTheme()) {
+        R.drawable.fondocriti
+    } else {
+        R.drawable.fondocriti_light
+    }
+
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
 
         Column(
@@ -45,13 +65,14 @@ fun AlbumReviewScreen(
 
             AlbumHeader(
                 coverRes = album.coverRes,
-                title    = album.title,
-                artist   = album.artist.name,
-                year     = album.year
+                title = album.title,
+                artist = album.artist.name,
+                year = album.year
             )
 
             Spacer(Modifier.height(16.dp))
 
+            // 🔹 Imagen del artista
             Image(
                 painter = painterResource(id = album.artist.profilePic),
                 contentDescription = "Foto de ${album.artist.name}",
@@ -64,9 +85,10 @@ fun AlbumReviewScreen(
 
             Spacer(Modifier.height(20.dp))
 
+            // 🔹 Puntaje general del álbum
             ScoreRow(
                 scoreLabel = stringResource(id = R.string.puntaje_album),
-                usersHint  = stringResource(id = R.string.cantidad_usuarios_alb),
+                usersHint = stringResource(id = R.string.cantidad_usuarios_alb),
                 scoreValue = if (albumReviews.isNotEmpty())
                     (albumReviews.map { it.score }.average() * 10).toInt().toString() + "%"
                 else
@@ -84,18 +106,20 @@ fun AlbumReviewScreen(
 
             Column {
                 if (albumReviews.isEmpty()) {
-                    androidx.compose.material3.Text(
+                    Text(
                         text = "Aún no hay reseñas para este álbum",
-                        color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                         modifier = Modifier.padding(8.dp)
                     )
                 } else {
                     albumReviews.forEach { review ->
                         UserReview(
                             userImage = review.user.profilePic,
-                            userName  = review.user.username,
-                            reviewText= review.content,
-                            isLiked   = review.score > 6
+                            userName = review.user.username,
+                            reviewText = review.content,
+                            isLiked = review.score > 6
                         )
                     }
                 }
@@ -104,12 +128,26 @@ fun AlbumReviewScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showSystemUi = true)
 @Composable
-fun AlbumReviewScreenPreview() {
-    Proyecto_movilTheme {
-        AlbumReviewScreen(
-            album = AlbumRepository.albums.first()
-        )
+fun AlbumReviewScreenPreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            AlbumReviewScreen(
+                album = AlbumRepository.albums.first()
+            )
+        }
+    }
+}
+
+@Preview(name = "Dark Mode", showSystemUi = true)
+@Composable
+fun AlbumReviewScreenPreviewDark() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            AlbumReviewScreen(
+                album = AlbumRepository.albums.first()
+            )
+        }
     }
 }

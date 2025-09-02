@@ -1,24 +1,12 @@
+package com.example.proyecto_movil.screen
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,10 +27,13 @@ fun UserReviewScreen(
     review: ReviewInfo,
     onBack: () -> Unit
 ) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
     Box(modifier = Modifier.fillMaxSize()) {
-        // Fondo degradado
+        // 👉 Fondo dinámico
         Image(
-            painter = painterResource(id = R.drawable.fondocriti),
+            painter = painterResource(id = backgroundRes),
             contentDescription = stringResource(id = R.string.fondo_degradado),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -51,7 +42,12 @@ fun UserReviewScreen(
         Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text("Reseña", color = MaterialTheme.colorScheme.onSurface) },
+                    title = {
+                        Text(
+                            "Reseña",
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
                     navigationIcon = {
                         IconButton(onClick = onBack) {
                             Icon(
@@ -63,7 +59,7 @@ fun UserReviewScreen(
                     }
                 )
             },
-            containerColor = Color.Transparent // 👈 importante para ver el fondo
+            containerColor = Color.Transparent
         ) { padding ->
             Column(
                 modifier = Modifier
@@ -82,26 +78,28 @@ fun UserReviewScreen(
                 )
                 Spacer(Modifier.height(16.dp))
 
-                // Nombre del álbum
+                // Nombre y artista
                 Text(
                     text = review.album.title,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = review.album.artist.name,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(Modifier.height(24.dp))
 
-                // Score
+                // Score con colores semánticos
                 val scoreColor =
-                    if (review.score >= 7) Color(0xFF2E7D32) // verde
-                    else if (review.score >= 5) Color(0xFFF9A825) // amarillo
-                    else Color(0xFFC62828) // rojo
+                    when {
+                        review.score >= 7 -> Color(0xFF2E7D32) // verde
+                        review.score >= 5 -> Color(0xFFF9A825) // amarillo
+                        else -> Color(0xFFC62828) // rojo
+                    }
 
                 Surface(
                     color = scoreColor,
@@ -123,18 +121,18 @@ fun UserReviewScreen(
                 Text(
                     text = review.content,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
                 Spacer(Modifier.height(24.dp))
 
-                // Botón extra (opcional)
+                // Botón de acción
                 OutlinedButton(
                     onClick = { /* editar reseña */ },
                     shape = RoundedCornerShape(50),
                     colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = Color.White
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {
                     Text("Editar reseña")

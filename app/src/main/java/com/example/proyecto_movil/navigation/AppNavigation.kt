@@ -1,6 +1,6 @@
 package com.example.proyecto_movil.navigation
 
-import UserReviewScreen
+import AlbumReviewScreen
 import WelcomeScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +17,7 @@ import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.screen.*
+import com.example.proyecto_movil.screen.UserReviewScreen
 
 @Composable
 fun AppNavHost(
@@ -50,9 +51,6 @@ fun AppNavHost(
                 },
                 onForgotPassword = { /* TODO */ },
                 onRegister = { navController.navigate(Screen.Register.route) },
-                onGoogle = { navController.navigate(Screen.Home.route) },
-                onFacebook = { navController.navigate(Screen.Home.route) },
-                onApple = { navController.navigate(Screen.Home.route) },
             )
         }
 

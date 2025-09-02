@@ -17,17 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import androidx.compose.foundation.isSystemInDarkTheme
 
 @Composable
 fun BackGroundImage(
     modifier: Modifier = Modifier
 ) {
-    // 👇 Si el fondo es claro, usa logo oscuro; si es oscuro, usa logo blanco
-    val logoRes = if (MaterialTheme.colorScheme.background.luminance() > 0.5f) {
-        R.drawable.logo_negro // tu versión oscura (para fondo claro)
-    } else {
-        R.drawable.logo // tu versión blanca (para fondo oscuro)
-    }
+    val darkTheme = isSystemInDarkTheme()
+    val logoRes = if (darkTheme) R.drawable.logo else R.drawable.logo_negro
 
     Box(
         modifier = modifier
@@ -53,6 +50,7 @@ fun BackGroundImage(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

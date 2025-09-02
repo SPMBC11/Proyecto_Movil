@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
+// ✅ Fondo con imagen dinámico
 @Composable
 fun ScreenBackground(
     @DrawableRes backgroundRes: Int,
@@ -36,6 +37,7 @@ fun ScreenBackground(
     }
 }
 
+// ✅ Icono de ajustes con color adaptable
 @Composable
 fun SettingsIcon(
     modifier: Modifier = Modifier,
@@ -51,6 +53,7 @@ fun SettingsIcon(
     )
 }
 
+// ✅ Título de barra superior
 @Composable
 fun TitleBar(
     text: String,
@@ -70,6 +73,7 @@ fun TitleBar(
     }
 }
 
+// ✅ Encabezado de álbum (titulo, artista, año)
 @Composable
 fun AlbumHeader(
     @DrawableRes coverRes: Int,
@@ -94,10 +98,20 @@ fun AlbumHeader(
             fontSize = 30.sp,
             fontWeight = FontWeight.SemiBold,
         )
-        Text(text = artist, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 18.sp)
-        Text(text = year, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+        Text(
+            text = artist,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 18.sp
+        )
+        Text(
+            text = year,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 14.sp
+        )
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,19 +123,18 @@ fun ReadOnlyField(
         value = value,
         onValueChange = {},
         readOnly = true,
+        enabled = false, // ✅ hace que use disabledColors
+        modifier = modifier,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedLabelColor = MaterialTheme.colorScheme.onSurface,
-            unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
-            cursorColor = MaterialTheme.colorScheme.onSurface,
-            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-            focusedBorderColor = MaterialTheme.colorScheme.outline,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-        ),
-        modifier = modifier
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,      // texto adaptado
+            disabledBorderColor = MaterialTheme.colorScheme.outline,      // borde adaptado
+            disabledContainerColor = MaterialTheme.colorScheme.surface,   // fondo adaptado al tema
+            cursorColor = MaterialTheme.colorScheme.onSurface
+        )
     )
 }
 
+// ✅ Fila de puntaje adaptada
 @Composable
 fun ScoreRow(
     scoreLabel: String,
@@ -156,6 +169,7 @@ fun ScoreRow(
     }
 }
 
+// ✅ Sección con título y subtítulo
 @Composable
 fun SectionTitle(
     title: String,
@@ -181,6 +195,7 @@ fun SectionTitle(
     }
 }
 
+// ✅ Fila con dos botones redondeados adaptados al tema
 @Composable
 fun ActionButtonsRow(
     leftText: String,
@@ -199,19 +214,25 @@ fun ActionButtonsRow(
     ) {
         Button(
             onClick = onLeftClick,
-            colors = ButtonDefaults.buttonColors(containerColor = leftColor),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = leftColor,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             shape = RoundedCornerShape(50),
             modifier = Modifier.weight(1f)
         ) {
-            Text(leftText, color = MaterialTheme.colorScheme.onPrimary)
+            Text(leftText)
         }
         Button(
             onClick = onRightClick,
-            colors = ButtonDefaults.buttonColors(containerColor = rightColor),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = rightColor,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
             shape = RoundedCornerShape(50),
             modifier = Modifier.weight(1f)
         ) {
-            Text(rightText, color = MaterialTheme.colorScheme.onPrimary)
+            Text(rightText)
         }
     }
 }

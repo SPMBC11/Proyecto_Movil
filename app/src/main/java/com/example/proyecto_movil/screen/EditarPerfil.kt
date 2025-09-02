@@ -1,11 +1,14 @@
 package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.utils.BotonEditarImagen
 import com.example.proyecto_movil.ui.utils.BotonGuardar
-import com.example.proyecto_movil.ui.utils.TituloArtista
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.ScreenBackground
 
 @Composable
@@ -38,32 +41,41 @@ fun EditarPerfil(
     onEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
 ) {
-    ScreenBackground(backgroundRes = R.drawable.fondocriti) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // TopBar
+            // ---------- TopBar ----------
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(onClick = onBack) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver"
+                        contentDescription = "Volver",
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
-                Spacer(Modifier.weight(1f))
-                TituloArtista("Editar perfil")
-                Spacer(Modifier.weight(1f))
+                Text(
+                    text = "Editar perfil",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.width(48.dp)) // balancea el espacio del botón back
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
 
-            // Avatar
+            // ---------- Avatar ----------
             Image(
                 painter = painterResource(id = R.drawable.xocas),
                 contentDescription = "Avatar",
@@ -84,7 +96,7 @@ fun EditarPerfil(
 
             Spacer(Modifier.height(24.dp))
 
-            // Campos compactos
+            // ---------- Campos ----------
             CompactTextField(
                 value = nombrePersona,
                 onValueChange = onNombrePersonaChange,
@@ -146,18 +158,19 @@ fun CompactTextField(
             Icon(
                 painter = painterResource(icon),
                 contentDescription = null,
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(18.dp),
+                tint = MaterialTheme.colorScheme.onSurface
             )
         },
         trailingIcon = if (isPassword && onTogglePassword != null) {
             {
                 IconButton(onClick = onTogglePassword) {
                     Icon(
-                        painter = painterResource(
-                            if (mostrarPassword) R.drawable.view else R.drawable.hide
-                        ),
+                        imageVector = if (mostrarPassword) Icons.Default.Visibility
+                        else Icons.Default.VisibilityOff,
                         contentDescription = "Toggle password",
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -165,23 +178,52 @@ fun CompactTextField(
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
-        visualTransformation = if (isPassword && !mostrarPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (isPassword && !mostrarPassword)
+            PasswordVisualTransformation()
+        else
+            VisualTransformation.None,
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp) // 👈 compactos
+            .height(50.dp)
             .padding(vertical = 6.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            focusedLabelColor = MaterialTheme.colorScheme.onBackground,
-            unfocusedLabelColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-            cursorColor = MaterialTheme.colorScheme.primary
+            focusedLabelColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
         )
     )
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light Mode", showSystemUi = true)
 @Composable
-fun EditarPerfilPreview() {
-    EditarPerfil()
+fun EditarPerfilPreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            EditarPerfil(
+                nombrePersona = "Juan Pérez",
+                nombreUsuario = "juanp123",
+                email = "juan@mail.com",
+                password = "123456"
+            )
+        }
+    }
+}
+
+@Preview(name = "Dark Mode", showSystemUi = true)
+@Composable
+fun EditarPerfilPreviewDark() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            EditarPerfil(
+                nombrePersona = "Juan Pérez",
+                nombreUsuario = "juanp123",
+                email = "juan@mail.com",
+                password = "123456"
+            )
+        }
+    }
 }

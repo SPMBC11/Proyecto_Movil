@@ -2,6 +2,7 @@ package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -21,15 +21,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.utils.ScreenBackground
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.ClickableSectionTitle
+import com.example.proyecto_movil.utils.ScreenBackground
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit = {}
 ) {
-    ScreenBackground(backgroundRes = R.drawable.fondocriti) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
+    ScreenBackground(backgroundRes = backgroundRes) {
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -76,21 +80,21 @@ private fun Header(onBackClick: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = "Volver",
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
                 .size(30.dp)
                 .clickable { onBackClick() }
         )
         Text(
             text = "Configuración",
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
         Icon(
             imageVector = Icons.Filled.ExitToApp,
             contentDescription = "Cerrar sesión",
-            tint = Color.White,
+            tint = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.size(30.dp)
         )
     }
@@ -98,9 +102,7 @@ private fun Header(onBackClick: () -> Unit) {
 
 @Composable
 private fun ProfileSection() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = painterResource(id = R.drawable.xocas),
             contentDescription = "Avatar de el.xokas",
@@ -112,16 +114,16 @@ private fun ProfileSection() {
         Column {
             Text(
                 text = "el.xokas",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "Ver perfil",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable { /* Acción para ver perfil */ }
+                modifier = Modifier.clickable { /* Acción ver perfil */ }
             )
         }
     }
@@ -146,16 +148,16 @@ private fun PrivacySection() {
     Spacer(modifier = Modifier.height(8.dp))
     SettingItem(text = "Playlists públicas", hasSwitch = true, isChecked = false)
     Spacer(modifier = Modifier.height(8.dp))
-    SettingItem(text = "Playlists aparecen en tu perfil", hasSwitch = true, isChecked = true)
+    SettingItem(text = "Playlists en tu perfil", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))
     SettingItem(text = "Mostrar seguidores y seguidos", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))
     Text(
         text = "Usuarios bloqueados",
-        color = Color(0xFFC83838),
+        color = MaterialTheme.colorScheme.error,
         fontSize = 16.sp,
         textDecoration = TextDecoration.Underline,
-        modifier = Modifier.clickable { /* Acción para ver usuarios bloqueados */ }
+        modifier = Modifier.clickable { /* Acción ver bloqueados */ }
     )
 }
 
@@ -163,7 +165,7 @@ private fun PrivacySection() {
 private fun ContentSection() {
     ClickableSectionTitle(title = "Contenido y visualización")
     Spacer(modifier = Modifier.height(16.dp))
-    SettingItem(text = "Permitir la reproducción de contenido explícito", hasSwitch = true, isChecked = true)
+    SettingItem(text = "Permitir contenido explícito", hasSwitch = true, isChecked = true)
     Spacer(modifier = Modifier.height(8.dp))
     SettingItem(text = "Mostrar contenido no disponible en mi país", hasSwitch = true, isChecked = false)
 }
@@ -190,7 +192,7 @@ private fun SettingItem(
     ) {
         Text(
             text = text,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 16.sp
         )
         if (hasSwitch) {
@@ -199,10 +201,10 @@ private fun SettingItem(
                 checked = checked,
                 onCheckedChange = { checked = it },
                 colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.White,
-                    checkedTrackColor = Color(0xFF1DB954),
-                    uncheckedThumbColor = Color.Gray,
-                    uncheckedTrackColor = Color.LightGray
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
         }
@@ -213,18 +215,29 @@ private fun SettingItem(
 private fun DeactivateAccountButton() {
     Text(
         text = "Desactivar mi cuenta",
-        color = Color(0xFF06A0B5),
+        color = MaterialTheme.colorScheme.primary,
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .clickable { /* Acción para desactivar cuenta */ }
+            .clickable { /* Acción desactivar */ }
     )
 }
 
-@Preview(showBackground = true)
+/* ---------- Previews ---------- */
+@Preview(showBackground = true, name = "Settings Light", showSystemUi = true)
 @Composable
-fun SettingsScreenPreview() {
-    SettingsScreen()
+fun SettingsScreenLightPreview() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        SettingsScreen()
+    }
+}
+
+@Preview(showBackground = true, name = "Settings Dark", showSystemUi = true)
+@Composable
+fun SettingsScreenDarkPreview() {
+    Proyecto_movilTheme(useDarkTheme = true) {
+        SettingsScreen()
+    }
 }

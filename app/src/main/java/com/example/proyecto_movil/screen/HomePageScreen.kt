@@ -3,6 +3,7 @@ package com.example.proyecto_movil.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,16 +15,11 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,6 +33,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import com.example.proyecto_movil.utils.ScreenBackground
 
 @Composable
 fun HomeScreen(
@@ -45,15 +43,10 @@ fun HomeScreen(
     onHomeClick: () -> Unit = {},
     onProfileClick: () -> Unit = {}
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
-        // Fondo
-        Image(
-            painter = painterResource(id = R.drawable.fondocriti),
-            contentDescription = stringResource(id = R.string.fondo_degradado),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
 
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
         // Contenido principal
         Column(
             modifier = Modifier
@@ -129,13 +122,13 @@ private fun HeaderSection() {
             Column {
                 Text(
                     text = "Bienvenido de vuelta",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
                     text = "Juan",
-                    color = Color.White.copy(alpha = 0.8f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 16.sp
                 )
             }
@@ -147,7 +140,7 @@ private fun HeaderSection() {
             modifier = Modifier
                 .padding(30.dp)
                 .size(30.dp),
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -159,22 +152,22 @@ private fun SearchBar() {
         value = "",
         onValueChange = {},
         leadingIcon = {
-            Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White)
+            Icon(Icons.Filled.Search, contentDescription = null, tint = MaterialTheme.colorScheme.onSurface)
         },
         placeholder = {
             Text(
                 text = "Busca entre más de 5 millones de álbumes",
-                color = Color.White.copy(alpha = 0.75f)
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
         singleLine = true,
         shape = RoundedCornerShape(26.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color(0xFF0AAAC0),
-            unfocusedBorderColor = Color(0xFF0AAAC0),
-            cursorColor = Color.White,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+            unfocusedTextColor = MaterialTheme.colorScheme.onSurface
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -191,7 +184,7 @@ private fun SectionRow(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 28.sp,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier.padding(bottom = 12.dp, start = 4.dp)
@@ -229,7 +222,7 @@ private fun AlbumCard(
         Spacer(Modifier.height(10.dp))
         Text(
             text = album.title,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = 10.sp,
             fontWeight = FontWeight.ExtraBold,
             maxLines = 2,
@@ -238,7 +231,7 @@ private fun AlbumCard(
         if (album.artist.name.isNotBlank()) {
             Text(
                 text = album.artist.name,
-                color = Color.White.copy(alpha = 0.85f),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 10.sp
             )
         }
@@ -253,19 +246,23 @@ private fun BottomBar(
 ) {
     Row(
         modifier = modifier
-            .background(Color(0xFF0C0C0C).copy(alpha = 0.6f))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f))
             .padding(vertical = 10.dp, horizontal = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         BottomBarItem(
-            icon = { Icon(Icons.Filled.Home, null, tint = Color(0xFF06A0B5)) },
+            icon = {
+                Icon(Icons.Filled.Home, null, tint = MaterialTheme.colorScheme.primary)
+            },
             label = "Home",
             active = true,
             onClick = onHomeClick
         )
         BottomBarItem(
-            icon = { Icon(Icons.Filled.Person, null, tint = Color.White) },
+            icon = {
+                Icon(Icons.Filled.Person, null, tint = MaterialTheme.colorScheme.onSurface)
+            },
             label = "Perfil",
             active = false,
             onClick = onProfileClick
@@ -291,15 +288,14 @@ private fun BottomBarItem(
         Spacer(Modifier.height(4.dp))
         Text(
             text = label,
-            color = if (active) Color(0xFF06A0B5) else Color.White,
+            color = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp,
             fontWeight = if (active) FontWeight.SemiBold else FontWeight.Normal
         )
     }
 }
 
-/* ---------- Wrapper opcional con navegación simple ---------- */
-
+/* ---------- Wrapper con navegación ---------- */
 @Composable
 fun HomeScreenRoute(navController: NavController) {
     HomeScreen(
@@ -315,9 +311,24 @@ fun HomeScreenRoute(navController: NavController) {
 }
 
 /* ---------- Preview ---------- */
-@Preview(showBackground = true, name = "HomeScreen Preview")
+@Preview(name = "HomeScreen Light", showSystemUi = true)
 @Composable
-fun HomeScreenPreview() {
+fun HomeScreenPreviewLight() {
     val navController = rememberNavController()
-    HomeScreenRoute(navController)
+    Proyecto_movilTheme(useDarkTheme = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeScreenRoute(navController)
+        }
+    }
+}
+
+@Preview(name = "HomeScreen Dark", showSystemUi = true)
+@Composable
+fun HomeScreenPreviewDark() {
+    val navController = rememberNavController()
+    Proyecto_movilTheme(useDarkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeScreenRoute(navController)
+        }
+    }
 }

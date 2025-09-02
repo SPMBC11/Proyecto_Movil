@@ -2,6 +2,7 @@ package com.example.proyecto_movil.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +27,6 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
-import com.example.proyecto_movil.data.local.UserRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
@@ -43,14 +43,18 @@ fun UserProfileScreen(
     onSettingsClick: () -> Unit,
     onEditProfile: () -> Unit
 ) {
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+
     Box(modifier = Modifier.fillMaxSize()) {
-        // 👉 Fondo
+        // 👉 Fondo dinámico
         Image(
-            painter = painterResource(id = R.drawable.fondocriti),
+            painter = painterResource(id = backgroundRes),
             contentDescription = stringResource(id = R.string.fondo_degradado),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
         Scaffold(
             topBar = {
                 Row(
@@ -63,7 +67,7 @@ fun UserProfileScreen(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Atrás",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .size(28.dp)
                             .clickable { /* onBack */ }
@@ -71,14 +75,14 @@ fun UserProfileScreen(
                     Icon(
                         imageVector = Icons.Default.Settings,
                         contentDescription = "Configuración",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .size(28.dp)
                             .clickable { onSettingsClick() }
                     )
                 }
             },
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.6f)
         ) { padding ->
             Column(
                 modifier = Modifier
@@ -96,18 +100,37 @@ fun UserProfileScreen(
                         .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                Text(text = username, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.White)
-                Text(text = "$followers seguidores • $following siguiendo", color = Color.White)
+                Text(
+                    text = username,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "$followers seguidores • $following siguiendo",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                OutlinedButton(onClick = onEditProfile, shape = RoundedCornerShape(50)) {
-                    Text("Editar perfil", color = Color.White)
+                OutlinedButton(
+                    onClick = onEditProfile,
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Text("Editar perfil", color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Álbumes favoritos
-                Text("Tus álbumes favoritos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(vertical = 16.dp)) {
+                Text(
+                    "Tus álbumes favoritos",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
                     items(favoriteAlbums.size) { index ->
                         val album = favoriteAlbums[index]
                         Column(
@@ -124,8 +147,18 @@ fun UserProfileScreen(
                                     .clip(RoundedCornerShape(8.dp))
                             )
                             Spacer(Modifier.height(6.dp))
-                            Text(album.title, color = Color.White, fontWeight = FontWeight.Bold, maxLines = 1, fontSize = 14.sp)
-                            Text(album.artist.name, color = Color.Gray, fontSize = 12.sp)
+                            Text(
+                                album.title,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                fontSize = 14.sp
+                            )
+                            Text(
+                                album.artist.name,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 12.sp
+                            )
                         }
                     }
                 }
@@ -133,7 +166,12 @@ fun UserProfileScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Reseñas
-                Text("Tus reseñas", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color.White)
+                Text(
+                    "Tus reseñas",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                     reviews.forEach { review ->
@@ -152,22 +190,31 @@ fun UserProfileScreen(
                             )
                             Spacer(Modifier.width(12.dp))
                             Column(Modifier.weight(1f)) {
-                                Text(review.album.title.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                Text(review.album.artist.name.uppercase(), color = Color.Gray, fontSize = 12.sp)
+                                Text(
+                                    review.album.title.uppercase(),
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                                Text(
+                                    review.album.artist.name.uppercase(),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    fontSize = 12.sp
+                                )
                                 OutlinedButton(
                                     onClick = { onReviewClick(review) },
                                     shape = RoundedCornerShape(50),
                                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                                     modifier = Modifier.padding(top = 6.dp)
                                 ) {
-                                    Text("Ver reseña", fontSize = 12.sp, color = Color.White)
+                                    Text("Ver reseña", fontSize = 12.sp)
                                 }
                             }
                             Spacer(Modifier.width(8.dp))
                             val scoreColor =
-                                if (review.score >= 7) Color(0xFF2E7D32)
-                                else if (review.score >= 5) Color(0xFFF9A825)
-                                else Color(0xFFC62828)
+                                if (review.score >= 7) Color(0xFF2E7D32) // verde
+                                else if (review.score >= 5) Color(0xFFF9A825) // amarillo
+                                else Color(0xFFC62828) // rojo
                             Surface(color = scoreColor, shape = RoundedCornerShape(6.dp)) {
                                 Text(
                                     text = "${(review.score * 10).toInt()}%",
@@ -178,9 +225,9 @@ fun UserProfileScreen(
                             }
                             Spacer(Modifier.width(8.dp))
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_edit), // asegúrate de tener este ícono
+                                painter = painterResource(id = R.drawable.ic_edit),
                                 contentDescription = "Editar reseña",
-                                tint = Color.White,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -196,16 +243,40 @@ fun UserProfileScreen(
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Ver reseñas y playlists", color = Color.White)
+                    Text("Ver reseñas y playlists", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, name = "UserProfile Light", showSystemUi = true)
 @Composable
-fun UserProfilePreview() {
+fun UserProfilePreviewLight() {
+    Proyecto_movilTheme(useDarkTheme = false) {
+        UserProfileScreen(
+            username = "el.xokas",
+            bio = "Streamer y crítico musical 🎶",
+            followers = 17,
+            following = 78,
+            profilePicRes = R.drawable.xocas,
+            favoriteAlbums = listOf(
+                AlbumRepository.albums[11],
+                AlbumRepository.albums[12],
+                AlbumRepository.albums[13]
+            ),
+            reviews = ReviewRepository.reviews.take(3),
+            onAlbumClick = {},
+            onReviewClick = {},
+            onSettingsClick = {},
+            onEditProfile = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "UserProfile Dark", showSystemUi = true)
+@Composable
+fun UserProfilePreviewDark() {
     Proyecto_movilTheme(useDarkTheme = true) {
         UserProfileScreen(
             username = "el.xokas",
@@ -214,9 +285,9 @@ fun UserProfilePreview() {
             following = 78,
             profilePicRes = R.drawable.xocas,
             favoriteAlbums = listOf(
-                AlbumRepository.albums[11], // Gipsy Kings
-                AlbumRepository.albums[12], // Abraham Mateo
-                AlbumRepository.albums[13]  // Lánzalo
+                AlbumRepository.albums[11],
+                AlbumRepository.albums[12],
+                AlbumRepository.albums[13]
             ),
             reviews = ReviewRepository.reviews.take(3),
             onAlbumClick = {},

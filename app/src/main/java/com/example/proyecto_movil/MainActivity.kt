@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.navigation.AppNavHost
 import com.example.proyecto_movil.utils.AppLogo
@@ -20,7 +21,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val navController = rememberNavController()
+
             Proyecto_movilTheme {
                 var showSplash by remember { mutableStateOf(true) }
 
@@ -30,14 +34,18 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Scaffold(
-                    topBar = { /* podrías meter un TopAppBar global aquí si quieres */ },
-                    bottomBar = { /* también tu BottomNavigation si lo usas global */ }
+                    topBar = {
+
+                    },
+                    bottomBar = {  }
                 ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         if (showSplash) {
                             SplashScreen()
                         } else {
-                            AppNavHost()
+                            AppNavHost(
+                                navController = navController
+                            )
                         }
                     }
                 }

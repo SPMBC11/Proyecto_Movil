@@ -49,8 +49,19 @@ object UserRepository {
             followers = 220,
             following = 180,
             playlists = listOf(PlaylistRepository.playlists[4])
+        ),
+        UserUI(
+            id = 6,
+            username = "el.xokas",
+            profilePic = R.drawable.xocas,
+            bio = "Streamer y crítico musical 🎶",
+            followers = 17,
+            following = 78,
+            playlists = listOf(PlaylistRepository.playlists[4])
         )
     )
 
     fun getUserById(id: Int): UserUI? = users.find { it.id == id }
+    // 🔹 Usuario simulado como autenticado
+    var currentUser: UserUI = users.first { it.username == "el.xokas" }
 }

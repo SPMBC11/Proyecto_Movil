@@ -19,8 +19,8 @@ fun SocialLoginButton(
     text: String,
     icon: Painter,
     onClick: () -> Unit,
-    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant, // 👈 dinámico
-    contentColor: Color = MaterialTheme.colorScheme.onSurface // 👈 dinámico
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface //
 ) {
     Button(
         onClick = onClick,

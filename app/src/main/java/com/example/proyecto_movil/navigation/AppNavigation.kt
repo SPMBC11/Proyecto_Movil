@@ -1,27 +1,32 @@
 package com.example.proyecto_movil.navigation
 
-import AlbumReviewScreen
+import com.example.proyecto_movil.screen.AlbumReviewScreen
 import WelcomeScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.proyecto_movil.R
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
+import com.example.proyecto_movil.data.local.UserRepository
 import com.example.proyecto_movil.screen.*
-import com.example.proyecto_movil.screen.UserReviewScreen
+import com.example.proyecto_movil.screen.HomePage.HomeScreen
+import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     startDestination: String = Screen.Welcome.route,
     modifier: Modifier = Modifier
 ) {
@@ -33,12 +38,9 @@ fun AppNavHost(
 
         // ---------- AUTH ----------
         composable(Screen.Welcome.route) {
-            WelcomeScreen(onStartClick = { navController.navigate(Screen.SignIn.route) })
+            WelcomeScreen(onStartClick = { navController.navigate(Screen.Login.route) })
         }
 
-        composable(Screen.SignIn.route) {
-            SignInScreen(onLoginClick = { navController.navigate(Screen.Login.route) })
-        }
 
         composable(Screen.Login.route) {
             LoginScreen(
@@ -67,42 +69,39 @@ fun AppNavHost(
         composable(Screen.Home.route) {
             HomeScreen(
                 onAlbumClick = { albumUi: AlbumUI ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("album", albumUi)
-                    navController.navigate(Screen.Album.route)
+                    navController.navigate(Screen.Album.createRoute(albumUi.id))
                 },
                 onHomeClick = { /* ya estás en Home */ },
-                onProfileClick = { navController.navigate(Screen.Profile.route) }
+                onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) }
             )
         }
 
-        // ---------- PROFILE ----------
-        composable(Screen.Profile.route) {
-            UserProfileScreen(
-                username = "Xokas",
-                bio = "Streamer, gamer y crítico musical 🎮🎶",
-                followers = 1200,
-                following = 500,
-                profilePicRes = R.drawable.xocas,
-                favoriteAlbums = AlbumRepository.albums.take(3),
-                reviews = ReviewRepository.reviews.take(2),
-                onAlbumClick = { album ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("album", album)
-                    navController.navigate(Screen.Album.route)
-                },
-                onReviewClick = { review ->
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("review", review)
-                    navController.navigate(Screen.UserReview.route)
-                },
-                onSettingsClick = { navController.navigate(Screen.Settings.route) },
-                onEditProfile = { navController.navigate(Screen.EditProfile.route) }
-            )
+// ---------- PERFIL (USUARIO ACTUAL Y OTROS) ----------
+        composable(
+            route = Screen.Profile.route,
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getInt("userId")
+            val user = userId?.let { UserRepository.getUserById(it) }
+
+            if (user != null) {
+                UserProfileScreen(
+                    user = user,
+                    reviews = ReviewRepository.getReviewsByUser(user.id),
+                    onBackClick = { navController.navigateUp() },
+                    onAlbumClick = { album -> navController.navigate("${Screen.Album.route}/${album.id}") },
+                    onReviewClick = { review ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set("review", review)
+                        navController.navigate(Screen.UserReview.route)
+                    },
+                    onSettingsClick = { navController.navigate(Screen.Settings.route) },
+                    onEditProfile = { navController.navigate(Screen.EditProfile.route) }
+                )
+            } else {
+                SimpleErrorScreen("Usuario no encontrado")
+            }
         }
+
 
         // ---------- REVIEW DETAIL ----------
         composable(Screen.Review.route) { backStackEntry ->
@@ -118,8 +117,12 @@ fun AppNavHost(
         }
 
         // ---------- ALBUM ----------
-        composable(Screen.Album.route) { backStackEntry ->
-            val album = backStackEntry.savedStateHandle.get<AlbumUI>("album")
+        composable(
+            route = "${Screen.Album.route}/{albumId}",
+            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val albumId = backStackEntry.arguments?.getInt("albumId")
+            val album = AlbumRepository.albums.find { it.id == albumId }
             if (album != null) {
                 AlbumReviewScreen(
                     album = album,
@@ -134,7 +137,7 @@ fun AppNavHost(
         composable(Screen.Artist.route) {
             ArtistPage(
                 onBack = { navController.navigateUp() },
-                onOpenAlbum = { /* si usas id, navega a Album con id */ },
+                onOpenAlbum = { /* opcional */ },
                 onSeeAll = { /* opcional */ }
             )
         }
@@ -148,6 +151,7 @@ fun AppNavHost(
 
         // ---------- EDITAR PERFIL ----------
         composable(Screen.EditProfile.route) {
+            val userId = navController.currentBackStackEntry?.arguments?.getInt("userId")
             EditarPerfil(
                 onBack = { navController.navigateUp() }
             )
@@ -183,5 +187,16 @@ private fun SimpleErrorScreen(message: String) {
         contentAlignment = androidx.compose.ui.Alignment.Center
     ) {
         Text(text = message, color = MaterialTheme.colorScheme.onBackground)
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun AppNavHostPreview() {
+    val navController = rememberNavController()
+    Proyecto_movilTheme {
+        Surface {
+            AppNavHost(navController = navController)
+        }
     }
 }

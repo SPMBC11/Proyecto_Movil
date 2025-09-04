@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import androidx.compose.foundation.isSystemInDarkTheme
+import com.example.proyecto_movil.utils.ScreenBackground
 
 @Composable
 fun BackGroundImage(
@@ -25,14 +26,13 @@ fun BackGroundImage(
 ) {
     val darkTheme = isSystemInDarkTheme()
     val logoRes = if (darkTheme) R.drawable.logo else R.drawable.logo_negro
+    val backgroundRes = if (darkTheme) R.drawable.fondocriti else R.drawable.fondocriti_light
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.Center)
+        ) {
             Image(
                 painter = painterResource(id = logoRes),
                 contentDescription = stringResource(R.string.critichord),
@@ -50,6 +50,7 @@ fun BackGroundImage(
         }
     }
 }
+
 
 
 @Preview(showBackground = true)

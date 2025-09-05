@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme

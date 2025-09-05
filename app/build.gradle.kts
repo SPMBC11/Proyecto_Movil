@@ -3,25 +3,21 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    // Hilt (plugin)
+    // Hilt
     alias(libs.plugins.dagger)
+    kotlin("kapt") // para KAPT
 
-    // KAPT para Hilt
-    kotlin("kapt")
-
-    // Parcelize para @Parcelize (evita @error.NonExistentClass)
+    // Parcelize (@Parcelize)
     id("kotlin-parcelize")
 
-    // Serialization (solo si usas @Serializable)
+    // Serialization (si usas @Serializable)
     alias(libs.plugins.kotlin.serialization)
-
-    // KSP solo si lo necesitas (Room/Moshi codegen, etc.)
-    // Si no lo usas, puedes comentarlo:
-    // alias(libs.plugins.google.ksp)
 
     // Firebase
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+
+    // alias(libs.plugins.google.ksp)
 }
 
 android {
@@ -39,9 +35,7 @@ android {
     }
 
     buildTypes {
-        debug {
-            isDebuggable = true
-        }
+        debug { isDebuggable = true }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -51,14 +45,12 @@ android {
         }
     }
 
-    // ✅ Usa Java 17 para mejor compatibilidad con AGP/Hilt/KAPT
+    // ✅ Usa Java 17
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    kotlinOptions { jvmTarget = "17" }
 
     packaging {
         resources {
@@ -76,7 +68,6 @@ android {
 dependencies {
     // --- Compose BOM ---
     implementation(platform(libs.androidx.compose.bom))
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -92,21 +83,20 @@ dependencies {
     // Navigation (Compose)
     implementation("androidx.navigation:navigation-compose:2.7.2")
 
-    // Material Icons (usa la versión del BOM → sin versión explícita)
+    // Material Icons
     implementation("androidx.compose.material:material-icons-extended")
 
-    // Lifecycle / ViewModel Compose
+    // Lifecycle / ViewModel
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
-    // --- Hilt (alineado 2.52) ---
+    // --- Hilt ---
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-android-compiler:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    // Solo si usas hilt-work u otras anotaciones de androidx.hilt:
-    // kapt("androidx.hilt:hilt-compiler:1.2.0")
+    // kapt("androidx.hilt:hilt-compiler:1.2.0") // solo si usas hilt-work
 
-    // --- Firebase (BOM) ---
+    // --- Firebase ---
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
@@ -123,7 +113,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    // --- (Opcional) kotlinx.serialization si usas @Serializable ---
+    // --- kotlinx.serialization ---
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // --- Tests ---
@@ -135,13 +125,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Adicionales tests
+    // Extra tests
     testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1") // versión estable para coroutines-test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
     testImplementation("com.google.truth:truth:1.4.2")
     androidTestImplementation("com.google.truth:truth:1.4.2")
 
-    // Hilt testing (alineado a 2.52)
+    // Hilt testing
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
 

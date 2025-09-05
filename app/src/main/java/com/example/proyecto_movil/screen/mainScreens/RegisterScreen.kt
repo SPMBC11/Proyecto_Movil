@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.mainScreens
 
 import com.example.proyecto_movil.utils.AppButton
 import androidx.compose.foundation.Image
@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.utils.*
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.proyecto_movil.uiViews.auth.AuthUiEvent
+import com.example.proyecto_movil.uiViews.auth.AuthViewModel
 
 @Composable
 fun RegisterScreen2(
@@ -28,6 +32,9 @@ fun RegisterScreen2(
     onRegister: (String, String, String) -> Unit = { _, _, _ -> },
     onLogin: () -> Unit = {}
 ) {
+    val authViewModel: AuthViewModel = viewModel()
+    val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
+
     var nombrePersona by remember { mutableStateOf("") }
     var nombreUsuario by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -37,7 +44,6 @@ fun RegisterScreen2(
     val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
 
     Box(modifier = modifier.fillMaxSize()) {
-        // 🔹 Fondo dinámico
         Image(
             painter = painterResource(id = backgroundRes),
             contentDescription = stringResource(id = R.string.fondo_degradado),
@@ -45,7 +51,6 @@ fun RegisterScreen2(
             contentScale = ContentScale.Crop
         )
 
-        // 🔹 Botón atrás
         IconButton(
             onClick = onBack,
             modifier = Modifier.padding(16.dp)
@@ -75,8 +80,14 @@ fun RegisterScreen2(
                 password = password,
                 onNombrePersonaChange = { nombrePersona = it },
                 onNombreUsuarioChange = { nombreUsuario = it },
-                onEmailChange = { email = it },
-                onPasswordChange = { password = it }
+                onEmailChange = {
+                    email = it
+                    authViewModel.onEvent(AuthUiEvent.OnEmailChange(it))
+                },
+                onPasswordChange = {
+                    password = it
+                    authViewModel.onEvent(AuthUiEvent.OnPasswordChange(it))
+                }
             )
 
             Spacer(Modifier.height(30.dp))
@@ -97,10 +108,12 @@ fun RegisterScreen2(
 
             Spacer(Modifier.height(16.dp))
 
-            // 🔹 Botón de registro
             AppButton(
                 text = "Registrarse",
-                onClick = { onRegister(nombreUsuario, email, password) },
+                onClick = {
+                    onRegister(nombreUsuario, email, password)
+                    authViewModel.onEvent(AuthUiEvent.OnRegisterClick)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -111,6 +124,13 @@ fun RegisterScreen2(
                 texto = "¿Ya tienes una cuenta? Inicia sesión",
                 onClick = onLogin
             )
+        }
+
+        if (authState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
         }
     }
 }

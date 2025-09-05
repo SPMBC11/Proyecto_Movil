@@ -1,6 +1,6 @@
 package com.example.proyecto_movil.navigation
 
-import com.example.proyecto_movil.screen.AlbumReviewScreen
+import com.example.proyecto_movil.screen.mainScreens.AlbumReviewScreen
 import WelcomeScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -20,8 +20,16 @@ import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.data.local.UserRepository
-import com.example.proyecto_movil.screen.*
-import com.example.proyecto_movil.screen.HomePage.HomeScreen
+import com.example.proyecto_movil.screen.components.ArtistPage
+import com.example.proyecto_movil.screen.components.ContentUser
+import com.example.proyecto_movil.screen.components.EditarPerfil
+import com.example.proyecto_movil.screen.components.SettingsScreen
+import com.example.proyecto_movil.screen.components.UserReviewScreen
+import com.example.proyecto_movil.screen.mainScreens.LoginScreen
+import com.example.proyecto_movil.screen.mainScreens.RegisterScreen2
+import com.example.proyecto_movil.screen.mainScreens.ReviewDetailScreen
+import com.example.proyecto_movil.screen.mainScreens.UserProfileScreen
+import com.example.proyecto_movil.uiViews.homePage.HomeScreen
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable

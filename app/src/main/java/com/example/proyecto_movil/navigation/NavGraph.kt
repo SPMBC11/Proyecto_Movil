@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.proyecto_movil.feature.album.ui.Artistpage
 import com.example.proyecto_movil.screen.*
 import com.example.proyecto_movil.utils.recursos.AlbumUi
@@ -62,11 +64,7 @@ fun AppNavHost(
         composable(Screen.Home.route) {
             HomeScreen(
                 onAlbumClick = { albumUi: AlbumUi ->
-                    // Guardamos el álbum seleccionado y navegamos al detalle
-                    navController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("album", albumUi)
-                    navController.navigate(Screen.Album.route)
+                    navController.navigate("${Screen.Album.route}/${albumUi.id}")
                 },
                 onHomeClick = { /* ya estás en Home */ },
                 onProfileClick = { navController.navigate(Screen.Profile.route) }
@@ -84,24 +82,15 @@ fun AppNavHost(
             )
         }
 
-        // ---------- ALBUM (SIN ID; recibe AlbumUi por savedStateHandle) ----------
-        composable(Screen.Album.route) { backStackEntry ->
-            val album: AlbumUi? =
-                navController.previousBackStackEntry?.savedStateHandle?.get("album")
-                    ?: backStackEntry.savedStateHandle.get("album")
-
-            if (album != null) {
-                albumReviewScreen(
-                    album = album,
-                    onArtistClick = {
-                        // Si luego tienes artistId en AlbumUi, navega con id:
-                        // navController.navigate("${Screen.Artist.route}/${album.artistId}")
-                        navController.navigate(Screen.Artist.route)
-                    }
-                )
-            } else {
-                SimpleErrorScreen("No hay álbum seleccionado")
-            }
+        // ---------- ALBUM (CON ID; usa SavedStateHandle) ----------
+        composable(
+            route = "${Screen.Album.route}/{albumId}",
+            arguments = listOf(navArgument("albumId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            AlbumReviewRoute(
+                backStackEntry = backStackEntry,
+                onArtistClick = { navController.navigate(Screen.Artist.route) }
+            )
         }
 
         // ---------- ARTISTA (GENÉRICO) ----------
@@ -133,9 +122,7 @@ fun AppNavHost(
             ContentUser(
                 onBack = { navController.navigateUp() },
                 onOpenAlbum = { albumId ->
-                    // Si quieres abrir un álbum específico desde ContentUser:
-                    // navController.navigate("${Screen.Album.route}/$albumId")
-                    navController.navigate(Screen.Album.route)
+                    navController.navigate("${Screen.Album.route}/$albumId")
                 }
             )
         }

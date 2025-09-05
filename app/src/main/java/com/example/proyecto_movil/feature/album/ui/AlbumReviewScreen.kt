@@ -23,12 +23,13 @@ import com.example.proyecto_movil.ui_components.ScoreRow
 import com.example.proyecto_movil.ui_components.SectionTitle
 import com.example.proyecto_movil.ui_components.ScreenBackground
 import com.example.proyecto_movil.ui_components.SettingsIcon
-import com.example.proyecto_movil.utils.recursos.AlbumUi
+import com.example.proyecto_movil.feature.album.domain.model.Album
+import com.example.proyecto_movil.feature.album.domain.model.Artist
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun albumReviewScreen(
-    album: AlbumUi,
+    album: Album,
     modifier: Modifier = Modifier,
     onArtistClick: () -> Unit = {}
 ) {
@@ -98,9 +99,16 @@ fun albumReviewScreen(
 @Preview(showBackground = true,)
 @Composable
 fun albumReviewScreenPreview() {
+    val previewAlbum = Album(
+        id = 101,
+        title = "CIRCLES",
+        year = "2020",
+        coverRes = R.drawable.mcmiller,
+        artist = Artist(id = 2, name = "Mac Miller", photoRes = R.drawable.mcmiller)
+    )
     albumReviewScreen(
-        album = TODO(),
-        modifier = TODO(),
-        onArtistClick = TODO()
+        album = previewAlbum,
+        modifier = Modifier,
+        onArtistClick = {}
     )
 }

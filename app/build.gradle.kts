@@ -66,4 +66,8 @@ dependencies {
     // Lifecycle Compose integrations for ViewModel factory and collectAsStateWithLifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
+    // Add ViewModel KTX for viewModelFactory { initializer { ... } } DSL
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.6")
+    // Core Lifecycle ViewModel (provides viewModelFactory/initializer DSL)
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.6")
 }

@@ -7,17 +7,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.proyecto_movil.feature.auth.ui.RegisterViewModel
 
 @Composable
 fun RegisterRoute(
+    vm: RegisterViewModel,
     onBack: () -> Unit,
     onRegistered: () -> Unit,
     onLogin: () -> Unit
 ) {
-    val vm: RegisterViewModel = viewModel()
     val uiState = vm.state.collectAsStateWithLifecycle().value
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -50,4 +50,3 @@ fun RegisterRoute(
         Text(text = data.visuals.message)
     }
 }
-

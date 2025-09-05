@@ -12,6 +12,8 @@ import androidx.navigation.navArgument
 import com.example.proyecto_movil.feature.album.ui.Artistpage
 import com.example.proyecto_movil.screen.*
 import com.example.proyecto_movil.utils.recursos.AlbumUi
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 
 @Composable
 fun AppNavHost(
@@ -35,7 +37,19 @@ fun AppNavHost(
         }
 
         composable(Screen.Login.route) {
+            // Crear ViewModel en NavGraph y pasarlo a la ruta
+            val loginVm: com.example.proyecto_movil.feature.auth.ui.LoginViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            com.example.proyecto_movil.feature.auth.ui.LoginViewModel(
+                                com.example.proyecto_movil.core.ServiceLocator.authRepository
+                            )
+                        }
+                    }
+                )
             LoginRoute(
+                vm = loginVm,
                 onBack = { navController.navigateUp() },
                 onLoggedIn = {
                     navController.navigate(Screen.Home.route) {
@@ -52,7 +66,11 @@ fun AppNavHost(
         }
 
         composable(Screen.Register.route) {
+            // Crear ViewModel en NavGraph y pasarlo a la ruta
+            val registerVm: com.example.proyecto_movil.feature.auth.ui.RegisterViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel()
             RegisterRoute(
+                vm = registerVm,
                 onBack = { navController.navigateUp() },
                 onRegistered = {
                     navController.navigate(Screen.Home.route) {
@@ -77,7 +95,19 @@ fun AppNavHost(
 
         // ---------- PROFILE ----------
         composable(Screen.Profile.route) {
+            // Crear ViewModel en NavGraph y pasarlo a la ruta
+            val profileVm: com.example.proyecto_movil.feature.profile.ui.UserProfileViewModel =
+                androidx.lifecycle.viewmodel.compose.viewModel(
+                    factory = viewModelFactory {
+                        initializer {
+                            com.example.proyecto_movil.feature.profile.ui.UserProfileViewModel(
+                                com.example.proyecto_movil.core.ServiceLocator.profileRepository
+                            )
+                        }
+                    }
+                )
             UserProfileRoute(
+                vm = profileVm,
                 onEditProfile = { navController.navigate(Screen.EditProfile.route) },
                 onSettings    = { navController.navigate(Screen.Settings.route) },
                 onOpenContent = { navController.navigate(Screen.ContentUser.route) },

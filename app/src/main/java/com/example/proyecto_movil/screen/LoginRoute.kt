@@ -7,14 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.proyecto_movil.core.ServiceLocator
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proyecto_movil.feature.auth.ui.LoginViewModel
 
 @Composable
 fun LoginRoute(
+    vm: LoginViewModel,
     onBack: () -> Unit,
     onLoggedIn: () -> Unit,
     onForgotPassword: () -> Unit,
@@ -23,11 +21,7 @@ fun LoginRoute(
     onFacebook: () -> Unit,
     onApple: () -> Unit
 ) {
-    val vm: LoginViewModel = viewModel(factory = viewModelFactory {
-        initializer { LoginViewModel(ServiceLocator.authRepository) }
-    })
-
-    val uiState = androidx.lifecycle.compose.collectAsStateWithLifecycle(vm.state).value
+    val uiState = vm.state.collectAsStateWithLifecycle().value
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -61,4 +55,3 @@ fun LoginRoute(
         Text(text = data.visuals.message)
     }
 }
-

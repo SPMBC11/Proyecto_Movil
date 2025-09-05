@@ -24,6 +24,7 @@ import com.example.proyecto_movil.ui_components.SectionTitle
 import com.example.proyecto_movil.ui_components.ScreenBackground
 import com.example.proyecto_movil.ui_components.SettingsIcon
 import com.example.proyecto_movil.utils.recursos.AlbumUi
+import com.example.proyecto_movil.utils.recursos.ArtistUI
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,12 +96,25 @@ fun albumReviewScreen(
     }
 }
 
-@Preview(showBackground = true,)
+@Preview(showBackground = true, name = "AlbumReviewScreen Preview")
 @Composable
 fun albumReviewScreenPreview() {
+    val sampleAlbum = AlbumUi(
+        id = 1,
+        coverRes = R.drawable.tyler_dttg,
+        title = "DON'T TAP THE GLASS",
+        year = "2024",
+        artist = ArtistUI(
+            id = 1,
+            name = "Tyler, The Creator",
+            genre = "Hip Hop",
+            displayName = "Tyler, The Creator"
+        )
+    )
+
     albumReviewScreen(
-        album = TODO(),
-        modifier = TODO(),
-        onArtistClick = TODO()
+        album = sampleAlbum,
+        modifier = Modifier,
+        onArtistClick = {}
     )
 }

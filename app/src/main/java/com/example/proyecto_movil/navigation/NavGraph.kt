@@ -35,9 +35,9 @@ fun AppNavHost(
         }
 
         composable(Screen.Login.route) {
-            LoginScreen(
+            LoginRoute(
                 onBack = { navController.navigateUp() },
-                onLogin = { _, _, _ ->
+                onLoggedIn = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Welcome.route) { inclusive = true }
                         launchSingleTop = true
@@ -47,7 +47,7 @@ fun AppNavHost(
                 onRegister = { navController.navigate(Screen.Register.route) },
                 onGoogle = { navController.navigate(Screen.Home.route) },
                 onFacebook = { navController.navigate(Screen.Home.route) },
-                onApple = { navController.navigate(Screen.Home.route) },
+                onApple = { navController.navigate(Screen.Home.route) }
             )
         }
 
@@ -77,8 +77,7 @@ fun AppNavHost(
 
         // ---------- PROFILE ----------
         composable(Screen.Profile.route) {
-            UserProfileScreen(
-                isCurrentUserProfile = true,
+            UserProfileRoute(
                 onEditProfile = { navController.navigate(Screen.EditProfile.route) },
                 onSettings    = { navController.navigate(Screen.Settings.route) },
                 onOpenContent = { navController.navigate(Screen.ContentUser.route) },
@@ -115,7 +114,7 @@ fun AppNavHost(
 
         // ---------- EDITAR PERFIL ----------
         composable(Screen.EditProfile.route) {
-            EditarPerfil(
+            EditProfileRoute(
                 onBackClick = { navController.navigateUp() },
                 onBack      = { navController.navigateUp() }
             )

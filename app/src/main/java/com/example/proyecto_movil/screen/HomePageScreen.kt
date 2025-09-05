@@ -340,5 +340,7 @@ fun HomeScreenRoute(navController: NavController) {
 @Composable
 fun HomeScreenPreview() {
     val navController = rememberNavController()
-    HomeScreenRoute(navController) // Preview solo para composición; clic no navega en preview
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        HomeScreenRoute(navController)
+    }
 }

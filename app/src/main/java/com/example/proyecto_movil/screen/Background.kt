@@ -56,5 +56,7 @@ fun BackGroundImage(
 @Preview (showBackground = true)
 @Composable
 fun BackGroundImagePreview() {
-    BackGroundImage()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        BackGroundImage()
+    }
 }

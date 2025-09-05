@@ -129,5 +129,7 @@ fun AddReviewScreen(
 @Preview(showBackground = true, name = "AddReviewScreen Preview")
 @Composable
 fun AddReviewScreenPreview() {
-    AddReviewScreen()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        AddReviewScreen()
+    }
 }

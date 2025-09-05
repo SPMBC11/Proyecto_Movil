@@ -139,7 +139,9 @@ fun RegisterScreen2(
 @Preview (showBackground = true)
 @Composable
 fun RegisterScreen2Preview() {
-    RegisterScreen2()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        RegisterScreen2()
+    }
 }
 
 @Composable

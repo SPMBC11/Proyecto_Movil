@@ -274,7 +274,7 @@ private fun DiagonalLine(offset: Dp = 0.dp) {
 @Preview(showBackground = true, backgroundColor = 0xFF0E0E0E)
 @Composable
 private fun LoginScreenPreview() {
-    MaterialTheme(colorScheme = darkColorScheme()) {
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
         LoginScreen()
-        }
+    }
 }

@@ -63,6 +63,15 @@ fun SplashScreen(modifier: Modifier = Modifier) {
     }
 }
 
+// Preview de SplashScreen
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        SplashScreen()
+    }
+}
+
 // (Opcional) Mantener Greeting:
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

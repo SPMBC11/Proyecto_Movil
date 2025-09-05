@@ -226,5 +226,7 @@ private fun DeactivateAccountButton() {
 @Preview(showBackground = true)
 @Composable
 fun SettingsScreenPreview() {
-    SettingsScreen()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        SettingsScreen()
+    }
 }

@@ -351,7 +351,7 @@ fun ScoreBadge(
 @Preview(showBackground = true, name = "My Profile Preview")
 @Composable
 fun MyProfileScreenPreview() {
-    Proyecto_movilTheme {
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
         UserProfileScreen(isCurrentUserProfile = true)
     }
 }
@@ -359,7 +359,7 @@ fun MyProfileScreenPreview() {
 @Preview(showBackground = true, name = "Other User Profile Preview")
 @Composable
 fun OtherUserProfileScreenPreview() {
-    Proyecto_movilTheme {
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
         UserProfileScreen(isCurrentUserProfile = false)
     }
 }

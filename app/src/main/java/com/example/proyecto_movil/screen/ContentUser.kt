@@ -207,5 +207,7 @@ fun ContentUser(
 @Preview(showBackground = true)
 @Composable
 fun ContentUserPreview() {
-    ContentUser()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        ContentUser()
+    }
 }

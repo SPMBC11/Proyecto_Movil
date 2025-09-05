@@ -230,5 +230,7 @@ fun EditarPerfil(
 @Preview(showBackground = true)
 @Composable
 fun EditarPerfilPreview() {
-    EditarPerfil()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        EditarPerfil()
+    }
 }

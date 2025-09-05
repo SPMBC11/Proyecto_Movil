@@ -202,5 +202,7 @@ fun Content(
 @Preview(showBackground = true)
 @Composable
 fun ContentPreview() {
-    Content()
+    com.example.proyecto_movil.ui.theme.Proyecto_movilTheme {
+        Content()
+    }
 }

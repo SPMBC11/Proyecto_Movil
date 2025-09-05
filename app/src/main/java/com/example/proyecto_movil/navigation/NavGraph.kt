@@ -52,10 +52,14 @@ fun AppNavHost(
         }
 
         composable(Screen.Register.route) {
-            RegisterScreen2(
-                modifier = Modifier,
+            RegisterRoute(
                 onBack = { navController.navigateUp() },
-                onRegister = { _, _, _ -> navController.navigate(Screen.Home.route) },
+                onRegistered = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 onLogin = { navController.navigate(Screen.Login.route) }
             )
         }

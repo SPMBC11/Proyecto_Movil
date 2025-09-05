@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen.HomePage
+package com.example.proyecto_movil.uiViews.homePage
 
 import com.example.proyecto_movil.data.AlbumUI
 

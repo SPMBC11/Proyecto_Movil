@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.components
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.clickable
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
+import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.utils.ScreenBackground
 import com.example.proyecto_movil.utils.SettingsIcon
@@ -106,7 +107,7 @@ fun ContentUser(
 }
 
 @Composable
-private fun AlbumListRow(albums: List<com.example.proyecto_movil.data.AlbumUI>) {
+private fun AlbumListRow(albums: List<AlbumUI>) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

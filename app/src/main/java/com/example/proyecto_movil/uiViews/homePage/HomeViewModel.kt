@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen.HomePage
+package com.example.proyecto_movil.uiViews.homePage
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

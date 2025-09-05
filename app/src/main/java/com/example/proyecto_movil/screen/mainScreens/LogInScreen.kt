@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.mainScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,6 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.proyecto_movil.uiViews.auth.AuthUiEvent
+import com.example.proyecto_movil.uiViews.auth.AuthViewModel
+
 @Composable
 fun LoginScreen(
     onBack: () -> Unit = {},
@@ -32,6 +37,11 @@ fun LoginScreen(
     onForgotPassword: () -> Unit = {},
     onRegister: () -> Unit = {}
 ) {
+
+    val authViewModel: AuthViewModel = viewModel()
+    val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
+
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var remember by remember { mutableStateOf(false) }
@@ -42,7 +52,7 @@ fun LoginScreen(
     val logoRes = if (isDark) R.drawable.logo else R.drawable.logo_negro
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // 🔹 Fondo dinámico
+        //  Fondo dinámico
         Image(
             painter = painterResource(id = backgroundRes),
             contentDescription = null,
@@ -50,7 +60,7 @@ fun LoginScreen(
             contentScale = ContentScale.Crop
         )
 
-        // 🔹 Botón volver
+        //  Botón volver
         IconButton(
             onClick = onBack,
             modifier = Modifier
@@ -64,7 +74,7 @@ fun LoginScreen(
             )
         }
 
-        // 🔹 Contenido principal
+        //  Contenido principal
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,7 +103,11 @@ fun LoginScreen(
             // Email
             InputField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = {
+                    email = it
+                    // sync con VM
+                    authViewModel.onEvent(AuthUiEvent.OnEmailChange(it))
+                },
                 label = stringResource(R.string.email),
                 isPassword = false,
                 showPassword = false,
@@ -105,7 +119,11 @@ fun LoginScreen(
             // Contraseña
             InputField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = {
+                    password = it
+                    // sync con VM
+                    authViewModel.onEvent(AuthUiEvent.OnPasswordChange(it))
+                },
                 label = stringResource(R.string.contra),
                 isPassword = true,
                 showPassword = showPassword,
@@ -138,7 +156,11 @@ fun LoginScreen(
 
             // Botón login
             Button(
-                onClick = { onLogin(email, password, remember) },
+                onClick = {
+                    onLogin(email, password, remember)
+                    // y además disparo el VM (diseño MVVM)
+                    authViewModel.onEvent(AuthUiEvent.OnLoginClick)
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -163,7 +185,7 @@ fun LoginScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // 🔹 Texto de registro
+            //  Texto de registro
             Text(
                 text = "¿No tienes una cuenta? Regístrate",
                 color = MaterialTheme.colorScheme.primary,
@@ -171,6 +193,18 @@ fun LoginScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.clickable { onRegister() }
             )
+        }
+
+        //  Indicador de carga del ViewModel (superpuesto, no cambia tu layout)
+        if (authState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 56.dp), // deja visible el botón atrás
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
     }
 }

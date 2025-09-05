@@ -1,10 +1,11 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.mainScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -14,6 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.proyecto_movil.uiViews.review.create.CreateReviewUiEvent
+import com.example.proyecto_movil.uiViews.review.create.CreateReviewViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +27,9 @@ fun AddReviewScreen(
     onPublicarClick: () -> Unit = {},
     onCancelarClick: () -> Unit = {}
 ) {
-    // 🔹 Fondo dinámico según el tema
+    val vm: CreateReviewViewModel = viewModel()
+    val state by vm.uiState.collectAsStateWithLifecycle()
+
     val isDarkTheme = isSystemInDarkTheme()
     val backgroundRes = if (isDarkTheme) R.drawable.fondocriti else R.drawable.fondocriti_light
 
@@ -46,7 +53,6 @@ fun AddReviewScreen(
                 year = stringResource(id = R.string.ano_album)
             )
 
-            // 📅 Fecha reseña
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,7 +73,6 @@ fun AddReviewScreen(
                 )
             }
 
-            // ⭐ Puntaje reseña
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +102,6 @@ fun AddReviewScreen(
                 }
             }
 
-            // ✍️ Campo reseña
             SectionTitle(
                 title = stringResource(id = R.string.agrega_resena)
             )
@@ -120,15 +124,24 @@ fun AddReviewScreen(
 
             Spacer(Modifier.weight(1f))
 
-            // 🔹 Botones
             ActionButtonsRow(
                 leftText = stringResource(id = R.string.cancelar_resena),
                 rightText = stringResource(id = R.string.publicar_resena),
                 onLeftClick = onCancelarClick,
-                onRightClick = onPublicarClick,
+                onRightClick = {
+                    onPublicarClick()
+                    vm.onEvent(CreateReviewUiEvent.OnSubmit)
+                },
                 leftColor = MaterialTheme.colorScheme.secondary,
                 rightColor = MaterialTheme.colorScheme.primary
             )
+        }
+
+        if (state.isSubmitting) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
         }
     }
 }

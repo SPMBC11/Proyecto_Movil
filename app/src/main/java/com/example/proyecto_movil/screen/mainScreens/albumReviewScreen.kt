@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.mainScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,11 +23,13 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
-import com.example.proyecto_movil.navigation.AppNavHost
-import com.example.proyecto_movil.navigation.Screen
 import com.example.proyecto_movil.ui.components.ReviewCard
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.utils.*
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.proyecto_movil.uiViews.album.AlbumReviewUiEvent
+import com.example.proyecto_movil.uiViews.album.AlbumReviewViewModel
 
 @Composable
 fun AlbumReviewScreen(
@@ -34,6 +38,10 @@ fun AlbumReviewScreen(
     onArtistClick: () -> Unit = {},
     onUserClick: (Int) -> Unit = {}
 ) {
+    val vm: AlbumReviewViewModel = viewModel()
+    val state by vm.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(album.id) { vm.onEvent(AlbumReviewUiEvent.OnLoad(album.id)) }
+
     val albumReviews = ReviewRepository.reviews.filter { it.album.id == album.id }
 
     val backgroundRes = if (isSystemInDarkTheme()) {
@@ -51,7 +59,7 @@ fun AlbumReviewScreen(
                 .padding(top = 55.dp, start = 16.dp, end = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 80.dp) // deja espacio al final
+            contentPadding = PaddingValues(bottom = 80.dp)
         ) {
             item {
                 TitleBar(text = stringResource(id = R.string.titulo_resenas))
@@ -63,7 +71,7 @@ fun AlbumReviewScreen(
                     coverRes = album.coverRes,
                     title = album.title,
                     artist = album.artist.name,
-                    year = album.year
+                    year = album.year.toString() // <-- FIX: convertir Int a String
                 )
             }
 
@@ -83,8 +91,8 @@ fun AlbumReviewScreen(
                 ScoreRow(
                     scoreLabel = stringResource(id = R.string.puntaje_album),
                     usersHint = stringResource(id = R.string.cantidad_usuarios_alb),
-                    scoreValue = if (albumReviews.isNotEmpty())
-                        (albumReviews.map { it.score }.average() * 10).toInt().toString() + "%"
+                    scoreValue = if (state.averageRating > 0f)
+                        "${(state.averageRating * 20).toInt()}%"
                     else "N/A"
                 )
             }
@@ -92,7 +100,7 @@ fun AlbumReviewScreen(
             item {
                 ClickableSectionTitle(
                     title = stringResource(id = R.string.resenas_album),
-                    onSeeAll = { /* TODO */ }
+                    onSeeAll = { }
                 )
             }
 
@@ -115,9 +123,15 @@ fun AlbumReviewScreen(
                 }
             }
         }
+
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+        }
     }
 }
-
 
 @Preview(name = "Light Mode", showSystemUi = true)
 @Composable

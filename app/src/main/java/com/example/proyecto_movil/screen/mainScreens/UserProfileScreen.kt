@@ -1,4 +1,4 @@
-package com.example.proyecto_movil.screen
+package com.example.proyecto_movil.screen.mainScreens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,22 +28,32 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.UserUI
 import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.proyecto_movil.data.AlbumUI
+import com.example.proyecto_movil.data.local.ReviewRepository
+import com.example.proyecto_movil.data.local.UserRepository
+import com.example.proyecto_movil.uiViews.profile.ProfileUiEvent
+import com.example.proyecto_movil.uiViews.profile.ProfileViewModel
 
 @Composable
 fun UserProfileScreen(
     user: UserUI,
     reviews: List<ReviewInfo>,
     onBackClick: () -> Unit = {},
-    onAlbumClick: (com.example.proyecto_movil.data.AlbumUI) -> Unit = {},
+    onAlbumClick: (AlbumUI) -> Unit = {},
     onReviewClick: (ReviewInfo) -> Unit = {},
     onSettingsClick: () -> Unit = {},
     onEditProfile: () -> Unit = {}
 ) {
+    val vm: ProfileViewModel = viewModel()
+    val state by vm.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(Unit) { vm.onEvent(ProfileUiEvent.OnLoad) }
+
     val isDark = isSystemInDarkTheme()
     val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // 🔹 Fondo dinámico
         Image(
             painter = painterResource(id = backgroundRes),
             contentDescription = null,
@@ -85,7 +97,6 @@ fun UserProfileScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // 🔹 Foto + datos
                 Image(
                     painter = painterResource(id = user.profilePic),
                     contentDescription = user.username,
@@ -106,7 +117,10 @@ fun UserProfileScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
-                    onClick = onEditProfile,
+                    onClick = {
+                        onEditProfile()
+                        vm.onEvent(ProfileUiEvent.OnSaveProfile)
+                    },
                     shape = RoundedCornerShape(50)
                 ) {
                     Text("Editar perfil", color = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -114,7 +128,6 @@ fun UserProfileScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // 🔹 Álbumes favoritos
                 if (user.playlists.isNotEmpty()) {
                     Text(
                         "Tus álbumes favoritos",
@@ -161,7 +174,6 @@ fun UserProfileScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // 🔹 Reseñas
                 Text(
                     "Tus reseñas",
                     fontWeight = FontWeight.Bold,
@@ -178,7 +190,7 @@ fun UserProfileScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
-                    onClick = { /* Navegar a reseñas + playlists */ },
+                    onClick = { },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = RoundedCornerShape(50),
                     modifier = Modifier.fillMaxWidth()
@@ -186,6 +198,13 @@ fun UserProfileScreen(
                     Text("Ver reseñas y playlists", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
+        }
+
+        if (state.isLoading || state.isRefreshing) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
         }
     }
 }
@@ -246,11 +265,11 @@ private fun ReviewItem(review: ReviewInfo, onReviewClick: (ReviewInfo) -> Unit) 
 @Preview(showBackground = true, name = "UserProfile Light", showSystemUi = true)
 @Composable
 fun UserProfilePreviewLight() {
-    val user = com.example.proyecto_movil.data.local.UserRepository.users.first()
+    val user = UserRepository.users.first()
     Proyecto_movilTheme(useDarkTheme = false) {
         UserProfileScreen(
             user = user,
-            reviews = com.example.proyecto_movil.data.local.ReviewRepository.getReviewsByUser(user.id)
+            reviews = ReviewRepository.getReviewsByUser(user.id)
         )
     }
 }
@@ -258,11 +277,11 @@ fun UserProfilePreviewLight() {
 @Preview(showBackground = true, name = "UserProfile Dark", showSystemUi = true)
 @Composable
 fun UserProfilePreviewDark() {
-    val user = com.example.proyecto_movil.data.local.UserRepository.users.first()
+    val user = UserRepository.users.first()
     Proyecto_movilTheme(useDarkTheme = true) {
         UserProfileScreen(
             user = user,
-            reviews = com.example.proyecto_movil.data.local.ReviewRepository.getReviewsByUser(user.id)
+            reviews = ReviewRepository.getReviewsByUser(user.id)
         )
     }
 }

@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.navigation.AppNavHost
-import com.example.proyecto_movil.utils.AppLogo
-import com.example.proyecto_movil.screen.components.BackGroundImage
+import com.example.proyecto_movil.ui.navigation.AppNavHost
+import com.example.proyecto_movil.ui.utils.AppLogo
+import com.example.proyecto_movil.ui.utils.BackGroundImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 @AndroidEntryPoint

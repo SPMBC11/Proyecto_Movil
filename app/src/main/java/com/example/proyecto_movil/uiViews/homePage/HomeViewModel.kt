@@ -1,5 +1,6 @@
 package com.example.proyecto_movil.uiViews.homePage
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -23,5 +24,6 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _state.update {
             it.copy(albumList = AlbumRepository.albums)
         }
+        Log.d("HomeViewModel", "Albums: ${_state.value.albumList} ")
     }
 }

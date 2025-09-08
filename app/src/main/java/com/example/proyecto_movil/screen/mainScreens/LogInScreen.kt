@@ -33,7 +33,7 @@ import com.example.proyecto_movil.uiViews.auth.AuthViewModel
 @Composable
 fun LoginScreen(
     onBack: () -> Unit = {},
-    onLogin: (email: String, password: String, remember: Boolean) -> Unit = { _, _, _ -> },
+    onLogin:() -> Unit = { },
     onForgotPassword: () -> Unit = {},
     onRegister: () -> Unit = {}
 ) {
@@ -120,9 +120,6 @@ fun LoginScreen(
             InputField(
                 value = password,
                 onValueChange = {
-                    password = it
-                    // sync con VM
-                    authViewModel.onEvent(AuthUiEvent.OnPasswordChange(it))
                 },
                 label = stringResource(R.string.contra),
                 isPassword = true,
@@ -157,9 +154,7 @@ fun LoginScreen(
             // Botón login
             Button(
                 onClick = {
-                    onLogin(email, password, remember)
-                    // y además disparo el VM (diseño MVVM)
-                    authViewModel.onEvent(AuthUiEvent.OnLoginClick)
+
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

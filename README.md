@@ -1,4 +1,4 @@
-# CritiChord
+ CritiChord
 
 ¡Bienvenido al repositorio de **CritiChord**! 
 

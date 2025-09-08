@@ -53,12 +53,7 @@ fun AppNavHost(
         composable(Screen.Login.route) {
             LoginScreen(
                 onBack = { navController.navigateUp() },
-                onLogin = { _, _, _ ->
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Welcome.route) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
+                onLogin = { navController.navigate(Screen.Home.route)},
                 onForgotPassword = { /* TODO */ },
                 onRegister = { navController.navigate(Screen.Register.route) },
             )
@@ -79,7 +74,7 @@ fun AppNavHost(
                 onAlbumClick = { albumUi: AlbumUI ->
                     navController.navigate(Screen.Album.createRoute(albumUi.id))
                 },
-                onHomeClick = { /* ya estás en Home */ },
+                onHomeClick = { /* ya está en Home */ },
                 onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) }
             )
         }

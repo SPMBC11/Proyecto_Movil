@@ -7,7 +7,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,17 +23,11 @@ import com.example.proyecto_movil.utils.ScreenBackground
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onAlbumClick: (AlbumUI) -> Unit = {},
-    onHomeClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {},
     homeViewModel: HomeViewModel = hiltViewModel(),
     stateOverride: HomeState? = null
 ) {
-    val uiState: State<HomeState> = if (stateOverride != null) {
-        remember { mutableStateOf(stateOverride) }
-    } else {
-        homeViewModel.state.collectAsState()
-    }
-    val state = uiState.value
+    val state by homeViewModel.state.collectAsState()
+    val currentState = stateOverride ?: state
 
     val isDark = isSystemInDarkTheme()
     val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
@@ -43,18 +36,15 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 52.dp, start = 16.dp, end = 16.dp, bottom = 72.dp)
+                .padding(horizontal = 16.dp, vertical = 16.dp) // padding más estándar
         ) {
-            HeaderSection()
-
-            Spacer(Modifier.height(12.dp))
             SearchBar()
             Spacer(Modifier.height(12.dp))
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 8.dp)
+                contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 item {
                     SectionRow(
@@ -66,7 +56,7 @@ fun HomeScreen(
                 item {
                     SectionRow(
                         title = "Nuevo entre amigos",
-                        albums = state.albumList,
+                        albums = currentState.albumList,
                         onAlbumClick = onAlbumClick
                     )
                 }
@@ -79,21 +69,10 @@ fun HomeScreen(
                 }
             }
         }
-
-        BottomBar(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            onHomeClick = onHomeClick,
-            onProfileClick = onProfileClick
-        )
     }
 }
 
 /* ---------- Subcomponentes ---------- */
-
-@Composable
-private fun HeaderSection() { /* igual que ya lo tienes */ }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -110,32 +89,7 @@ private fun SectionRow(
 private fun AlbumCard(
     album: AlbumUI,
     onClick: () -> Unit
-) { /* igual que ya lo tienes */ }
-
-@Composable
-private fun BottomBar(
-    modifier: Modifier = Modifier,
-    onHomeClick: () -> Unit,
-    onProfileClick: () -> Unit
-) { /* igual que ya lo tienes */ }
-
-@Composable
-private fun BottomBarItem(
-    icon: @Composable () -> Unit,
-    label: String,
-    active: Boolean,
-    onClick: () -> Unit
-) { /* igual que ya lo tienes */ }
-
-/* ---------- Wrapper con navegación ---------- */
-@Composable
-fun HomeScreenRoute(navController: NavController) {
-    HomeScreen(
-        onAlbumClick = { album -> navController.navigate("${Screen.Album.route}/${album.id}") },
-        onHomeClick = { /* ya estás en Home */ },
-        onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) }
-    )
-}
+) { }
 
 /* ---------- Previews ---------- */
 @Preview(name = "HomeScreen Light", showSystemUi = true)
@@ -166,8 +120,6 @@ fun HomeScreenPreviewDark() {
 private fun HomeScreenRoutePreview(navController: NavController, state: HomeState) {
     HomeScreen(
         onAlbumClick = { album -> navController.navigate("${Screen.Album.route}/${album.id}") },
-        onHomeClick = { /* ya estás en Home */ },
-        onProfileClick = { /* no-op */ },
         stateOverride = state
     )
 }

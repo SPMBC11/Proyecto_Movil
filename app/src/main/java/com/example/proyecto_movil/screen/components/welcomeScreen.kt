@@ -29,7 +29,8 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 
 @Composable
-fun WelcomeScreen(onStartClick: () -> Unit) {
+fun WelcomeScreen(
+    onStartClick: () -> Unit) {
 
     Box(
         modifier = Modifier

@@ -1,36 +1,49 @@
 package com.example.proyecto_movil.navigation
 
-import com.example.proyecto_movil.screen.mainScreens.AlbumReviewScreen
-import WelcomeScreen
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.proyecto_movil.data.AlbumUI
-import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.data.local.UserRepository
-import com.example.proyecto_movil.screen.components.ArtistPage
-import com.example.proyecto_movil.screen.components.ContentUser
-import com.example.proyecto_movil.screen.components.EditarPerfil
-import com.example.proyecto_movil.screen.components.SettingsScreen
-import com.example.proyecto_movil.screen.components.UserReviewScreen
-import com.example.proyecto_movil.screen.mainScreens.LoginScreen
-import com.example.proyecto_movil.screen.mainScreens.RegisterScreen2
-import com.example.proyecto_movil.screen.mainScreens.ReviewDetailScreen
-import com.example.proyecto_movil.screen.mainScreens.UserProfileScreen
-import com.example.proyecto_movil.uiViews.homePage.HomeScreen
+import com.example.proyecto_movil.navigation.Screen
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+
+// Screens + ViewModels
+import com.example.proyecto_movil.ui.Screens.Welcome.WelcomeScreen
+import com.example.proyecto_movil.ui.Screens.Welcome.WelcomeViewModel
+import com.example.proyecto_movil.ui.Screens.Login.LoginScreen
+import com.example.proyecto_movil.ui.Screens.Login.LoginViewModel
+import com.example.proyecto_movil.ui.Screens.Register.RegisterScreen
+import com.example.proyecto_movil.ui.Screens.Register.RegisterViewModel
+import com.example.proyecto_movil.uiViews.homePage.HomeScreen
+import com.example.proyecto_movil.ui.Screens.Home.HomeViewModel
+import com.example.proyecto_movil.ui.Screens.UserProfile.UserProfileScreen
+import com.example.proyecto_movil.ui.Screens.UserProfile.UserProfileViewModel
+import com.example.proyecto_movil.ui.Screens.Settings.SettingsScreen
+import com.example.proyecto_movil.ui.Screens.Settings.SettingsViewModel
+import com.example.proyecto_movil.ui.Screens.Content.ContentScreen
+import com.example.proyecto_movil.ui.Screens.Content.ContentViewModel
+import com.example.proyecto_movil.ui.Screens.AddReview.AddReviewScreen
+import com.example.proyecto_movil.ui.Screens.AddReview.AddReviewViewModel
+import com.example.proyecto_movil.ui.Screens.EditProfile.EditarPerfilScreen
+import com.example.proyecto_movil.ui.Screens.EditProfile.EditProfileViewModel
+import com.example.proyecto_movil.ui.Screens.AlbumReviews.AlbumReviewScreen
 
 @Composable
 fun AppNavHost(
@@ -43,85 +56,90 @@ fun AppNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-
-        // ---------- AUTH ----------
+        /* WELCOME */
         composable(Screen.Welcome.route) {
-            WelcomeScreen(onStartClick = { navController.navigate(Screen.Login.route) })
-        }
-
-
-        composable(Screen.Login.route) {
-            LoginScreen(
-                onBack = { navController.navigateUp() },
-                onLogin = { navController.navigate(Screen.Home.route)},
-                onForgotPassword = { /* TODO */ },
-                onRegister = { navController.navigate(Screen.Register.route) },
+            val vm: WelcomeViewModel = viewModel()
+            WelcomeScreen(
+                viewModel = vm,
+                onStartClick = { navController.navigate(Screen.Login.route) }
             )
         }
 
-        composable(Screen.Register.route) {
-            RegisterScreen2(
-                modifier = Modifier,
+        /* LOGIN */
+        composable(Screen.Login.route) {
+            val vm: LoginViewModel = viewModel()
+            LoginScreen(
+                viewModel = vm,
                 onBack = { navController.navigateUp() },
-                onRegister = { _, _, _ -> navController.navigate(Screen.Home.route) },
+                onLogin = { _, _, _ ->
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onForgotPassword = { /* TODO */ },
+                onRegister = { navController.navigate(Screen.Register.route) }
+            )
+        }
+
+        /* REGISTER */
+        composable(Screen.Register.route) {
+            val vm: RegisterViewModel = viewModel()
+            RegisterScreen(
+                viewModel = vm,
+                onBack = { navController.navigateUp() },
+                onRegister = { _, _, _ ->
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 onLogin = { navController.navigate(Screen.Login.route) }
             )
         }
 
-        // ---------- HOME ----------
+        /* HOME */
         composable(Screen.Home.route) {
+            val vm: HomeViewModel = viewModel()
             HomeScreen(
-                onAlbumClick = { albumUi: AlbumUI ->
-                    navController.navigate(Screen.Album.createRoute(albumUi.id))
+                viewModel = vm,
+                onAlbumClick = { album: AlbumUI ->
+                    navController.navigate(Screen.Album.createRoute(album.id))
                 },
-                onHomeClick = { /* ya está en Home */ },
-                onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) }
+                onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) },
+                onSettingsClick = { navController.navigate(Screen.Settings.route) },
+                onSearchChanged = { /* opcional: analytics/busqueda global */ }
             )
         }
 
-// ---------- PERFIL (USUARIO ACTUAL Y OTROS) ----------
+        /* PROFILE */
         composable(
             route = Screen.Profile.route,
             arguments = listOf(navArgument("userId") { type = NavType.IntType })
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getInt("userId")
             val user = userId?.let { UserRepository.getUserById(it) }
-
             if (user != null) {
+                val reviews = ReviewRepository.getReviewsByUser(user.id)
+                val vm: UserProfileViewModel = viewModel()
                 UserProfileScreen(
+                    viewModel = vm,
                     user = user,
-                    reviews = ReviewRepository.getReviewsByUser(user.id),
+                    reviews = reviews,
                     onBackClick = { navController.navigateUp() },
-                    onAlbumClick = { album -> navController.navigate("${Screen.Album.route}/${album.id}") },
-                    onReviewClick = { review ->
-                        navController.currentBackStackEntry?.savedStateHandle?.set("review", review)
-                        navController.navigate(Screen.UserReview.route)
-                    },
+                    onAlbumClick = { album -> navController.navigate(Screen.Album.createRoute(album.id)) },
+                    onReviewClick = { /* si tienes detalle, navega aquí */ },
                     onSettingsClick = { navController.navigate(Screen.Settings.route) },
                     onEditProfile = { navController.navigate(Screen.EditProfile.route) }
                 )
             } else {
-                SimpleErrorScreen("Usuario no encontrado")
+                SimpleError("Usuario no encontrado")
             }
         }
 
-
-        // ---------- REVIEW DETAIL ----------
-        composable(Screen.Review.route) { backStackEntry ->
-            val review = backStackEntry.savedStateHandle.get<ReviewInfo>("review")
-            if (review != null) {
-                ReviewDetailScreen(
-                    review = review,
-                    onBack = { navController.navigateUp() }
-                )
-            } else {
-                SimpleErrorScreen("No hay reseña seleccionada")
-            }
-        }
-
-        // ---------- ALBUM ----------
+        /* ALBUM (reseñas del álbum) */
         composable(
-            route = "${Screen.Album.route}/{albumId}",
+            route = Screen.Album.route,
             arguments = listOf(navArgument("albumId") { type = NavType.IntType })
         ) { backStackEntry ->
             val albumId = backStackEntry.arguments?.getInt("albumId")
@@ -129,66 +147,81 @@ fun AppNavHost(
             if (album != null) {
                 AlbumReviewScreen(
                     album = album,
-                    onArtistClick = { navController.navigate(Screen.Artist.route) }
+                    onArtistClick = {
+                        navController.navigate(Screen.ContentArtist.createRoute(album.artist.id))
+                    },
+                    onUserClick = { userId ->
+                        navController.navigate(Screen.Profile.createRoute(userId))
+                    }
                 )
             } else {
-                SimpleErrorScreen("No hay álbum seleccionado")
+                SimpleError("Álbum no encontrado")
             }
         }
 
-        // ---------- ARTISTA ----------
-        composable(Screen.Artist.route) {
-            ArtistPage(
+        /* CONTENT por artista (NO owner) */
+        composable(
+            route = Screen.ContentArtist.route,
+            arguments = listOf(navArgument("artistId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val artistId = backStackEntry.arguments?.getInt("artistId")
+            val vm: ContentViewModel = viewModel()
+            LaunchedEffect(artistId) { vm.setInitial(artistId = artistId, isOwner = false) }
+            ContentScreen(
+                viewModel = vm,
                 onBack = { navController.navigateUp() },
-                onOpenAlbum = { /* opcional */ },
-                onSeeAll = { /* opcional */ }
+                onOpenAlbum = { id -> navController.navigate(Screen.Album.createRoute(id)) },
+                onSeeAll = { /* navegar a discografía completa si quieres */ }
             )
         }
 
-        // ---------- SETTINGS ----------
+        /* CONTENT del usuario (owner) */
+        composable(Screen.ContentUser.route) {
+            val vm: ContentViewModel = viewModel()
+            LaunchedEffect(Unit) { vm.setInitial(artistId = null, isOwner = true) }
+            ContentScreen(
+                viewModel = vm,
+                onBack = { navController.navigateUp() },
+                onOpenAlbum = { id -> navController.navigate(Screen.Album.createRoute(id)) },
+                onEditAlbum = { /* abrir editor si lo implementas */ }
+            )
+        }
+
+        /* SETTINGS */
         composable(Screen.Settings.route) {
+            val vm: SettingsViewModel = viewModel()
             SettingsScreen(
+                viewModel = vm,
                 onBackClick = { navController.navigateUp() }
             )
         }
 
-        // ---------- EDITAR PERFIL ----------
+        /* EDIT PROFILE */
         composable(Screen.EditProfile.route) {
-            val userId = navController.currentBackStackEntry?.arguments?.getInt("userId")
-            EditarPerfil(
-                onBack = { navController.navigateUp() }
-            )
-        }
-
-        // ---------- CONTENT USER ----------
-        composable(Screen.ContentUser.route) {
-            ContentUser(
+            val vm: EditProfileViewModel = viewModel()
+            EditarPerfilScreen(
+                viewModel = vm,
                 onBack = { navController.navigateUp() },
-                onOpenAlbum = { navController.navigate(Screen.Album.route) }
+                onSaved = { navController.navigateUp() }
             )
         }
 
-        // ---------- USER REVIEW ----------
-        composable(Screen.UserReview.route) { backStackEntry ->
-            val review = backStackEntry.savedStateHandle.get<ReviewInfo>("review")
-            if (review != null) {
-                UserReviewScreen(
-                    review = review,
-                    onBack = { navController.navigateUp() }
-                )
-            } else {
-                SimpleErrorScreen("No hay reseña seleccionada")
-            }
+        /* ADD REVIEW (si la usas) */
+        composable(Screen.AddReview.route) {
+            val vm: AddReviewViewModel = viewModel()
+            AddReviewScreen(
+                viewModel = vm,
+                onCancelarClick = { navController.navigateUp() },
+                onPublicarClick = { navController.navigateUp() }
+            )
         }
     }
 }
 
+/* ---------------------- Utils de error + preview ---------------------- */
 @Composable
-private fun SimpleErrorScreen(message: String) {
-    androidx.compose.foundation.layout.Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = androidx.compose.ui.Alignment.Center
-    ) {
+private fun SimpleError(message: String) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = message, color = MaterialTheme.colorScheme.onBackground)
     }
 }

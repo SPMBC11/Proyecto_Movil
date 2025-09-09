@@ -64,7 +64,7 @@ data class BottomNavItem(
 
 val bottomNavItems = listOf(
     BottomNavItem(Icons.Filled.Home, Icons.Outlined.Home, Screen.Home.route),
-    BottomNavItem(Icons.Filled.Email, Icons.Outlined.Email, Screen.Settings.route),
+    BottomNavItem(Icons.Filled.AddCircle, Icons.Outlined.AddCircle, Screen.AddReview.route),
     BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, Screen.Profile.route),
 )
 

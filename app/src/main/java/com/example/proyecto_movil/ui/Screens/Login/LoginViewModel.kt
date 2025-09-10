@@ -19,6 +19,8 @@ class LoginViewModel : ViewModel() {
     fun onForgotClicked() = _uiState.update { s -> s.copy(navigateToForgot = true) }
     fun onRegisterClicked() = _uiState.update { s -> s.copy(navigateToRegister = true) }
 
+
+    //comentario
     fun onLoginClicked() {
         val s = _uiState.value
         when {

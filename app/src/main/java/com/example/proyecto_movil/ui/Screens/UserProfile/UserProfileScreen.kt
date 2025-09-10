@@ -115,12 +115,15 @@ fun UserProfileScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val safeAvatarRes = if (state.avatarRes != 0) state.avatarRes else R.drawable.avatar_demo
+
                 Image(
-                    painter = painterResource(id = state.avatarRes),
+                    painter = painterResource(id = safeAvatarRes),
                     contentDescription = state.username,
                     modifier = Modifier
                         .size(120.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(

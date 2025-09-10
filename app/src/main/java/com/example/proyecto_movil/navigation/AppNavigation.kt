@@ -100,17 +100,15 @@ fun AppNavHost(
 
         /* HOME */
         composable(Screen.Home.route) {
-            val vm: HomeViewModel = viewModel()
-            HomeScreen(
-                viewModel = vm,
-                onAlbumClick = { album: AlbumUI ->
-                    navController.navigate(Screen.Album.createRoute(album.id))
-                },
-                onProfileClick = { navController.navigate(Screen.Profile.createRoute(6)) },
-                onSettingsClick = { navController.navigate(Screen.Settings.route) },
-                onSearchChanged = { /* opcional: analytics/busqueda global */ }
-            )
-        }
+        val vm: HomeViewModel = viewModel()
+        HomeScreen(
+            viewModel = vm,
+            onAlbumClick = { album: AlbumUI ->
+                navController.navigate(Screen.Album.createRoute(album.id))
+            }
+        )
+    }
+
 
         /* PROFILE */
         composable(

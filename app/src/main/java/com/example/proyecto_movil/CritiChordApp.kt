@@ -65,7 +65,7 @@ data class BottomNavItem(
 val bottomNavItems = listOf(
     BottomNavItem(Icons.Filled.Home, Icons.Outlined.Home, Screen.Home.route),
     BottomNavItem(Icons.Filled.AddCircle, Icons.Outlined.AddCircle, Screen.AddReview.route),
-    BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, Screen.Profile.route),
+    BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, Screen.Profile.createRoute(6)),
 )
 
 @Composable
@@ -117,8 +117,8 @@ fun CritiChordTopBar() {
                 Icon(
                     painter = painterResource(id = logoRes),
                     contentDescription = "Logo CritiChord",
-                    tint = Color.Unspecified, // para que respete los colores originales del drawable
-                    modifier = Modifier.size(32.dp) // ajusta el tamaño a lo que quieras
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(32.dp)
                 )
                 Text(
                     text = "CritiChord",

@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.proyecto_movil.navigation.AppNavHost
@@ -24,51 +25,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            val navController = rememberNavController()
-
             Proyecto_movilTheme {
-                var showSplash by remember { mutableStateOf(true) }
-
-                LaunchedEffect(Unit) {
-                    delay(1500) // 1.5 s
-                    showSplash = false
-                }
-
-                Scaffold(
-                    topBar = {
-
-                    },
-                    bottomBar = {  }
-                ) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        if (showSplash) {
-                            SplashScreen()
-                        } else {
-                            AppNavHost(
-                                navController = navController
-                            )
-                        }
-                    }
-                }
+                CritiChordApp()
             }
         }
     }
 }
 
-@Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        BackGroundImage()
-        AppLogo(
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
 
-// (Opcional) Mantener Greeting:
+@Preview
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(text = "Hello $name!", modifier = modifier.padding(16.dp))
+fun MainPreview() {
+    Proyecto_movilTheme {
+        CritiChordApp()
+    }
 }

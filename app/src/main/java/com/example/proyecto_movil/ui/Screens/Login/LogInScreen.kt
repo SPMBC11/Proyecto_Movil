@@ -219,24 +219,3 @@ private fun InputField(
     )
 }
 
-@Preview(name = "Login Light", showSystemUi = true)
-@Composable
-fun LoginScreenPreviewLight() {
-    Proyecto_movilTheme(useDarkTheme = false) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { LoginViewModel() }
-            LoginScreen(viewModel = vm)
-        }
-    }
-}
-
-@Preview(name = "Login Dark", showSystemUi = true)
-@Composable
-fun LoginScreenPreviewDark() {
-    Proyecto_movilTheme(useDarkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { LoginViewModel() }
-            LoginScreen(viewModel = vm)
-        }
-    }
-}

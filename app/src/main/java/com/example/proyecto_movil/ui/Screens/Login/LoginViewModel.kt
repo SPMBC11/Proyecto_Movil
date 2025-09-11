@@ -1,16 +1,21 @@
 package com.example.proyecto_movil.ui.Screens.Login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.proyecto_movil.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
-
-    private val _uiState = MutableStateFlow(LoginState())
+class LoginViewModel @Inject constructor(
+    private val authRepository : AuthRepository
+): ViewModel() {
+private
+     val _uiState = MutableStateFlow(LoginState())
     val uiState: StateFlow<LoginState> = _uiState
 
     fun updateEmail(v: String) = _uiState.update { s -> s.copy(email = v) }
@@ -27,14 +32,38 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     fun onLoginClicked() {
         val s = _uiState.value
         when {
-            s.email.isBlank() || s.password.isBlank() ->
+            s.email.isBlank() || s.password.isBlank() -> {
                 showError("Completa email y contraseña")
-            s.password.length < 6 ->
+            }
+            s.password.length < 6 -> {
                 showError("La contraseña debe tener al menos 6 caracteres")
-            else ->
-                _uiState.update { it.copy(navigateAfterLogin = true, showMessage = false, errorMessage = "") }
+            }
+            else -> {
+                viewModelScope.launch {
+                    try {
+                        // authRepository.signIn debe devolver Result<Unit>
+                        val result = authRepository.signIn(s.email, s.password)
+
+                        if (result.isSuccess) {
+                            _uiState.update {
+                                it.copy(
+                                    navigateAfterLogin = true,
+                                    showMessage = false,
+                                    errorMessage = ""
+                                )
+                            }
+                        } else {
+                            val msg = result.exceptionOrNull()?.message ?: "Correo o contraseña incorrectos"
+                            showError(msg)
+                        }
+                    } catch (e: Exception) {
+                        showError(e.message ?: "Error al iniciar sesión")
+                    }
+                }
+            }
         }
     }
+
 
     fun consumeBack() = _uiState.update { s -> s.copy(navigateBack = false) }
     fun consumeAfterLogin() = _uiState.update { s -> s.copy(navigateAfterLogin = false) }

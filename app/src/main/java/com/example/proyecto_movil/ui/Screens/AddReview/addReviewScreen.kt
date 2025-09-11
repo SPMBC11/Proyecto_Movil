@@ -1,9 +1,13 @@
 package com.example.proyecto_movil.ui.Screens.AddReview
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +25,9 @@ fun AddReviewScreen(
     viewModel: AddReviewViewModel,
     modifier: Modifier = Modifier,
     onPublicarClick: () -> Unit = {},
-    onCancelarClick: () -> Unit = {}
+    onCancelarClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
+
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -40,7 +46,11 @@ fun AddReviewScreen(
     val backgroundRes = if (isDarkTheme) R.drawable.fondocriti else R.drawable.fondocriti_light
 
     ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
-        SettingsIcon(modifier = Modifier.align(Alignment.TopEnd))
+        SettingsIcon(modifier = Modifier.align(Alignment.TopEnd)
+                .size(28.dp)
+                .clickable { viewModel.onSettingsClicked() }
+
+        )
 
         Column(
             modifier = Modifier

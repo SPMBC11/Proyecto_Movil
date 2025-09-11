@@ -14,5 +14,6 @@ data class AddReviewState(
     val showMessage: Boolean = false,
     val errorMessage: String = "",
     val navigateCancel: Boolean = false,
-    val navigatePublished: Boolean = false
+    val navigatePublished: Boolean = false,
+    val navigateToSettings: Boolean = false
 )

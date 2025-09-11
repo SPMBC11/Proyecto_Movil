@@ -20,6 +20,7 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ArtistUI
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import androidx.compose.foundation.clickable
 
 @Composable
 fun AlbumCard(
@@ -30,6 +31,7 @@ fun AlbumCard(
         modifier = Modifier
             .width(120.dp)
             .padding(4.dp)
+            .clickable(onClick = onClick)
     ) {
         Image(
             painter = painterResource(id = album.coverRes),

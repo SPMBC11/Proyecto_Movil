@@ -26,4 +26,6 @@ class AddReviewViewModel : ViewModel() {
 
     fun updateReviewText(v: String) = _uiState.update { it.copy(reviewText = v) }
     fun toggleLike() = _uiState.update { it.copy(liked = !it.liked) }
+
+    fun onSettingsClicked() = _uiState.update { s -> s.copy(navigateToSettings = true) }
 }

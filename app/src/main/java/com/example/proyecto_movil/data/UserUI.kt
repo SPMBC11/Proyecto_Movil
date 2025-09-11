@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class UserUI(
     val id: Int,
     val username: String,
-    @DrawableRes val profilePic: Int,
+    val profilePic: String,
     val bio: String = "",
     val followers: Int = 0,
     val following: Int = 0,

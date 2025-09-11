@@ -9,6 +9,6 @@ data class AlbumUI (
     val id: Int,
     val title: String,
     val year: String,
-    @DrawableRes val coverRes: Int,
+    val coverRes: String,
     val artist: ArtistUI
 ): Parcelable

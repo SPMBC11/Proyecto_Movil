@@ -46,6 +46,9 @@ import com.example.proyecto_movil.ui.Screens.EditProfile.EditarPerfilScreen
 import com.example.proyecto_movil.ui.Screens.EditProfile.EditProfileViewModel
 import com.example.proyecto_movil.ui.Screens.AlbumReviews.AlbumReviewScreen
 
+
+
+
 @Composable
 fun AppNavHost(
     navController: NavHostController,

@@ -60,7 +60,7 @@ fun RegisterScreen(
 
         IconButton(
             onClick = { viewModel.onBackClicked() },
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(10.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
@@ -74,7 +74,7 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(Modifier.height(90.dp))
+            Spacer(Modifier.height(80.dp))
             LogoApp()
             Spacer(Modifier.height(60.dp))
             Registrate(texto = "Regístrate")
@@ -264,24 +264,3 @@ private fun FormularioRegistro(
     }
 }
 
-@Preview(name = "Register Light", showSystemUi = true)
-@Composable
-fun RegisterScreenPreviewLight() {
-    Proyecto_movilTheme(useDarkTheme = false) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { RegisterViewModel() }
-            RegisterScreen(viewModel = vm)
-        }
-    }
-}
-
-@Preview(name = "Register Dark", showSystemUi = true)
-@Composable
-fun RegisterScreenPreviewDark() {
-    Proyecto_movilTheme(useDarkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { RegisterViewModel() }
-            RegisterScreen(viewModel = vm)
-        }
-    }
-}

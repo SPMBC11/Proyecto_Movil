@@ -3,11 +3,14 @@ package com.example.proyecto_movil.ui.Screens.Content
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ArtistRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class ContentViewModel : ViewModel() {
+@HiltViewModel
+class ContentViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(ContentState())
     val uiState: StateFlow<ContentState> = _uiState

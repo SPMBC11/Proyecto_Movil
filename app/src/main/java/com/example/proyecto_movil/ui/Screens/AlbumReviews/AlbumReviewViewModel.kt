@@ -3,11 +3,14 @@ package com.example.proyecto_movil.ui.Screens.AlbumReviews
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.ReviewRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class AlbumReviewViewModel : ViewModel() {
+@HiltViewModel
+class AlbumReviewViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(AlbumReviewState())
     val uiState: StateFlow<AlbumReviewState> = _uiState

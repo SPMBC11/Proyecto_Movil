@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.UserUI
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class UserProfileViewModel : ViewModel() {
+@HiltViewModel
+class UserProfileViewModel @Inject constructor(): ViewModel() {
 
     private val _uiState = MutableStateFlow(UserProfileState())
     val uiState: StateFlow<UserProfileState> = _uiState

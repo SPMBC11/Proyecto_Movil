@@ -6,8 +6,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-
-class EditProfileViewModel : ViewModel() {
+@HiltViewModel
+class EditProfileViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(EditProfileState())
     val uiState: StateFlow<EditProfileState> = _uiState
 

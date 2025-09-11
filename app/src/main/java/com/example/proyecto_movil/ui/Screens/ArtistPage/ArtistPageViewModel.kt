@@ -3,11 +3,14 @@ package com.example.proyecto_movil.ui.Screens.ArtistPage
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ArtistRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class ArtistPageViewModel : ViewModel() {
+@HiltViewModel
+class ArtistPageViewModel @Inject constructor(): ViewModel() {
 
     private val _uiState = MutableStateFlow(ArtistPageState())
     val uiState: StateFlow<ArtistPageState> = _uiState

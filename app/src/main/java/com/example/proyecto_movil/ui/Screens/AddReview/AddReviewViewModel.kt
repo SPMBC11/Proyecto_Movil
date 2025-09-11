@@ -7,7 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
-class AddReviewViewModel : ViewModel() {
+@HiltViewModel
+class AddReviewViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(AddReviewState())
     val uiState: StateFlow<AddReviewState> = _uiState
 

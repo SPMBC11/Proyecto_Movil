@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -58,7 +59,7 @@ fun AppNavHost(
     ) {
         /* WELCOME */
         composable(Screen.Welcome.route) {
-            val vm: WelcomeViewModel = viewModel()
+            val vm: WelcomeViewModel = hiltViewModel()
             WelcomeScreen(
                 viewModel = vm,
                 onStartClick = { navController.navigate(Screen.Login.route) }
@@ -67,7 +68,7 @@ fun AppNavHost(
 
         /* LOGIN */
         composable(Screen.Login.route) {
-            val vm: LoginViewModel = viewModel()
+            val vm: LoginViewModel = hiltViewModel()
             LoginScreen(
                 viewModel = vm,
                 onBack = { navController.navigateUp() },
@@ -84,7 +85,7 @@ fun AppNavHost(
 
         /* REGISTER */
         composable(Screen.Register.route) {
-            val vm: RegisterViewModel = viewModel()
+            val vm: RegisterViewModel = hiltViewModel()
             RegisterScreen(
                 viewModel = vm,
                 onBack = { navController.navigateUp() },
@@ -100,7 +101,7 @@ fun AppNavHost(
 
         /* HOME */
         composable(Screen.Home.route) {
-        val vm: HomeViewModel = viewModel()
+        val vm: HomeViewModel = hiltViewModel()
         HomeScreen(
             viewModel = vm,
             onAlbumClick = { album: AlbumUI ->
@@ -119,7 +120,7 @@ fun AppNavHost(
             val user = userId?.let { UserRepository.getUserById(it) }
             if (user != null) {
                 val reviews = ReviewRepository.getReviewsByUser(user.id)
-                val vm: UserProfileViewModel = viewModel()
+                val vm: UserProfileViewModel = hiltViewModel()
                 UserProfileScreen(
                     viewModel = vm,
                     user = user,
@@ -163,7 +164,7 @@ fun AppNavHost(
             arguments = listOf(navArgument("artistId") { type = NavType.IntType })
         ) { backStackEntry ->
             val artistId = backStackEntry.arguments?.getInt("artistId")
-            val vm: ContentViewModel = viewModel()
+            val vm: ContentViewModel = hiltViewModel()
             LaunchedEffect(artistId) { vm.setInitial(artistId = artistId, isOwner = false) }
             ContentScreen(
                 viewModel = vm,
@@ -175,7 +176,7 @@ fun AppNavHost(
 
         /* CONTENT del usuario (owner) */
         composable(Screen.ContentUser.route) {
-            val vm: ContentViewModel = viewModel()
+            val vm: ContentViewModel = hiltViewModel()
             LaunchedEffect(Unit) { vm.setInitial(artistId = null, isOwner = true) }
             ContentScreen(
                 viewModel = vm,
@@ -187,7 +188,7 @@ fun AppNavHost(
 
         /* SETTINGS */
         composable(Screen.Settings.route) {
-            val vm: SettingsViewModel = viewModel()
+            val vm: SettingsViewModel = hiltViewModel()
             SettingsScreen(
                 viewModel = vm,
                 onBackClick = { navController.navigateUp() }
@@ -196,7 +197,7 @@ fun AppNavHost(
 
         /* EDIT PROFILE */
         composable(Screen.EditProfile.route) {
-            val vm: EditProfileViewModel = viewModel()
+            val vm: EditProfileViewModel = hiltViewModel()
             EditarPerfilScreen(
                 viewModel = vm,
                 onBack = { navController.navigateUp() },
@@ -206,7 +207,7 @@ fun AppNavHost(
 
         /* ADD REVIEW (si la usas) */
         composable(Screen.AddReview.route) {
-            val vm: AddReviewViewModel = viewModel()
+            val vm: AddReviewViewModel = hiltViewModel()
             AddReviewScreen(
                 viewModel = vm,
                 onCancelarClick = { navController.navigateUp() },

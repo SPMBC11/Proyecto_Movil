@@ -2,8 +2,9 @@ package com.example.proyecto_movil.data.local
 
 import PlaylistUI
 
+
 object PlaylistRepository {
-    val playlists = listOf(
+    public val playlists = listOf(
         PlaylistUI(
             id = 101,
             title = "Clásicos del Rap",
@@ -36,5 +37,21 @@ object PlaylistRepository {
         )
     )
 
-    fun getPlaylistById(id: Int): PlaylistUI? = playlists.find { it.id == id }
+    fun getPlaylists(): Result<List<PlaylistUI>> {
+        return try {
+            Result.success(playlists)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getPlaylistById(id: Int): Result<PlaylistUI> {
+        return try {
+            val playlist = playlists.firstOrNull { it.id == id }
+                ?: throw NoSuchElementException("Playlist con id $id no encontrada")
+            Result.success(playlist)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

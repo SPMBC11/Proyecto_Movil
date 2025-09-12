@@ -15,3 +15,4 @@ data class UserUI(
     val following: Int = 0,
     val playlists: List<PlaylistUI> = emptyList()
 ) : Parcelable
+

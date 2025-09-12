@@ -18,6 +18,7 @@ class UserProfileViewModel @Inject constructor(): ViewModel() {
 
     fun setInitialData(user: UserUI, reviews: List<ReviewInfo>) {
         val fav = user.playlists.firstOrNull()?.albums ?: emptyList()
+
         _uiState.update {
             it.copy(
                 username = user.username,

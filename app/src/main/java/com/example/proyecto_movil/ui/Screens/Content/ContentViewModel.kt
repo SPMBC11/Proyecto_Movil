@@ -16,14 +16,18 @@ class ContentViewModel @Inject constructor() : ViewModel() {
     val uiState: StateFlow<ContentState> = _uiState
 
     /** Llama esto al entrar a la pantalla (o desde el NavHost) */
+    // ContentViewModel.kt
     fun setInitial(artistId: Int? = null, isOwner: Boolean = false) {
+        // 1) Resolver nombre de encabezado con Result
         val header = artistId?.let { id ->
-            ArtistRepository.artists.find { it.id == id }?.name ?: "Contenido"
+            ArtistRepository.getArtistById(id).getOrNull()?.name ?: "Contenido"
         } ?: "Contenido"
 
+        // 2) Tomar álbumes con Result
+        val allAlbums = AlbumRepository.getAlbums().getOrElse { emptyList() }
         val albums = artistId?.let { id ->
-            AlbumRepository.albums.filter { it.artist.id == id }
-        } ?: AlbumRepository.albums
+            allAlbums.filter { it.artist.id == id }
+        } ?: allAlbums
 
         _uiState.update {
             it.copy(
@@ -34,6 +38,7 @@ class ContentViewModel @Inject constructor() : ViewModel() {
             )
         }
     }
+
 
     // Acciones de UI
     fun onBackClicked() = _uiState.update { it.copy(navigateBack = true) }

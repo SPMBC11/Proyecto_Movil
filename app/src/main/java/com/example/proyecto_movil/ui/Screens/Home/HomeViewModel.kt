@@ -14,7 +14,8 @@ class HomeViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         HomeState(
-            albumList = AlbumRepository.albums.take(6)
+            // antes: AlbumRepository.albums.take(6)
+            albumList = AlbumRepository.getAlbums().getOrElse { emptyList() }.take(6)
         )
     )
     val uiState: StateFlow<HomeState> = _uiState
@@ -42,8 +43,10 @@ class HomeViewModel @Inject constructor() : ViewModel() {
         _uiState.update { it.copy(openAlbum = null) }
 
     fun getNewReleases(): List<AlbumUI> =
-        AlbumRepository.albums.filter { it.id in listOf(601, 201, 501) }
+        AlbumRepository.getAlbums().getOrElse { emptyList() }
+            .filter { it.id in listOf(601, 201, 501) }
 
     fun getPopularAlbums(): List<AlbumUI> =
-        AlbumRepository.albums.filter { it.id in listOf(801, 701, 401) }
+        AlbumRepository.getAlbums().getOrElse { emptyList() }
+            .filter { it.id in listOf(801, 701, 401) }
 }

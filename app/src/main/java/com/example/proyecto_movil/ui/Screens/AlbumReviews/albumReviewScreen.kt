@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
@@ -75,8 +76,8 @@ fun AlbumReviewScreen(
             }
 
             item {
-                Image(
-                    painter = painterResource(id = state.artistProfileRes),
+                AsyncImage(
+                    model = state.artistProfileRes,
                     contentDescription = "Foto de ${state.albumArtist}",
                     modifier = Modifier
                         .size(72.dp)

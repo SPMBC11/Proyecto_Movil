@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.ReviewInfo
 
@@ -69,12 +70,13 @@ fun UserReviewScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Cover del álbum
-                Image(
-                    painter = painterResource(id = review.album.coverRes),
+                AsyncImage(
+                    model = review.album.coverRes,             // URL en String
                     contentDescription = review.album.title,
                     modifier = Modifier
                         .size(220.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Crop
                 )
                 Spacer(Modifier.height(16.dp))
 

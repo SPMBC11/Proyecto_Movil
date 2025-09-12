@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +28,9 @@ import com.example.proyecto_movil.data.UserUI
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.data.local.UserRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import coil.compose.AsyncImage
+import androidx.compose.ui.layout.ContentScale
+
 
 @Composable
 fun UserProfileScreen(
@@ -165,13 +167,15 @@ fun UserProfileScreen(
                                     .clickable { viewModel.onAlbumClicked(album) },
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Image(
-                                    painter = painterResource(id = album.coverRes),
+                                AsyncImage(
+                                    model = album.coverRes,   // ahora es String (URL)
                                     contentDescription = album.title,
                                     modifier = Modifier
                                         .size(120.dp)
-                                        .clip(RoundedCornerShape(8.dp))
+                                        .clip(RoundedCornerShape(8.dp)),
+                                    contentScale = ContentScale.Crop
                                 )
+
                                 Spacer(Modifier.height(6.dp))
                                 Text(
                                     album.title,
@@ -231,13 +235,15 @@ private fun ReviewItem(review: ReviewInfo, onClick: () -> Unit) {
             .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = review.album.coverRes),
+        AsyncImage(
+            model = review.album.coverRes,
             contentDescription = review.album.title,
             modifier = Modifier
                 .size(70.dp)
-                .clip(RoundedCornerShape(6.dp))
+                .clip(RoundedCornerShape(6.dp)),
+            contentScale = ContentScale.Crop
         )
+
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(

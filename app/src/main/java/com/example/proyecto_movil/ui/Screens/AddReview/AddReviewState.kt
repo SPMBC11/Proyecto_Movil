@@ -3,7 +3,7 @@ package com.example.proyecto_movil.ui.Screens.AddReview
 import com.example.proyecto_movil.R
 
 data class AddReviewState(
-    val albumCoverRes: Int = R.drawable.circles,
+    val albumCoverRes: String = "",
     val albumTitle: String = "CIRCLES",
     val albumArtist: String = "Mac Miller",
     val albumYear: String = "2020",

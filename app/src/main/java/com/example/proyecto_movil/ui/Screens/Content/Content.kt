@@ -12,8 +12,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.local.AlbumRepository
@@ -84,7 +86,13 @@ fun ContentScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.clickable { viewModel.onOpenAlbum(alb.id) }
                             ) {
-                                FotoAlbumArtistaPeque(alb.coverRes)
+                                AsyncImage(
+                                    model = alb.coverRes,
+                                    contentDescription = "Portada: ${alb.title}",
+                                    modifier = Modifier.size(64.dp), // ajusta al tamaño que uses en ese card
+                                    contentScale = ContentScale.Crop
+                                )
+
                                 Column(Modifier.padding(start = 8.dp)) {
                                     TituloAlbumPeque(alb.title)
                                     Spacer(Modifier.height(4.dp))
@@ -163,10 +171,15 @@ private fun AlbumListRow(
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
         items(albums) { alb ->
-            FotoAlbumArtistaPeque(
-                alb.coverRes,
-                modifier = Modifier.clickable { onOpenAlbum(alb.id) }
+            AsyncImage(
+                model = alb.coverRes,
+                contentDescription = "Portada",
+                modifier = Modifier
+                    .size(64.dp) // o el tamaño pequeño de tu lista
+                    .clickable { onOpenAlbum(alb.id) },
+                contentScale = ContentScale.Crop
             )
+
         }
     }
 }

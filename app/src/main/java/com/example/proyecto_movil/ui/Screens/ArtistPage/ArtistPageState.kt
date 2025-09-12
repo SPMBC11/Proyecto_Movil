@@ -6,7 +6,7 @@ import com.example.proyecto_movil.data.AlbumUI
 data class ArtistPageState(
     val artistId: Int? = null,
     val artistName: String = "",
-    val artistProfileRes: Int = R.drawable.logo,
+    val artistProfileRes: String = "",
     val followersText: String = "17K seguidores",
     val globalScoreText: String = "Puntaje global",
     val reviewsExtraText: String = "de 0 reseñas",

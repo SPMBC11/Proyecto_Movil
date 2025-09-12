@@ -5,6 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -12,10 +13,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.ui.utils.*
@@ -81,7 +85,15 @@ fun ArtistPage(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ) {
-                FotoPerfilArtista(state.artistProfileRes)
+                AsyncImage(
+                    model = state.artistProfileRes,
+                    contentDescription = "Foto de ${state.artistName}",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+
 
                 Spacer(Modifier.height(10.dp))
                 TituloArtista(state.artistName)
@@ -103,7 +115,13 @@ fun ArtistPage(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.clickable { viewModel.onAlbumClicked(alb.id) }
                         ) {
-                            FotoAlbumArtista(alb.coverRes)
+                            AsyncImage(
+                                model = alb.coverRes,                           // String (URL)
+                                contentDescription = "Portada: ${alb.title}",
+                                modifier = Modifier.size(140.dp),
+                                contentScale = ContentScale.Crop
+                            )
+
                             TituloAlbumes(alb.title)
                             Spacer(Modifier.height(4.dp))
                             FechaAlbum(alb.year)

@@ -18,6 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import androidx.compose.ui.platform.LocalContext
+
 
 // ✅ Fondo con imagen dinámico
 @Composable
@@ -76,7 +80,7 @@ fun TitleBar(
 // ✅ Encabezado de álbum (titulo, artista, año)
 @Composable
 fun AlbumHeader(
-    @DrawableRes coverRes: Int,
+    coverRes: String,
     title: String,
     artist: String,
     year: String,
@@ -86,11 +90,18 @@ fun AlbumHeader(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(id = coverRes),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(coverRes)          // ← tu URL
+                .crossfade(true)         // animación suave
+                .build(),
             contentDescription = null,
-            modifier = Modifier.size(200.dp)
+            modifier = Modifier.size(200.dp),
+            contentScale = ContentScale.Crop,
+            placeholder = painterResource(id = android.R.drawable.ic_menu_gallery),
+            error = painterResource(id = android.R.drawable.ic_menu_report_image)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = title,

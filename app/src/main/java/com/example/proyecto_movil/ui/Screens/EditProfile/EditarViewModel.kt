@@ -1,13 +1,14 @@
 package com.example.proyecto_movil.ui.Screens.EditProfile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-@HiltViewModel
-class EditProfileViewModel @Inject constructor() : ViewModel() {
+import kotlinx.coroutines.launch
+
+class EditProfileViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(EditProfileState())
     val uiState: StateFlow<EditProfileState> = _uiState
 
@@ -29,4 +30,12 @@ class EditProfileViewModel @Inject constructor() : ViewModel() {
     fun updateEmail(v: String) = _uiState.update { it.copy(email = v) }
     fun updatePassword(v: String) = _uiState.update { it.copy(password = v) }
     fun toggleMostrarPassword() = _uiState.update { it.copy(mostrarPassword = !it.mostrarPassword) }
+
+    fun updateAvatarUrl(url: String) = _uiState.update { it.copy(avatarUrl = url) }
+
+    fun uploadAvatarUrlAfterPicker(downloadUrl: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(avatarUrl = downloadUrl) }
+        }
+    }
 }

@@ -232,13 +232,13 @@ fun AppNavHost(
                 onCancel = { navController.navigateUp() },
                 onPublished = { album, reviewText, score, liked ->
 
-                    /*ReviewRepository.addReview(
+                    ReviewRepository.addReview(
                         album = album,
-                        user = UserRepository.currentUser,
+                        user = UserRepository.users[6],
                         content = reviewText,
                         score = score.toDouble(),
                         isLowScore = !liked
-                    )*/
+                    )
                     navController.navigateUp()
                 }
             )

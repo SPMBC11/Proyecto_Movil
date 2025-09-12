@@ -2,9 +2,11 @@ package com.example.proyecto_movil.data.local
 
 import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ReviewInfo
+import com.example.proyecto_movil.data.UserUI
 
 object ReviewRepository {
-    val reviews = listOf(
+    // ✅ mutableListOf con todas tus reseñas originales
+    private val _reviews = mutableListOf(
         // 🔹 Usuario 1 (Juan)
         ReviewInfo(
             album = AlbumRepository.albums.first { it.title == "CIRCLES" },
@@ -228,7 +230,10 @@ object ReviewRepository {
         )
     )
 
-    // ===== Métodos públicos con Result =====
+    /** Lista inmutable para exponer a la UI */
+    val reviews: List<ReviewInfo>
+        get() = _reviews
+
     fun getReviews(): Result<List<ReviewInfo>> = try {
         Result.success(reviews)
     } catch (e: Exception) {
@@ -236,20 +241,20 @@ object ReviewRepository {
     }
 
     fun getReviewsByUser(userId: Int): Result<List<ReviewInfo>> = try {
-        Result.success(reviews.filter { it.user.id == userId })
+        Result.success(_reviews.filter { it.user.id == userId })
     } catch (e: Exception) {
         Result.failure(e)
     }
 
     fun getReviewsByAlbum(albumId: Int): Result<List<ReviewInfo>> = try {
-        Result.success(reviews.filter { it.album.id == albumId })
+        Result.success(_reviews.filter { it.album.id == albumId })
     } catch (e: Exception) {
         Result.failure(e)
     }
 
     fun getFavoriteAlbumsByUser(userId: Int, minScore: Double = 8.0): Result<List<AlbumUI>> = try {
         Result.success(
-            reviews
+            _reviews
                 .filter { it.user.id == userId && it.score >= minScore }
                 .map { it.album }
                 .distinct()
@@ -258,4 +263,17 @@ object ReviewRepository {
         Result.failure(e)
     }
 
+    fun addReview(
+        album: AlbumUI,
+        user: UserUI,
+        content: String,
+        score: Double,
+        isLowScore: Boolean
+    ): Result<Unit> = try {
+        val newReview = ReviewInfo(album, user, content, score, isLowScore)
+        _reviews.add(0, newReview)
+        Result.success(Unit)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

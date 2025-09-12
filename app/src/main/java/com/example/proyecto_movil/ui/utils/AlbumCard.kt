@@ -21,6 +21,9 @@ import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ArtistUI
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import coil.compose.AsyncImage
 
 @Composable
 fun AlbumCard(
@@ -33,11 +36,12 @@ fun AlbumCard(
             .padding(4.dp)
             .clickable(onClick = onClick)
     ) {
-        Image(
-            painter = painterResource(id = album.coverRes),
+        AsyncImage(
+            model = album.coverRes,              // aquí pasa el String (URL)
             contentDescription = album.title,
             modifier = Modifier
-                .size(120.dp), // imagen cuadrada
+                .size(120.dp)                    // imagen cuadrada
+                .clip(RoundedCornerShape(8.dp)), // esquinas redondeadas (opcional)
             contentScale = ContentScale.Crop
         )
 
@@ -70,11 +74,13 @@ fun AlbumCardPreview() {
         id = 1,
         title = "The Dark Side of the Moon",
         year = "1973",
-        coverRes = R.drawable.emailsicantsend, // Usa un drawable de tu res
+        // URI de recurso como String (Coil lo soporta)
+        coverRes = "android.resource://com.example.proyecto_movil/${R.drawable.emailsicantsend}",
         artist = ArtistUI(
             id = 1,
             name = "Pink Floyd",
-            profilePic = R.drawable.sabrina,
+            // También como String
+            profilePic = "android.resource://com.example.proyecto_movil/${R.drawable.sabrina}",
             genre = "Rock"
         )
     )

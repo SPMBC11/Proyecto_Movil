@@ -4,6 +4,7 @@ import com.example.proyecto_movil.R
 
 data class EditProfileState(
     val avatarRes: Int = R.drawable.xocas,
+    val avatarUrl: String = "",
     val nombrePersona: String = "",
     val nombreUsuario: String = "",
     val email: String = "",

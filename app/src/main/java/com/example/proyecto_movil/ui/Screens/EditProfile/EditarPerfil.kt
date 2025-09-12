@@ -1,5 +1,8 @@
 package com.example.proyecto_movil.ui.Screens.EditProfile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -14,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +26,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.proyecto_movil.R
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.ui.utils.BotonEditarImagen
@@ -36,6 +42,15 @@ fun EditarPerfilScreen(
     onSaved: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val picker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            val fakeUrl = uri.toString()
+            viewModel.uploadAvatarUrlAfterPicker(fakeUrl)
+        }
+    }
 
     LaunchedEffect(state.navigateBack, state.navigateSaved) {
         if (state.navigateBack) {
@@ -81,25 +96,36 @@ fun EditarPerfilScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            Image(
-                painter = painterResource(id = state.avatarRes),
-                contentDescription = "Avatar",
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-            )
+            if (state.avatarUrl.isNotBlank()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context).data(state.avatarUrl).crossfade(true).build(),
+                    contentDescription = "Avatar",
+                    modifier = Modifier.size(100.dp).clip(CircleShape)
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = state.avatarRes),
+                    contentDescription = "Avatar",
+                    modifier = Modifier.size(100.dp).clip(CircleShape)
+                )
+            }
 
             Spacer(Modifier.height(8.dp))
 
             BotonEditarImagen(
                 "Editar imagen",
-                onClick = { },
-                modifier = Modifier
-                    .height(32.dp)
-                    .width(150.dp)
+                onClick = { picker.launch("image/*") },
+                modifier = Modifier.height(32.dp).width(150.dp)
             )
 
             Spacer(Modifier.height(24.dp))
+
+            CompactTextField(
+                value = state.avatarUrl,
+                onValueChange = viewModel::updateAvatarUrl,
+                label = "Link Imagen Firebase",
+                icon = R.drawable.usuario
+            )
 
             CompactTextField(
                 value = state.nombrePersona,
@@ -178,8 +204,7 @@ fun CompactTextField(
             {
                 IconButton(onClick = onTogglePassword) {
                     Icon(
-                        imageVector = if (mostrarPassword) Icons.Default.Visibility
-                        else Icons.Default.VisibilityOff,
+                        imageVector = if (mostrarPassword) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                         contentDescription = "Toggle password",
                         modifier = Modifier.size(18.dp),
                         tint = MaterialTheme.colorScheme.onSurface
@@ -190,14 +215,8 @@ fun CompactTextField(
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
-        visualTransformation = if (isPassword && !mostrarPassword)
-            PasswordVisualTransformation()
-        else
-            VisualTransformation.None,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .padding(vertical = 6.dp),
+        visualTransformation = if (isPassword && !mostrarPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        modifier = Modifier.fillMaxWidth().height(50.dp).padding(vertical = 6.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline,
@@ -216,9 +235,7 @@ fun EditarPerfilPreviewLight() {
     Proyecto_movilTheme(useDarkTheme = false) {
         Surface(color = MaterialTheme.colorScheme.background) {
             val vm = remember { EditProfileViewModel() }
-            EditarPerfilScreen(
-                viewModel = vm
-            )
+            EditarPerfilScreen(viewModel = vm)
         }
     }
 }
@@ -229,9 +246,7 @@ fun EditarPerfilPreviewDark() {
     Proyecto_movilTheme(useDarkTheme = true) {
         Surface(color = MaterialTheme.colorScheme.background) {
             val vm = remember { EditProfileViewModel() }
-            EditarPerfilScreen(
-                viewModel = vm
-            )
+            EditarPerfilScreen(viewModel = vm)
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.proyecto_movil.data.ReviewInfo
 import com.example.proyecto_movil.data.local.ReviewRepository
 import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
@@ -62,14 +63,15 @@ fun ReviewCard(
 
             // ---------- Álbum + artista ----------
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = album.coverRes),
+                AsyncImage(
+                    model = album.coverRes,                // String (URL)
                     contentDescription = album.title,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(60.dp)
                         .clip(RoundedCornerShape(8.dp))
                 )
+
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(

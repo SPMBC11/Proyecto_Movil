@@ -8,6 +8,6 @@ import kotlinx.parcelize.Parcelize
 data class ArtistUI(
     val id: Int,
     val name: String,
-    @DrawableRes val profilePic: Int,
+    val profilePic: String,
     val genre: String
 ) : Parcelable

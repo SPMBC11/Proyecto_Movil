@@ -1,14 +1,14 @@
-package com.example.proyecto_movil.data
+    package com.example.proyecto_movil.data
 
-import android.os.Parcelable
-import androidx.annotation.DrawableRes
-import kotlinx.android.parcel.Parcelize
+    import android.os.Parcelable
+    import androidx.annotation.DrawableRes
+    import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class AlbumUI (
-    val id: Int,
-    val title: String,
-    val year: String,
-    val coverRes: String,
-    val artist: ArtistUI
-): Parcelable
+    @Parcelize
+    data class AlbumUI (
+        val id: Int,
+        val title: String,
+        val year: String,
+        val coverRes: String,
+        val artist: ArtistUI
+    ): Parcelable

@@ -1,138 +1,77 @@
 package com.example.proyecto_movil.ui.Screens.AddReview
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
-import com.example.proyecto_movil.ui.utils.*
+import com.example.proyecto_movil.data.AlbumUI
+import com.example.proyecto_movil.ui.utils.ScreenBackground
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddReviewScreen(
     viewModel: AddReviewViewModel,
-    modifier: Modifier = Modifier,
-    onPublicarClick: () -> Unit = {},
-    onCancelarClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {}
-
+    albumList: List<AlbumUI>,
+    onCancel: () -> Unit,
+    onPublished: (AlbumUI, String, Int, Boolean) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+    val isDark = isSystemInDarkTheme()
+    val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
+    val scrollState = rememberScrollState()
 
-    LaunchedEffect(state.navigateCancel, state.navigatePublished) {
-        if (state.navigateCancel) {
-            onCancelarClick()
-            viewModel.consumeCancel()
-        }
-        if (state.navigatePublished) {
-            onPublicarClick()
-            viewModel.consumePublished()
-        }
-    }
-
-    val isDarkTheme = isSystemInDarkTheme()
-    val backgroundRes = if (isDarkTheme) R.drawable.fondocriti else R.drawable.fondocriti_light
-
-    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
-        SettingsIcon(modifier = Modifier.align(Alignment.TopEnd)
-                .size(28.dp)
-                .clickable { viewModel.onSettingsClicked() }
-
-        )
-
+    ScreenBackground(backgroundRes = backgroundRes) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 55.dp, start = 16.dp, end = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .verticalScroll(scrollState)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            TitleBar(text = stringResource(id = R.string.titulo_agreresenas))
 
-            Spacer(Modifier.height(32.dp))
-
-            AlbumHeader(
-                coverRes = state.albumCoverRes,
-                title = state.albumTitle,
-                artist = state.albumArtist,
-                year = state.albumYear
+            // Dropdown para seleccionar álbum
+            AlbumDropdown(
+                albums = albumList,
+                selectedTitle = state.albumTitle,
+                onAlbumSelected = { album -> viewModel.updateAlbum(album) }
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 15.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(id = R.string.fecha_resena),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(start = 25.dp)
-                )
-                ReadOnlyField(
-                    value = state.dateString,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(horizontal = 45.dp)
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, start = 16.dp, end = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = stringResource(id = R.string.puntaje_resena),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(start = 9.dp)
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    ReadOnlyField(
-                        value = "${state.scorePercent}%",
-                        modifier = Modifier.width(120.dp)
-                    )
-                    Image(
-                        painter = painterResource(id = if (state.liked) R.drawable.coralleno else R.drawable.coravacio),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickableNoRipple { viewModel.toggleLike() }
-                    )
-                }
-            }
-
-            SectionTitle(title = stringResource(id = R.string.agrega_resena))
-
+            // Campo de texto para la reseña
             OutlinedTextField(
                 value = state.reviewText,
-                onValueChange = viewModel::updateReviewText,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .padding(top = 10.dp, start = 20.dp, end = 20.dp),
-                placeholder = { Text("Aquí puedes agregar una reseña...") }
+                onValueChange = { viewModel.updateReviewText(it) },
+                label = { Text("Escribe tu reseña") },
+                modifier = Modifier.fillMaxWidth()
             )
 
+            // Slider para puntaje
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Puntaje: ${state.scorePercent}%")
+                Slider(
+                    value = state.scorePercent.toFloat(),
+                    onValueChange = { viewModel.updateScore(it.toInt()) },
+                    valueRange = 0f..100f,
+                    steps = 10
+                )
+            }
+
+            // Checkbox para like
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = state.liked,
+                    onCheckedChange = { viewModel.toggleLike() }
+                )
+                Text(if (state.liked) "¡Me gustó!" else "No me gustó")
+            }
+
+            // Mensaje de error si no hay texto
             if (state.showMessage) {
-                Spacer(Modifier.height(8.dp))
                 Text(
                     text = state.errorMessage,
                     color = MaterialTheme.colorScheme.error,
@@ -140,38 +79,69 @@ fun AddReviewScreen(
                 )
             }
 
-            Spacer(Modifier.weight(1f))
+            // Botones de acción
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                OutlinedButton(onClick = { viewModel.onCancelClicked() }) {
+                    Text("Cancelar")
+                }
+                Button(onClick = { viewModel.onPublishClicked() }) {
+                    Text("Publicar")
+                }
+            }
+        }
+    }
 
-            ActionButtonsRow(
-                leftText = stringResource(id = R.string.cancelar_resena),
-                rightText = stringResource(id = R.string.publicar_resena),
-                onLeftClick = { viewModel.onCancelClicked() },
-                onRightClick = { viewModel.onPublishClicked() },
-                leftColor = MaterialTheme.colorScheme.secondary,
-                rightColor = MaterialTheme.colorScheme.primary
-            )
+    // Navegación al cancelar
+    LaunchedEffect(state.navigateCancel) {
+        if (state.navigateCancel) {
+            onCancel()
+            viewModel.consumeCancel()
+        }
+    }
+
+    // Navegación al publicar
+    LaunchedEffect(state.navigatePublished) {
+        if (state.navigatePublished) {
+            val selectedAlbum = albumList.find { it.title == state.albumTitle }
+            if (selectedAlbum != null) {
+                onPublished(selectedAlbum, state.reviewText, state.scorePercent, state.liked)
+            }
+            viewModel.consumePublished()
         }
     }
 }
 
-@Preview(name = "AddReview Light", showSystemUi = true)
+/* ---------- Dropdown para álbumes ---------- */
 @Composable
-fun AddReviewScreenLightPreview() {
-    Proyecto_movilTheme(useDarkTheme = false) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { AddReviewViewModel() }
-            AddReviewScreen(viewModel = vm)
+fun AlbumDropdown(
+    albums: List<AlbumUI>,
+    selectedTitle: String,
+    onAlbumSelected: (AlbumUI) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column {
+        OutlinedButton(onClick = { expanded = true }) {
+            Text(selectedTitle.ifBlank { "Selecciona un álbum" })
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            albums.forEach { album ->
+                DropdownMenuItem(
+                    text = { Text(album.title) },
+                    onClick = {
+                        onAlbumSelected(album)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
+
 }
 
-@Preview(name = "AddReview Dark", showSystemUi = true)
-@Composable
-fun AddReviewScreenDarkPreview() {
-    Proyecto_movilTheme(useDarkTheme = true) {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val vm = remember { AddReviewViewModel() }
-            AddReviewScreen(viewModel = vm)
-        }
-    }
-}

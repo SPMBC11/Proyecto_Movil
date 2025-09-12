@@ -188,10 +188,11 @@ object ReviewRepository {
             score = 8.5,
             isLowScore = false
         ),
+
         // 🔹 Usuario 6 (el.xokas)
         ReviewInfo(
             album = AlbumRepository.albums.first { it.title == "CIRCLES" },
-            user = UserRepository.users[5], // Xokas
+            user = UserRepository.users[5],
             content = "Gran obra de Mac, transmite sentimientos reales. Imprescindible.",
             score = 9.0,
             isLowScore = false

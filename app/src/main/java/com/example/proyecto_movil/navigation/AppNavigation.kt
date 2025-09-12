@@ -208,13 +208,24 @@ fun AppNavHost(
             )
         }
 
-        /* ADD REVIEW (si la usas) */
+        /* ADD REVIEW */
         composable(Screen.AddReview.route) {
             val vm: AddReviewViewModel = hiltViewModel()
             AddReviewScreen(
                 viewModel = vm,
-                onCancelarClick = { navController.navigateUp() },
-                onPublicarClick = { navController.navigateUp() }
+                albumList = AlbumRepository.albums, // lista de álbumes para el dropdown
+                onCancel = { navController.navigateUp() },
+                onPublished = { album, reviewText, score, liked ->
+
+                    /*ReviewRepository.addReview(
+                        album = album,
+                        user = UserRepository.currentUser,
+                        content = reviewText,
+                        score = score.toDouble(),
+                        isLowScore = !liked
+                    )*/
+                    navController.navigateUp()
+                }
             )
         }
     }

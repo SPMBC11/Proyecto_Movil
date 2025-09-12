@@ -97,6 +97,8 @@ dependencies {
     kapt(libs.dagger.kapt)
     // kapt("androidx.hilt:hilt-compiler:1.2.0") // solo si usas hilt-work
 
+
+
     // --- Firebase ---
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)

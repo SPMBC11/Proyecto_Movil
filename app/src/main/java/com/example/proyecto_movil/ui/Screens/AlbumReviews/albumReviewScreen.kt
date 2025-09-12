@@ -36,7 +36,7 @@ fun AlbumReviewScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(album.id) { viewModel.setAlbum(album) }
+    LaunchedEffect(album.id) { viewModel.setAlbumById(album.id) }
     LaunchedEffect(state.navigateToArtist, state.openUserId) {
         if (state.navigateToArtist) {
             onArtistClick()

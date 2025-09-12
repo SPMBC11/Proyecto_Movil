@@ -1,5 +1,6 @@
 package com.example.proyecto_movil.data.local
 
+import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.ReviewInfo
 
 object ReviewRepository {
@@ -227,16 +228,34 @@ object ReviewRepository {
         )
     )
 
-    // 🔹 Funciones de consulta
-    fun getReviewsByUser(userId: Int) =
-        reviews.filter { it.user.id == userId }
+    // ===== Métodos públicos con Result =====
+    fun getReviews(): Result<List<ReviewInfo>> = try {
+        Result.success(reviews)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 
-    fun getReviewsByAlbum(albumId: Int) =
-        reviews.filter { it.album.id == albumId }
+    fun getReviewsByUser(userId: Int): Result<List<ReviewInfo>> = try {
+        Result.success(reviews.filter { it.user.id == userId })
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 
-    fun getFavoriteAlbumsByUser(userId: Int, minScore: Double = 8.0) =
-        reviews
-            .filter { it.user.id == userId && it.score >= minScore }
-            .map { it.album }
-            .distinct()
+    fun getReviewsByAlbum(albumId: Int): Result<List<ReviewInfo>> = try {
+        Result.success(reviews.filter { it.album.id == albumId })
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    fun getFavoriteAlbumsByUser(userId: Int, minScore: Double = 8.0): Result<List<AlbumUI>> = try {
+        Result.success(
+            reviews
+                .filter { it.user.id == userId && it.score >= minScore }
+                .map { it.album }
+                .distinct()
+        )
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
 }

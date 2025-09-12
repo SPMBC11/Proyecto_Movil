@@ -61,7 +61,37 @@ object UserRepository {
         )
     )
 
-    fun getUserById(id: Int): UserUI? = users.find { it.id == id }
-    // 🔹 Usuario simulado como autenticado
-    var currentUser: UserUI = users.first { it.username == "el.xokas" }
+    // Usuario autenticado simulado
+    private var currentUser: UserUI = users.first { it.username == "el.xokas" }
+
+    // ========= API pública con Result =========
+
+    fun getUsers(): Result<List<UserUI>> = try {
+        Result.success(users)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    fun getUserById(id: Int): Result<UserUI> = try {
+        val u = users.firstOrNull { it.id == id }
+            ?: throw NoSuchElementException("Usuario con id $id no encontrado")
+        Result.success(u)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    fun getCurrentUser(): Result<UserUI> = try {
+        Result.success(currentUser)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    fun setCurrentUserById(id: Int): Result<UserUI> = try {
+        val u = users.firstOrNull { it.id == id }
+            ?: throw NoSuchElementException("Usuario con id $id no encontrado")
+        currentUser = u
+        Result.success(u)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

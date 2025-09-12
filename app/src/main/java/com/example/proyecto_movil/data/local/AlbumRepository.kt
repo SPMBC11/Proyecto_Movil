@@ -4,7 +4,7 @@ import com.example.proyecto_movil.R
 import com.example.proyecto_movil.data.AlbumUI
 
 object AlbumRepository {
-    val albums = listOf(
+ public  val albums = listOf(
         // Sabrina Carpenter
         AlbumUI(102, "SHORT N`SWEET", "2024", "https://i.scdn.co/image/ab67616d00001e02fd8d7a8d96871e791cb1f626", ArtistRepository.artists[0]),
         AlbumUI(103, "emails i can't send", "2023", "https://i.scdn.co/image/ab67616d0000b273700f7bf79c9f063ad0362bdf", ArtistRepository.artists[0]),
@@ -66,4 +66,22 @@ object AlbumRepository {
         // Justin Bieber
         AlbumUI(1901, "Swag", "2012", "https://cdn.massa.com.br/uploads/2025/07/20250711131212-justin-bieber-1024x691.jpg", ArtistRepository.artists[18])
     )
+
+    fun getAlbums(): Result<List<AlbumUI>> {
+        return try {
+            Result.success(albums)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getAlbumById(id: Int): Result<AlbumUI> {
+        return try {
+            val album = albums.firstOrNull { it.id == id }
+                ?: throw NoSuchElementException("Álbum con id $id no encontrado")
+            Result.success(album)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

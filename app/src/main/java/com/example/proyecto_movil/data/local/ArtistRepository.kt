@@ -5,7 +5,7 @@ import com.example.proyecto_movil.data.ArtistUI
 
 object ArtistRepository {
 
-    val artists = listOf(
+public  val artists = listOf(
         ArtistUI(1, "Sabrina Carpenter", "https://i.scdn.co/image/ab6761610000e5eb78e45cfa4697ce3c437cb455", genre = "Pop"),
         ArtistUI(2, "Mac Miller", "https://i.scdn.co/image/ab6761610000e5ebed3b89aa602145fde71a163a", genre = "Hip Hop"),
         ArtistUI(3, "Aminé", "https://i.scdn.co/image/ab6761610000e5eb31ad986e8e1328db4b3d83cd", genre = "Hip Hop"),
@@ -27,4 +27,17 @@ object ArtistRepository {
         ArtistUI(19, "Justin Bieber", "https://i.scdn.co/image/ab67616d0000b273f46b9d202509a8f7384b90de", genre = "Pop"),
         ArtistUI(20, "David Lynch", "https://i.scdn.co/image/95aab2d79f7db9b6da2ea2e04a552ad84a9f88a1", genre = "Hell"),
     )
+    fun getArtists(): Result<List<ArtistUI>> = try {
+        Result.success(artists)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+    fun getArtistById(id: Int): Result<ArtistUI> = try {
+        val artist = artists.firstOrNull { it.id == id }
+            ?: throw NoSuchElementException("Artista con id $id no encontrado")
+        Result.success(artist)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

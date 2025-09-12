@@ -291,7 +291,7 @@ fun UserProfilePreviewLight() {
         UserProfileScreen(
             viewModel = vm,
             user = user,
-            reviews = ReviewRepository.getReviewsByUser(user.id)
+            reviews = ReviewRepository.getReviewsByUser(user.id).getOrElse { emptyList() } // <-- cambio
         )
     }
 }
@@ -305,7 +305,7 @@ fun UserProfilePreviewDark() {
         UserProfileScreen(
             viewModel = vm,
             user = user,
-            reviews = ReviewRepository.getReviewsByUser(user.id)
+            reviews = ReviewRepository.getReviewsByUser(user.id).getOrElse { emptyList() }
         )
     }
 }

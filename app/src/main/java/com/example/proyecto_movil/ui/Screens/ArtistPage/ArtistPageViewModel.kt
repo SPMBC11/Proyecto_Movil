@@ -1,5 +1,6 @@
 package com.example.proyecto_movil.ui.Screens.ArtistPage
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ArtistRepository
@@ -16,12 +17,25 @@ class ArtistPageViewModel @Inject constructor(): ViewModel() {
     val uiState: StateFlow<ArtistPageState> = _uiState
 
     fun setArtist(artistId: Int?) {
-        val artist = artistId?.let { id -> ArtistRepository.artists.find { it.id == id } }
-            ?: ArtistRepository.artists.firstOrNull()
-            ?: return
+        // 1) Resolver artista con Result
+        val artist = if (artistId != null) {
+            ArtistRepository.getArtistById(artistId).getOrNull()
+        } else {
+            ArtistRepository.getArtists().getOrNull()?.firstOrNull()
+        }
 
-        val albums = AlbumRepository.albums.filter { it.artist.id == artist.id }
+        if (artist == null) {
+            Log.e("ArtistPageVM", "No se pudo cargar el artista (artistId=$artistId)")
+            return
+        }
 
+        // 2) Traer álbumes con Result y filtrar por artista
+        val albums = AlbumRepository
+            .getAlbums()
+            .getOrElse { emptyList() }
+            .filter { it.artist.id == artist.id }
+
+        // 3) Datos de UI fijos/demo (puedes conectarlo a repos si lo deseas)
         val reviewsCount = 4500
         val globalScoreLabel = "Puntaje global"
 
@@ -29,7 +43,7 @@ class ArtistPageViewModel @Inject constructor(): ViewModel() {
             it.copy(
                 artistId = artist.id,
                 artistName = artist.name,
-                artistProfileRes = artist.profilePic,
+                artistProfileRes = artist.profilePic,   // String (URL)
                 followersText = "17K seguidores",
                 globalScoreText = globalScoreLabel,
                 reviewsExtraText = "de $reviewsCount reseñas",
@@ -38,24 +52,12 @@ class ArtistPageViewModel @Inject constructor(): ViewModel() {
         }
     }
 
-    fun onBackClicked() {
-        _uiState.update { it.copy(navigateBack = true) }
-    }
-    fun consumeBack() {
-        _uiState.update { it.copy(navigateBack = false) }
-    }
+    fun onBackClicked() { _uiState.update { it.copy(navigateBack = true) } }
+    fun consumeBack() { _uiState.update { it.copy(navigateBack = false) } }
 
-    fun onSeeAllClicked() {
-        _uiState.update { it.copy(navigateSeeAll = true) }
-    }
-    fun consumeSeeAll() {
-        _uiState.update { it.copy(navigateSeeAll = false) }
-    }
+    fun onSeeAllClicked() { _uiState.update { it.copy(navigateSeeAll = true) } }
+    fun consumeSeeAll() { _uiState.update { it.copy(navigateSeeAll = false) } }
 
-    fun onAlbumClicked(id: Int) {
-        _uiState.update { it.copy(openAlbumId = id) }
-    }
-    fun consumeOpenAlbum() {
-        _uiState.update { it.copy(openAlbumId = null) }
-    }
+    fun onAlbumClicked(id: Int) { _uiState.update { it.copy(openAlbumId = id) } }
+    fun consumeOpenAlbum() { _uiState.update { it.copy(openAlbumId = null) } }
 }

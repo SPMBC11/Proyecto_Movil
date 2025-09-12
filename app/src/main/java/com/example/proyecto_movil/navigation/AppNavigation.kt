@@ -46,6 +46,10 @@ import com.example.proyecto_movil.ui.Screens.EditProfile.EditarPerfilScreen
 import com.example.proyecto_movil.ui.Screens.EditProfile.EditProfileViewModel
 import com.example.proyecto_movil.ui.Screens.AlbumReviews.AlbumReviewScreen
 
+import com.example.proyecto_movil.data.UserUI
+import com.example.proyecto_movil.data.ReviewInfo
+
+
 
 
 
@@ -120,17 +124,27 @@ fun AppNavHost(
             arguments = listOf(navArgument("userId") { type = NavType.IntType })
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getInt("userId")
-            val user = userId?.let { UserRepository.getUserById(it) }
+
+            // Desempacar Result<UserUI> -> UserUI?
+            val user: UserUI? = userId?.let { id ->
+                UserRepository.getUserById(id).getOrNull()
+            }
+
+            // Desempacar Result<List<ReviewInfo>> -> List<ReviewInfo>
+            val reviews: List<ReviewInfo> = user
+                ?.let { u -> ReviewRepository.getReviewsByUser(u.id).getOrElse { emptyList() } }
+                ?: emptyList()
+
+            val vm: UserProfileViewModel = hiltViewModel()
+
             if (user != null) {
-                val reviews = ReviewRepository.getReviewsByUser(user.id)
-                val vm: UserProfileViewModel = hiltViewModel()
                 UserProfileScreen(
                     viewModel = vm,
-                    user = user,
-                    reviews = reviews,
+                    user = user,                 // ahora es UserUI
+                    reviews = reviews,           // ahora es List<ReviewInfo>
                     onBackClick = { navController.navigateUp() },
                     onAlbumClick = { album -> navController.navigate(Screen.Album.createRoute(album.id)) },
-                    onReviewClick = { /* si tienes detalle, navega aquí */ },
+                    onReviewClick = { /* navegar a detalle si lo tienes */ },
                     onSettingsClick = { navController.navigate(Screen.Settings.route) },
                     onEditProfile = { navController.navigate(Screen.EditProfile.route) }
                 )
@@ -138,6 +152,7 @@ fun AppNavHost(
                 SimpleError("Usuario no encontrado")
             }
         }
+
 
         /* ALBUM (reseñas del álbum) */
         composable(

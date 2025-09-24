@@ -35,9 +35,13 @@ fun LoginScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    // ---------- Navegaciones one-shot ----------
     LaunchedEffect(state.navigateBack, state.navigateAfterLogin, state.navigateToForgot, state.navigateToRegister) {
         if (state.navigateBack) { onBack(); viewModel.consumeBack() }
-        if (state.navigateAfterLogin) { onLogin(state.email, state.password, state.remember); viewModel.consumeAfterLogin() }
+        if (state.navigateAfterLogin) {
+            onLogin(state.email, state.password, state.remember)
+            viewModel.consumeAfterLogin()
+        }
         if (state.navigateToForgot) { onForgotPassword(); viewModel.consumeForgot() }
         if (state.navigateToRegister) { onRegister(); viewModel.consumeRegister() }
     }
@@ -46,135 +50,147 @@ fun LoginScreen(
     val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
     val logoRes = if (isDark) R.drawable.logo else R.drawable.logo_negro
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = backgroundRes),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        IconButton(
-            onClick = { viewModel.onBackClicked() },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(12.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Atrás",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+    // ---------- Snackbar in-app (Opción A) ----------
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.showMessage, state.errorMessage) {
+        if (state.showMessage && state.errorMessage.isNotBlank()) {
+            snackbarHostState.showSnackbar(state.errorMessage)
+            viewModel.consumeMessage() // ✅ consumir el evento para que no se repita
         }
+    }
 
-        Column(
+    // ---------- UI envuelta en Scaffold para mostrar Snackbar ----------
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { padding ->
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .padding(horizontal = 24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .padding(padding)
         ) {
             Image(
-                painter = painterResource(id = logoRes),
-                contentDescription = "Logo",
-                modifier = Modifier.size(100.dp)
+                painter = painterResource(id = backgroundRes),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                text = "Accede a tu cuenta",
-                color = MaterialTheme.colorScheme.onSurface,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            InputField(
-                value = state.email,
-                onValueChange = viewModel::updateEmail,
-                label = stringResource(R.string.email),
-                isPassword = false,
-                showPassword = false,
-                onTogglePassword = {}
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            InputField(
-                value = state.password,
-                onValueChange = viewModel::updatePassword,
-                label = stringResource(R.string.contra),
-                isPassword = true,
-                showPassword = state.showPassword,
-                onTogglePassword = { viewModel.toggleShowPassword() }
-            )
-
-            if (state.showMessage) {
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = state.errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    fontSize = 13.sp
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+            IconButton(
+                onClick = { viewModel.onBackClicked() },
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(12.dp)
             ) {
-                Checkbox(
-                    checked = state.remember,
-                    onCheckedChange = { viewModel.toggleRemember() },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MaterialTheme.colorScheme.primary,
-                        checkmarkColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                )
-                Text(
-                    stringResource(R.string.recordarme),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 14.sp
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Atrás",
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
 
-            Spacer(Modifier.height(8.dp))
-
-            Button(
-                onClick = { viewModel.onLoginClicked() },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                shape = RoundedCornerShape(28.dp),
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp)
+                    .align(Alignment.Center)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Ingresar", fontWeight = FontWeight.SemiBold)
+                Image(
+                    painter = painterResource(id = logoRes),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(100.dp)
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "Accede a tu cuenta",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                InputField(
+                    value = state.email,
+                    onValueChange = viewModel::updateEmail,
+                    label = stringResource(R.string.email),
+                    isPassword = false,
+                    showPassword = false,
+                    onTogglePassword = {}
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                InputField(
+                    value = state.password,
+                    onValueChange = viewModel::updatePassword,
+                    label = stringResource(R.string.contra),
+                    isPassword = true,
+                    showPassword = state.showPassword,
+                    onTogglePassword = { viewModel.toggleShowPassword() }
+                )
+
+                // ❌ Ya no mostramos el error inline; lo maneja el Snackbar
+
+                Spacer(Modifier.height(8.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Checkbox(
+                        checked = state.remember,
+                        onCheckedChange = { viewModel.toggleRemember() },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colorScheme.primary,
+                            checkmarkColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                    Text(
+                        stringResource(R.string.recordarme),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 14.sp
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                Button(
+                    onClick = { viewModel.onLoginClicked() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    shape = RoundedCornerShape(28.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp)
+                ) {
+                    Text("Ingresar", fontWeight = FontWeight.SemiBold)
+                }
+
+                Spacer(Modifier.height(10.dp))
+
+                Text(
+                    text = stringResource(R.string.olvidaste_tu_contrase_a),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 13.sp,
+                    modifier = Modifier.clickable { viewModel.onForgotClicked() }
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "¿No tienes una cuenta? Regístrate",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.clickable { viewModel.onRegisterClicked() }
+                )
             }
 
-            Spacer(Modifier.height(10.dp))
-
-            Text(
-                text = stringResource(R.string.olvidaste_tu_contrase_a),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 13.sp,
-                modifier = Modifier.clickable { viewModel.onForgotClicked() }
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                text = "¿No tienes una cuenta? Regístrate",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.clickable { viewModel.onRegisterClicked() }
-            )
         }
     }
 }
@@ -218,4 +234,3 @@ private fun InputField(
         modifier = Modifier.fillMaxWidth()
     )
 }
-

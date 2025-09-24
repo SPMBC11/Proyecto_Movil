@@ -14,16 +14,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyecto_movil.R
-import com.example.proyecto_movil.ui.theme.Proyecto_movilTheme
 import com.example.proyecto_movil.ui.utils.AppButton
 import com.example.proyecto_movil.ui.utils.LogoApp
 import com.example.proyecto_movil.ui.utils.Registrate
 import com.example.proyecto_movil.ui.utils.Terminos
 import com.example.proyecto_movil.ui.utils.YatienesCuenta
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RegisterScreen(
@@ -34,99 +31,122 @@ fun RegisterScreen(
     onLogin: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+
     val isDark = isSystemInDarkTheme()
     val backgroundRes = if (isDark) R.drawable.fondocriti else R.drawable.fondocriti_light
 
-    LaunchedEffect(state.navigateBack, state.navigateToLogin, state.navigateAfterRegister) {
-        if (state.navigateBack) {
-            onBack()
-            viewModel.consumeNavigation()
-        } else if (state.navigateToLogin) {
-            onLogin()
-            viewModel.consumeNavigation()
-        } else if (state.navigateAfterRegister) {
-            onRegister(state.nombreUsuario, state.email, state.password)
-            viewModel.consumeNavigation()
+    // ---------- Snackbar in-app ----------
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.showMessage, state.errorMessage) {
+        if (state.showMessage && state.errorMessage.isNotBlank()) {
+            snackbarHostState.showSnackbar(state.errorMessage)
+            viewModel.consumeMessage() // ✅ importante: consumir el evento
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = backgroundRes),
-            contentDescription = stringResource(id = R.string.fondo_degradado),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        IconButton(
-            onClick = { viewModel.onBackClicked() },
-            modifier = Modifier.padding(10.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+    // ---------- Navegaciones one-shot ----------
+    LaunchedEffect(state.navigateBack, state.navigateToLogin, state.navigateAfterRegister) {
+        when {
+            state.navigateBack -> {
+                onBack()
+                viewModel.consumeNavigation()
+            }
+            state.navigateToLogin -> {
+                onLogin()
+                viewModel.consumeNavigation()
+            }
+            state.navigateAfterRegister -> {
+                onRegister(state.nombreUsuario, state.email, state.password)
+                viewModel.consumeNavigation()
+            }
         }
+    }
 
-        Column(
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+    // ---------- UI envuelta en Scaffold para poder mostrar Snackbar ----------
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
+        Box(modifier = modifier
+            .fillMaxSize()
+            .padding(padding)
         ) {
-            Spacer(Modifier.height(80.dp))
-            LogoApp()
-            Spacer(Modifier.height(60.dp))
-            Registrate(texto = "Regístrate")
-            Spacer(Modifier.height(10.dp))
-
-            FormularioRegistro(
-                nombrePersona = state.nombrePersona,
-                nombreUsuario = state.nombreUsuario,
-                email = state.email,
-                password = state.password,
-                mostrarPassword = state.mostrarPassword,
-                onNombrePersonaChange = viewModel::updateNombrePersona,
-                onNombreUsuarioChange = viewModel::updateNombreUsuario,
-                onEmailChange = viewModel::updateEmail,
-                onPasswordChange = viewModel::updatePassword,
-                onTogglePassword = viewModel::toggleMostrarPassword
+            Image(
+                painter = painterResource(id = backgroundRes),
+                contentDescription = stringResource(id = R.string.fondo_degradado),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-            Spacer(Modifier.height(30.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+            IconButton(
+                onClick = { viewModel.onBackClicked() },
+                modifier = Modifier.padding(10.dp)
             ) {
-                Checkbox(
-                    checked = state.acceptedTerms,
-                    onCheckedChange = { viewModel.toggleAcceptedTerms() }
-                )
-                Spacer(Modifier.width(8.dp))
-                Terminos(
-                    texto = "He leído y acepto los términos y condiciones",
-                    modifier = Modifier.weight(1f)
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
 
-            Spacer(Modifier.height(16.dp))
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Spacer(Modifier.height(80.dp))
+                LogoApp()
+                Spacer(Modifier.height(60.dp))
+                Registrate(texto = "Regístrate")
+                Spacer(Modifier.height(10.dp))
 
-            AppButton(
-                text = "Registrarse",
-                onClick = { viewModel.onRegisterClicked() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
+                FormularioRegistro(
+                    nombrePersona = state.nombrePersona,
+                    nombreUsuario = state.nombreUsuario,
+                    email = state.email,
+                    password = state.password,
+                    mostrarPassword = state.mostrarPassword,
+                    onNombrePersonaChange = viewModel::updateNombrePersona,
+                    onNombreUsuarioChange = viewModel::updateNombreUsuario,
+                    onEmailChange = viewModel::updateEmail,
+                    onPasswordChange = viewModel::updatePassword,
+                    onTogglePassword = viewModel::toggleMostrarPassword
+                )
 
-            Spacer(Modifier.height(30.dp))
-            YatienesCuenta(
-                texto = "¿Ya tienes una cuenta? Inicia sesión",
-                onClick = { viewModel.onLoginClicked() }
-            )
+                Spacer(Modifier.height(30.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = state.acceptedTerms,
+                        onCheckedChange = { viewModel.toggleAcceptedTerms() }
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Terminos(
+                        texto = "He leído y acepto los términos y condiciones",
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                AppButton(
+                    text = "Registrarse",
+                    onClick = { viewModel.onRegisterClicked() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+
+                Spacer(Modifier.height(30.dp))
+                YatienesCuenta(
+                    texto = "¿Ya tienes una cuenta? Inicia sesión",
+                    onClick = { viewModel.onLoginClicked() }
+                )
+            }
         }
     }
 }
@@ -263,4 +283,3 @@ private fun FormularioRegistro(
         )
     }
 }
-

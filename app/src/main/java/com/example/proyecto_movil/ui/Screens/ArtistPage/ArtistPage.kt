@@ -38,7 +38,7 @@ fun ArtistPage(
     // Cargar artista cuando cambia el id
     LaunchedEffect(artistId) { viewModel.setArtist(artistId) }
 
-    // Navegaciones / eventos
+    // Navegaciones / eventos one-shot
     LaunchedEffect(state.navigateBack, state.navigateSeeAll, state.openAlbumId) {
         if (state.navigateBack) {
             onBack()
@@ -54,92 +54,106 @@ fun ArtistPage(
         }
     }
 
-    val backgroundRes = if (isSystemInDarkTheme()) R.drawable.fondocriti else R.drawable.fondocriti_light
+    // ---------- Snackbar in-app (mensajes VM) ----------
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.showMessage, state.message) {
+        if (state.showMessage && !state.message.isNullOrBlank()) {
+            snackbarHostState.showSnackbar(state.message!!)
+            viewModel.consumeMessage() // <- consumir para no repetir
+        }
+    }
 
-    ScreenBackground(backgroundRes = backgroundRes, modifier = modifier) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 10.dp, start = 16.dp, end = 16.dp)
-        ) {
-            // TopBar: back + settings
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { viewModel.onBackClicked() }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                SettingsIcon()
-            }
+    val backgroundRes =
+        if (isSystemInDarkTheme()) R.drawable.fondocriti else R.drawable.fondocriti_light
 
-            Spacer(Modifier.height(20.dp))
-
-            // Contenido
+    // Envuelve todo en Scaffold para alojar el Snackbar
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
+        ScreenBackground(backgroundRes = backgroundRes, modifier = modifier.padding(padding)) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 10.dp, start = 16.dp, end = 16.dp)
             ) {
-                AsyncImage(
-                    model = state.artistProfileRes,
-                    contentDescription = "Foto de ${state.artistName}",
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape),
-                    contentScale = ContentScale.Crop
-                )
+                // TopBar: back + settings
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { viewModel.onBackClicked() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    SettingsIcon()
+                }
 
+                Spacer(Modifier.height(20.dp))
 
-                Spacer(Modifier.height(10.dp))
-                TituloArtista(state.artistName)
+                // Contenido
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    AsyncImage(
+                        model = state.artistProfileRes,
+                        contentDescription = "Foto de ${state.artistName}",
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
 
-                Spacer(Modifier.height(16.dp))
-                SeguidoresCantante(state.followersText)
-                Spacer(Modifier.height(16.dp))
-                SeguidoresCantante(state.globalScoreText)
-                TextoReseñas(state.reviewsExtraText)
+                    Spacer(Modifier.height(10.dp))
+                    TituloArtista(state.artistName)
 
-                Spacer(Modifier.height(24.dp))
-                TituloAlbum("Álbumes")
+                    Spacer(Modifier.height(16.dp))
+                    SeguidoresCantante(state.followersText)
+                    Spacer(Modifier.height(16.dp))
+                    SeguidoresCantante(state.globalScoreText)
+                    TextoReseñas(state.reviewsExtraText)
 
-                Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(24.dp))
+                    TituloAlbum("Álbumes")
 
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    items(state.albums) { alb ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.clickable { viewModel.onAlbumClicked(alb.id) }
-                        ) {
-                            AsyncImage(
-                                model = alb.coverRes,                           // String (URL)
-                                contentDescription = "Portada: ${alb.title}",
-                                modifier = Modifier.size(140.dp),
-                                contentScale = ContentScale.Crop
-                            )
+                    Spacer(Modifier.height(12.dp))
 
-                            TituloAlbumes(alb.title)
-                            Spacer(Modifier.height(4.dp))
-                            FechaAlbum(alb.year)
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                        items(state.albums) { alb ->
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.clickable { viewModel.onAlbumClicked(alb.id) }
+                            ) {
+                                AsyncImage(
+                                    model = alb.coverRes, // String (URL) o recurso
+                                    contentDescription = "Portada: ${alb.title}",
+                                    modifier = Modifier.size(140.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+
+                                TituloAlbumes(alb.title)
+                                Spacer(Modifier.height(4.dp))
+                                FechaAlbum(alb.year)
+                            }
                         }
                     }
-                }
 
-                Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(24.dp))
 
-                Button(
-                    onClick = { viewModel.onSeeAllClicked() },
-                    shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    )
-                ) {
-                    Text("Ver toda la discografía", fontSize = 14.sp)
+                    Button(
+                        onClick = { viewModel.onSeeAllClicked() },
+                        shape = RoundedCornerShape(25.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Text("Ver toda la discografía", fontSize = 14.sp)
+                    }
                 }
             }
         }

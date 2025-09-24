@@ -1,9 +1,9 @@
-package com.example.proyecto_movil.ui.Screens.AlbumReviews
+package com.example.proyecto_movil.ui.Screens.ArtistPage
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.local.AlbumRepository
-import com.example.proyecto_movil.data.local.ReviewRepository
+import com.example.proyecto_movil.data.local.ArtistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,44 +11,57 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class AlbumReviewViewModel @Inject constructor() : ViewModel() {
+class ArtistPageViewModel @Inject constructor(): ViewModel() {
 
-    private val _uiState = MutableStateFlow(AlbumReviewState())
-    val uiState: StateFlow<AlbumReviewState> = _uiState
+    private val _uiState = MutableStateFlow(ArtistPageState())
+    val uiState: StateFlow<ArtistPageState> = _uiState
 
-    /**
-     * Carga un álbum por su ID usando el repositorio.
-     */
-    fun setAlbumById(albumId: Int) {
-        val result = AlbumRepository.getAlbumById(albumId)
-        result
-            .onSuccess { album ->
-                val albumReviews = ReviewRepository.reviews.filter { it.album.id == album.id }
-                val avg = if (albumReviews.isNotEmpty()) {
-                    ((albumReviews.map { it.score }.average()) * 10).toInt()
-                } else null
+    fun setArtist(artistId: Int?) {
+        val artist = if (artistId != null) {
+            ArtistRepository.getArtistById(artistId).getOrNull()
+        } else {
+            ArtistRepository.getArtists().getOrNull()?.firstOrNull()
+        }
 
-                _uiState.value = AlbumReviewState(
-                    albumId = album.id,
-                    albumCoverRes = album.coverRes,            // String (URL)
-                    albumTitle = album.title,
-                    albumArtist = album.artist.name,
-                    albumYear = album.year,
-                    artistProfileRes = album.artist.profilePic, // String (URL)
-                    reviews = albumReviews,
-                    avgPercent = avg
-                )
-            }
-            .onFailure { e ->
-                Log.e("AlbumReviewVM", "Error al cargar álbum $albumId", e)
-                // Opcional: reflejar el error en el estado si agregas un campo errorMessage en AlbumReviewState
-                _uiState.update { it.copy(/* errorMessage = e.message */) }
-            }
+        if (artist == null) {
+            val msg = "No se pudo cargar el artista (id=$artistId)"
+            Log.e("ArtistPageVM", msg)
+            _uiState.update { it.copy(showMessage = true, message = msg) }
+            return
+        }
+
+        val albums = AlbumRepository
+            .getAlbums()
+            .getOrElse { emptyList() }
+            .filter { it.artist.id == artist.id }
+
+        val reviewsCount = 4500
+        val globalScoreLabel = "Puntaje global"
+
+        _uiState.update {
+            it.copy(
+                artistId = artist.id,
+                artistName = artist.name,
+                artistProfileRes = artist.profilePic,   // String (URL)
+                followersText = "17K seguidores",
+                globalScoreText = globalScoreLabel,
+                reviewsExtraText = "de $reviewsCount reseñas",
+                albums = albums,
+                // limpia mensaje previo si existía
+                showMessage = false,
+                message = null
+            )
+        }
     }
 
-    fun onArtistClicked() = _uiState.update { it.copy(navigateToArtist = true) }
-    fun consumeNavigateArtist() = _uiState.update { it.copy(navigateToArtist = false) }
+    // Navegación
+    fun onBackClicked()     { _uiState.update { it.copy(navigateBack = true) } }
+    fun consumeBack()       { _uiState.update { it.copy(navigateBack = false) } }
+    fun onSeeAllClicked()   { _uiState.update { it.copy(navigateSeeAll = true) } }
+    fun consumeSeeAll()     { _uiState.update { it.copy(navigateSeeAll = false) } }
+    fun onAlbumClicked(id: Int) { _uiState.update { it.copy(openAlbumId = id) } }
+    fun consumeOpenAlbum()  { _uiState.update { it.copy(openAlbumId = null) } }
 
-    fun onUserClicked(userId: Int) = _uiState.update { it.copy(openUserId = userId) }
-    fun consumeOpenUser() = _uiState.update { it.copy(openUserId = null) }
+    // Mensajería
+    fun consumeMessage()    { _uiState.update { it.copy(showMessage = false, message = null) } }
 }

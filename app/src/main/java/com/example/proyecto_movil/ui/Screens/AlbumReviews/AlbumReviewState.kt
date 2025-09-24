@@ -11,6 +11,15 @@ data class AlbumReviewState(
     val artistProfileRes: String = "",
     val reviews: List<ReviewInfo> = emptyList(),
     val avgPercent: Int? = null,
+
+    // Navegación existente
     val navigateToArtist: Boolean = false,
-    val openUserId: Int? = null
+    val openUserId: Int? = null,
+
+    // Snackbar (mensajes transientes desde try/catch)
+    val showMessage: Boolean = false,
+    val message: String? = null,
+
+    // (opcional) loader
+    val isLoading: Boolean = false
 )

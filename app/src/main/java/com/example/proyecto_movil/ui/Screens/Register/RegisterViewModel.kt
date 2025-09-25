@@ -59,6 +59,7 @@ class RegisterViewModel @Inject constructor(
                                 )
                             }
                         } else {
+
                             _uiState.update { it.copy(showMessage = true, errorMessage = result.exceptionOrNull()?.message ?: "Error al registrar") }
                         }
 

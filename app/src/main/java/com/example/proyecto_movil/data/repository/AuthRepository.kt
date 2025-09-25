@@ -16,11 +16,15 @@ class AuthRepository @Inject constructor(
 
 
     suspend fun signIn(email: String, password: String): Result<Unit> {
-        try {
+        return try {
             authRemoteDataSource.signIn(email, password)
-            return Result.success(Unit)
-        }catch (e: Exception) {
-            return Result.failure(e)
+            Result.success(Unit)
+        }catch (e: FirebaseAuthInvalidUserException) {
+      Result.failure(Exception("El usuario no existe"))
+        }catch (e: FirebaseAuthInvalidCredentialsException) {
+      Result.failure(Exception("Credenciales incorrectas"))
+        } catch (e: Exception) {
+           Result.failure(Exception("Error al iniciar sesion"))
         }
     }
 

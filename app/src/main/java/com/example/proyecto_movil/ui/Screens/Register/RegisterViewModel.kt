@@ -41,7 +41,7 @@ class RegisterViewModel @Inject constructor(
                 showError("La contraseña debe tener al menos 6 caracteres")
             else -> {
                 viewModelScope.launch {
-                    try {
+
 
                         val result = authRepository.signUp(email = s.email, password = s.password)
 
@@ -59,12 +59,9 @@ class RegisterViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            val msg = result.exceptionOrNull()?.message ?: "Error al registrar"
-                            showError(msg)
+                            _uiState.update { it.copy(showMessage = true, errorMessage = result.exceptionOrNull()?.message ?: "Error al registrar") }
                         }
-                    } catch (e: Exception) {
-                        showError(e.message ?: "Error desconocido al registrar")
-                    }
+
                 }
             }
         }

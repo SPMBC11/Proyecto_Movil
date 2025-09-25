@@ -1,6 +1,7 @@
 package com.example.proyecto_movil.data.repository
 
 import com.example.proyecto_movil.data.datasource.AuthRemoteDataSource
+import com.example.proyecto_movil.data.injection.FireBaseHiltModule_AuthFactory.auth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseUser
@@ -11,24 +12,18 @@ class AuthRepository @Inject constructor(
 ) {
 
     //Obtenemos el usuario
-    val currentUser: FirebaseUser?
-        get() = authRemoteDataSource.currentUser
+    val currentUser: FirebaseUser? = authRemoteDataSource.currentUser
+
 
     suspend fun signIn(email: String, password: String): Result<Unit> {
-        return try {
+        try {
             authRemoteDataSource.signIn(email, password)
-            Result.success(Unit)
+            return Result.success(Unit)
+        }catch (e: Exception) {
+            return Result.failure(e)
         }
-        catch (e: FirebaseAuthInvalidCredentialsException){
-            Result.failure(Exception("Credenciales incorrectas"))
-        } catch (e: FirebaseAuthInvalidUserException) {
-            Result.failure(Exception("El usuario no existe"))
-        }
-        catch (e: Exception) {
-            Result.failure(Exception("Error al iniciar sesion"))
-        }
-
     }
+
 
     suspend fun signUp(email: String, password: String): Result<Unit> {
         try {

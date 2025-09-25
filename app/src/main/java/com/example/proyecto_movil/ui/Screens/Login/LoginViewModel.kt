@@ -41,25 +41,19 @@ private
             }
             else -> {
                 viewModelScope.launch {
-                    try {
                         // authRepository.signIn debe devolver Result<Unit>
                         val result = authRepository.signIn(s.email, s.password)
 
                         if (result.isSuccess) {
-                            _uiState.update {
-                                it.copy(
-                                    navigateAfterLogin = true,
+                            _uiState.update { it.copy(navigateAfterLogin = true,
                                     showMessage = false,
                                     errorMessage = ""
                                 )
                             }
                         } else {
-                            val msg = result.exceptionOrNull()?.message ?: "Correo o contraseña incorrectos"
-                            showError(msg)
+                          _uiState.update { it.copy(showMessage = true, errorMessage = result.exceptionOrNull()?.message ?: "Error al iniciar sesión") }
                         }
-                    } catch (e: Exception) {
-                        showError(e.message ?: "Error al iniciar sesión")
-                    }
+
                 }
             }
         }

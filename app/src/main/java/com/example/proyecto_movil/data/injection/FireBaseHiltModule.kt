@@ -15,6 +15,7 @@ import dagger.hilt.components.SingletonComponent
 class FireBaseHiltModule {
     @Provides
     fun auth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    fun storage(): FirebaseStorage = Firebase.storage
 }
-@Provides
-fun storage(): FirebaseStorage = Firebase.storage

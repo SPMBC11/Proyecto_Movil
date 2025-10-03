@@ -14,6 +14,13 @@ data class UserProfileDto(
 )
  fun UserProfileDto.toUserProfileInfo(): UserProfileInfo {
     return UserProfileInfo(
-
+        id = id,
+        username = username,
+        profileImage = profile_pic,
+        bio = bio,
+        followers = followers,
+        following = following,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
     )
 }

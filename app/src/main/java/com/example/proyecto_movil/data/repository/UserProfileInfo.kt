@@ -1,7 +1,7 @@
 package com.example.proyecto_movil.data.repository
 
 data class UserProfileInfo(
-    val id: String,
+    val id: Int,
     val username: String,
     val profileImage: String,
     val bio: String,
@@ -12,3 +12,4 @@ data class UserProfileInfo(
 ){
 constructor(): this("", "", "", "", 0, 0, "", "")
 }
+

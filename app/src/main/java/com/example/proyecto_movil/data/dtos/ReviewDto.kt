@@ -28,8 +28,8 @@ data class ReviewDto(
     val createdAt: String, // en formato ISO // "2025-08-05T22:20:16.658Z"
     val updatedAt: String,
 ) {
-    constructor(): this("", "", 0, false, "", "", "", "")
-
+    constructor() : this("", "", 0, false, "", "", "", "")
+}
     fun ReviewDto.toReviewInfo(): ReviewInfo {
         return ReviewInfo(
             id = id,
@@ -43,4 +43,4 @@ data class ReviewDto(
             liked = false
         )
     }
-}
+

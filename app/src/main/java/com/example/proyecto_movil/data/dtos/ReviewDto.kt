@@ -7,7 +7,7 @@ import com.example.proyecto_movil.data.UserUI
 data class UserDto(
     val id: String,
     val username: String,
-    val profile_pic: String?
+    val profile_pic: String?,
     val bio: String,
     val followers: Int,
     val following: Int,
@@ -15,37 +15,32 @@ data class UserDto(
     val updatedAt: String,
 
 ){
-    constructor(): this("", "", "", "")
+constructor(): this("", "", null, "", 0, 0, "", "")
 }
 
 data class ReviewDto(
-    val userId: String,
     val id: String,
-    val imageUrl: String?, // null por ahora
     val content: String,
-    val likesCount: Int,
-
-    val comments: Int,
+    val score: Int,
+    val is_low_score: Boolean,
+    val album_id: String,
+    val user_id: String,
     val createdAt: String, // en formato ISO // "2025-08-05T22:20:16.658Z"
     val updatedAt: String,
-    val user: UserDto,
-    //nuevo
-    var liked: Boolean = false
 ) {
-    constructor() : this("", "", null, "", 0, 0, "", "", UserDto("", "", "", null), false)
+    constructor(): this("", "", 0, false, "", "", "", "")
 
     fun ReviewDto.toReviewInfo(): ReviewInfo {
         return ReviewInfo(
-            profileImage = user.profileImage ?: "",
-            name = user.name,
-            username = user.username,
-            content = content,
-            time = createdAt,//fechaCreacion
-            comments = comments,
-            likes = likesCount,
             id = id,
-            userId = userId,
-            liked = liked
+            content = content,
+            score = score,
+            is_low_score = is_low_score,
+            album_id = album_id,
+            user_id = user_id,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            liked = false
         )
     }
 }

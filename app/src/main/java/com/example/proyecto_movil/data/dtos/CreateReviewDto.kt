@@ -1,16 +1,16 @@
 package com.example.proyecto_movil.data.dtos
 
 data class CreateReviewUserDto(
-    val name: String? = null,
-    val username: String? = null,
-    val profileImage: String? = null
+   val id: String,
+   val username: String,
+   val profile_pic: String,
 )
 
 
 data class CreateReviewDto(
     val content: String,
-    var userId: Int,
-    val parentReviewId: Int?,
-    val reviewId: String? = null,
-    val user: CreateReviewUserDto? = null
+    val score: Int,
+    val is_low_score: Boolean,
+    val album_id: String,
+    val user_id: String,
 )

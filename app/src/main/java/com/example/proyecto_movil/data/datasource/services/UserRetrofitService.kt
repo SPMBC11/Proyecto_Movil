@@ -9,6 +9,3 @@ interface UserRetrofitService {
     suspend fun getUserReviews(@Path("id") userId: String): List<ReviewDto>
 }
 
-@GET("users/{userId}")
-suspend fun getUserById(@Path("userId") userId: String):
-}

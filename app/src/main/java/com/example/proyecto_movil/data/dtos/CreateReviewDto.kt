@@ -9,8 +9,8 @@ data class CreateReviewUserDto(
 
 data class CreateReviewDto(
     val content: String,
-    var userId: String,
-    val parentReviewId: String?,
+    var userId: Int,
+    val parentReviewId: Int?,
     val reviewId: String? = null,
     val user: CreateReviewUserDto? = null
 )

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.proyecto_movil.data.local.AlbumRepository
 import com.example.proyecto_movil.data.local.ArtistRepository
+import com.example.proyecto_movil.data.local.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +12,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class ArtistPageViewModel @Inject constructor(): ViewModel() {
+class ArtistPageViewModel @Inject constructor(
+    private val reviewRepository: ReviewRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(ArtistPageState())
     val uiState: StateFlow<ArtistPageState> = _uiState

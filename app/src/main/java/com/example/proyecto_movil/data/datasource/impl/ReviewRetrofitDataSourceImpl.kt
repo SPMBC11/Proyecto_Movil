@@ -21,7 +21,6 @@ class ReviewRetrofitDataSourceImpl  @Inject constructor(
     }
 
     override suspend fun createReview(review: CreateReviewDto) {
-        review.userId = "1"
         service.createReview(review)
     }
 

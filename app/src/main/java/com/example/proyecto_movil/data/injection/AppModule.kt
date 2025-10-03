@@ -1,5 +1,6 @@
 package com.example.proyecto_movil.data.injection
 
+import com.example.proyecto_movil.data.datasource.ReviewRetrofitService
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -24,4 +25,13 @@ object AppModule {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun providesReviewRetrofitService(retrofit: Retrofit): ReviewRetrofitService {
+        return retrofit.create(ReviewRetrofitService::class.java)
+    }
+
+
+
 }

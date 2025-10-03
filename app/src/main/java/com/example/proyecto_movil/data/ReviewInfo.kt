@@ -4,9 +4,17 @@ import com.example.proyecto_movil.data.AlbumUI
 import com.example.proyecto_movil.data.UserUI
 
 data class ReviewInfo(
-    val album: AlbumUI,
-    val user: UserUI,
+    val profileImage: String,
+    val id: String,
+    val name: String,
+    val username: String,
     val content: String,
-    val score: Double,
-    val isLowScore: Boolean
-)
+    val time: String,
+    val likes: Int,
+    val comments: Int,
+    val userId: String,
+    //
+    val liked: Boolean = false,
+){
+    constructor() : this ("","","","","","",0,0,"",false)
+}
